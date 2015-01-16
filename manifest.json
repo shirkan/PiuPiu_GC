@@ -1,0 +1,17 @@
+{
+  "appID": "e1d3f9ac50c54731a5d723b8747db66b",
+  "dependencies": {
+    "devkit-core": "https://github.com/gameclosure/devkit-core#v2.0.19"
+  },
+  "shortName": "PiuPiu",
+  "studio": {
+    "domain": "studio.example.com",
+    "name": "Your Studio Name",
+    "stagingDomain": "staging.example.com"
+  },
+  "supportedOrientations": [
+    "portrait",
+    "landscape"
+  ],
+  "title": "PiuPiu"
+}

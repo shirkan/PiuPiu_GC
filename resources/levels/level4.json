@@ -1,0 +1,10 @@
+{
+  "totalEnemies" : -1,
+  "enemiesSpawnInterval": 0.4,
+  "powerupsSpawnInterval": 5,
+  "powerupsTypes": "all",
+  "powerupsSpawnIntervalMin": 200,
+  "powerupsSpawnIntervalMax": 300,
+  "powerupsSpawnIntervalType": "rangeCount",
+  "hint" : "GOTTA SHOOT'EM ALL!"
+}

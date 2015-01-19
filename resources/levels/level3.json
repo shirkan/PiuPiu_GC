@@ -1,0 +1,8 @@
+{
+  "totalEnemies": 20,
+  "enemiesSpawnIntervalMin": 0.5,
+  "enemiesSpawnIntervalMax": 1,
+  "enemiesSpawnInterval": 0.2,
+  "enemiesSpawnIntervalType": "rangeTime",
+  "hint" : "Even more coming your way!"
+}

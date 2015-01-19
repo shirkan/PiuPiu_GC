@@ -1,0 +1,6 @@
+{
+  "totalEnemies": 10,
+  "enemiesSpawnInterval": 0.8,
+  "enemiesSpawnIntervalType": "constantTempo",
+  "hint" : "More enemies coming your way!"
+}

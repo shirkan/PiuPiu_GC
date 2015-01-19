@@ -1,17 +1,45 @@
 {
+  "addons": {},
+  "android": {
+    "icons": {
+      "144": "resources/icons/icon-144.png",
+      "36": "resources/icons/icon-36.png",
+      "48": "resources/icons/icon-48.png",
+      "72": "resources/icons/icon-72.png",
+      "96": "resources/icons/icon-96.png"
+    },
+    "versionCode": 11
+  },
   "appID": "e1d3f9ac50c54731a5d723b8747db66b",
   "dependencies": {
-    "devkit-core": "https://github.com/gameclosure/devkit-core#v2.0.19"
+    "devkit-core": "https://github.com/gameclosure/devkit-core#v2.0.19",
+    "devkit-menus": "https://github.com/gameclosure/menus#v2.0.0"
+  },
+  "icon": "resources/icons/favicon.png",
+  "ios": {
+    "appleID": 946898089,
+    "bundleID": "com.shirkan.piupiu",
+    "icons": {
+      "114": "resources/icons/icon-114.png",
+      "120": "resources/icons/icon-120.png",
+      "144": "resources/icons/icon-144.png",
+      "152": "resources/icons/icon-152.png",
+      "57": "resources/icons/icon-57.png",
+      "72": "resources/icons/icon-72.png",
+      "76": "resources/icons/icon-76.png",
+      "renderGloss": false
+    },
+    "version": "0.6",
+    "versionCode": 11
   },
   "shortName": "PiuPiu",
   "studio": {
-    "domain": "studio.example.com",
-    "name": "Your Studio Name",
-    "stagingDomain": "staging.example.com"
+    "domain": "PiuPiu.shirkan.com",
+    "name": "Meganeev Studios"
   },
   "supportedOrientations": [
-    "portrait",
     "landscape"
   ],
-  "title": "PiuPiu"
+  "title": "Piu Piu",
+  "version": "0.6"
 }

@@ -54,7 +54,7 @@ exports = Class(ImageView, function (supr) {
             //animate(this.menu[0]).now({scale: 1.5}, 100).then({scale: 1}, 100);
             animateText(this.menu[0]);
             LOG(entries[0]);
-            //this.emit('game:start');
+            this.emit('game:start');
         }));
         this.menu[1].on('InputSelect', bind (this, function() {
             animateText(this.menu[1]);

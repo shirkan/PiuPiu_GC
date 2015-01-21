@@ -7,21 +7,32 @@ import device;
 
 exports
 {
+    makePoint = function (x, y) {
+        return {"x":x, "y" : y}
+    }
 
-    calculateTrigonometry = function ( point ) {
-        var endPoint = cc.p();
-        var bulletStartPoint = cc.p();
+    calculateBulletTrigonometry = function ( point ) {
+        var bulletEndPoint = {};
+        var bulletStartPoint = {};
         var endAngle = 0;
+        var bulletPathLengths = {};
 
         //  Calculating ax+b = 0
-        var a = calculateGradientOfLine(point, PiuPiuConsts.handsAnchor);
+        var a = calculateGradientOfLine(point, PiuPiuGlobals.handsAnchor);
         var b = point.y - (a * point.x);
+
+        //  Calculate rotation angle
+        //  "a" is the tangent, so the angle should be tan(a
+        endAngle = (Math.atan(a)).toFixed(2);
+
+        //  Calculate bullet start point
+        bulletStartPoint.x = PiuPiuGlobals.handsAnchor.x + (PiuPiuConsts.handsLength * Math.cos(endAngle));
+        bulletStartPoint.y = a * bulletStartPoint.x + b;
 
         //  Calculating end point
         if (a==0) {
             //  very rare, end point is right ahead after right border
-            endPoint.x = PiuPiuGlobals.winSize.width;
-            endPoint.y = point.y;
+            bulletEndPoint = makePoint(PiuPiuGlobals.winSize.width, point.y);
         } else {
             //  Calculate intersection of ax+b with x=winSize.width
             var xBorderEndX = PiuPiuGlobals.winSize.width;
@@ -37,27 +48,23 @@ exports
             var yBorderEndX = (yBorderEndY - b) / a;
 
             //  Determine which is closer, using Pitagoras
-            var xBorderLength = Math.sqrt(Math.pow(xBorderEndX - PiuPiuConsts.sourcePoint.x, 2) + Math.pow(xBorderEndY - PiuPiuConsts.sourcePoint.y, 2));
-            var yBorderLength = Math.sqrt(Math.pow(yBorderEndX - PiuPiuConsts.sourcePoint.x, 2) + Math.pow(yBorderEndY - PiuPiuConsts.sourcePoint.y, 2));
+            var xBorderLength = Math.sqrt(Math.pow(xBorderEndX - bulletStartPoint.x, 2) + Math.pow(xBorderEndY - bulletStartPoint.y, 2));
+            var yBorderLength = Math.sqrt(Math.pow(yBorderEndX - bulletStartPoint.x, 2) + Math.pow(yBorderEndY - bulletStartPoint.y, 2));
 
             if (xBorderLength < yBorderLength) {
-                endPoint.x = xBorderEndX;
-                endPoint.y = xBorderEndY;
+                bulletEndPoint = makePoint(xBorderEndX, xBorderEndY);
             } else {
-                endPoint.x = yBorderEndX;
-                endPoint.y = yBorderEndY;
+                bulletEndPoint = makePoint(yBorderEndX, yBorderEndY);
             }
         }
 
-        //  Calculate rotation angle
-        //  "a" is the tangent, so the angle should be tan(a
-        endAngle = (Math.atan(a)).toFixed(2);
+        //  Calculate length of X-axis & Y-axis, to determine spee on each axis
+        bulletPathLengths = makePoint(bulletEndPoint.x - bulletStartPoint.x, bulletEndPoint.y - bulletStartPoint.y);
 
-        //  Calculate bullet start point
-        bulletStartPoint.x = PiuPiuConsts.handsAnchor.x + (PiuPiuConsts.handsLength * Math.cos(endAngle));
-        bulletStartPoint.y = a * bulletStartPoint.x + b;
+        LOG("Shooting from x: " + bulletStartPoint.x + " y: " + bulletStartPoint.y + " to x: " + bulletEndPoint.x + " y: " + bulletEndPoint.y);
+        LOG("Path length x: " + bulletPathLengths.x + " y: " + bulletPathLengths.y);
 
-        return [endPoint, bulletStartPoint, endAngle];
+        return [bulletStartPoint, bulletPathLengths, endAngle];
 
     }
 
@@ -230,6 +237,10 @@ exports
         if (PiuPiuGlobals.soundEnabled === undefined || isNaN(PiuPiuGlobals.soundEnabled)) {
             localStorage.soundEnabled = PiuPiuGlobals.soundEnabled = 1;
         }
+
+        //  Calculate hands anchor and source point
+        PiuPiuGlobals.handsAnchor = makePoint(0.35 * PiuPiuConsts.playerWidth, PiuPiuGlobals.winSize.height / 2 - 0.14 * PiuPiuConsts.playerHeight);
+        PiuPiuGlobals.sourcePoint = makePoint(0, PiuPiuGlobals.winSize.height / 2);
     }
 
     loadStats = function () {
@@ -283,13 +294,13 @@ exports
 
     //  Levels load
     loadAllLevels = function () {
-        var self = this;
         var i = 1;
         var fileName = "resources/levels/level" + i + ".json";
         while (CACHE[fileName]) {
             LOG("loading file " + fileName);
             PiuPiuLevels[i] = {};
             PiuPiuLevels[i] = JSON.parse(CACHE[fileName]);
+            PiuPiuLevels[i].totalEnemiesToKill = PiuPiuLevels[i].totalEnemiesToSpawn = PiuPiuLevels[i].totalEnemies;
             fileName = "resources/levels/level" + (++i) + ".json";
         }
     }

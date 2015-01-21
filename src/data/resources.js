@@ -37,12 +37,12 @@ exports
 
         //  Game
         EnemyBig_png : "resources/images/game/enemy.png",
-        Enemy_png : "resources/images/game/enemy_small.png",
+        Enemy_png : "resources/images/game/enemy_mid.png",
         Player_png : "resources/images/game/player.png",
-        Hands_png : "resources/images/game/handsSprites.png",
+        Hands_png : "resources/images/game/hands.png",
         Hands_plist: "resources/images/game/hands.plist",
         BulletBig_png: "resources/images/game/bullet.png",
-        Bullet_png: "resources/images/game/bullet_small2.png",
+        Bullet_png: "resources/images/game/bullet_small.png",
         LifeBig_png : "resources/images/game/life.png",
         Life_png : "resources/images/game/life_small.png",
         Achievement_png : "resources/images/game/achievement_unlocked.png",

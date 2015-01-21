@@ -25,14 +25,13 @@ exports = Class(ui.View, function (supr) {
 			superview: this,
 			x: 0,
 			y: 0,
-			anchorX: PiuPiuGlobals.winSize.width /2,
-			anchorY: PiuPiuGlobals.winSize.height /2,
+			width: PiuPiuGlobals.winSize.width,
+			height: PiuPiuGlobals.winSize.height,
 			text: "Meganeev\nStudios",
 			wrap: true,
 			size: PiuPiuConsts.fontSizeBig,
 			fontFamily : PiuPiuConsts.fontName,
-			color: "#ffffff",
-			layout: "box",
+			color: "white",
 			verticalAlign: 'middle',
 			horizontalAlign: 'center'
 		});

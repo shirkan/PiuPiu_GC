@@ -70,7 +70,8 @@ exports
         PiuPiuConsts.fontSizeSmall = 28;
         PiuPiuConsts.fontStrokeSize = 8;
         PiuPiuConsts.fontStrokeSizeSmall = 4;
-        PiuPiuConsts.fontSizeStatus = 16;
+        PiuPiuConsts.fontSizeStatus = 32;
+        PiuPiuConsts.fontStrokeSizeStatus = 6;
 
         //  Music
         PiuPiuConsts.musicFiles = [res.music_arsenal1, res.music_athletico1, res.music_barca1, res.music_barca2, res.music_barca3,
@@ -87,11 +88,12 @@ exports
         PiuPiuConsts.pointsNormalMultiplier = 1;
         PiuPiuConsts.normalUpdateRate = 1;
 
-        PiuPiuConsts.sourcePoint = (110, 255);
+        //  Status view
+        PiuPiuConsts.statusZOrder = 10;
 
         //  Bullet
         PiuPiuConsts.framesPerSeconds = 1000;
-        PiuPiuConsts.bulletLocalZOrder = 5;
+        PiuPiuConsts.bulletZOrder = 5;
 
         //  Enemy
         PiuPiuConsts.enemyMoveToPoint = (30,240);
@@ -100,10 +102,11 @@ exports
         PiuPiuConsts.enemyLocalZOrder = 3;
 
         //  Player
-        PiuPiuConsts.handsAnchor = (30,184);
         PiuPiuConsts.handsLength = 83;
         PiuPiuConsts.livesOnGameStart = 2;
         PiuPiuConsts.maxLives = 5;
+        PiuPiuConsts.playerWidth = 71;
+        PiuPiuConsts.playerHeight= 235;
 
         //  Powerups
         PiuPiuConsts.powerupRadius = 7;
@@ -132,6 +135,9 @@ exports
         //  Application vars
         PiuPiuGlobals.winSize = {};
         PiuPiuGlobals.scenes = [];
+        //  Calculate hands anchor later, when screen size is defined
+        PiuPiuGlobals.handsAnchor = [];
+        PiuPiuConsts.sourcePoint = [];
 
         //  Music
         PiuPiuGlobals.currentMusicFile = "";

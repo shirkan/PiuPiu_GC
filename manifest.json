@@ -13,7 +13,7 @@
   "appID": "e1d3f9ac50c54731a5d723b8747db66b",
   "dependencies": {
     "devkit-core": "https://github.com/gameclosure/devkit-core#v2.0.19",
-    "devkit-menus": "https://github.com/gameclosure/menus#v2.0.0"
+    "devkit-entities": "https://github.com/gameclosure/devkit-entities#v0.2.4"
   },
   "icon": "resources/icons/favicon.png",
   "ios": {
@@ -34,12 +34,15 @@
   },
   "shortName": "PiuPiu",
   "studio": {
-    "domain": "PiuPiu.shirkan.com",
+    "domain": "shirkan.com",
     "name": "Meganeev Studios"
   },
   "supportedOrientations": [
     "landscape"
   ],
+  "splash" : {
+    "universal" : "resources/splash/Default-568h@2x.png"
+  },
   "title": "Piu Piu",
   "version": "0.6"
 }

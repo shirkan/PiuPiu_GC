@@ -24,8 +24,8 @@ exports = Class(GC.Application, function () {
             superview: this,
             x: 0,
             y: 0,
-            width: this.baseWidth,
-            height: this.baseHeight,
+            width: PiuPiuGlobals.winSize.width,
+            height: PiuPiuGlobals.winSize.height,
             clip: true
         });
 
@@ -48,25 +48,19 @@ exports = Class(GC.Application, function () {
         }));
     };
 
-    this.launchUI = function () {
-
-    };
+    this.launchUI = function () {};
 
     this.scaleUI = function () {
         if (device.height > device.width) {
-            this.baseWidth = BOUNDS_WIDTH;
-            this.baseHeight = device.height * (BOUNDS_WIDTH / device.width);
-            this.scale = device.width / this.baseWidth;
+            PiuPiuGlobals.winSize.width = BOUNDS_WIDTH;
+            PiuPiuGlobals.winSize.height = device.height * (BOUNDS_WIDTH / device.width);
+            PiuPiuGlobals.winSize.scale = device.width / PiuPiuGlobals.winSize.width;
         } else {
-            this.baseWidth = BOUNDS_HEIGHT;
-            this.baseHeight = device.height * (BOUNDS_HEIGHT / device.width);
-            this.scale = device.height / this.baseHeight;
+            PiuPiuGlobals.winSize.width = BOUNDS_HEIGHT;
+            PiuPiuGlobals.winSize.height = device.height * (BOUNDS_HEIGHT / device.width);
+            PiuPiuGlobals.winSize.scale = device.height / PiuPiuGlobals.winSize.height;
         }
-        this.view.style.scale = this.scale;
-
-        PiuPiuGlobals.winSize.width = this.baseWidth;
-        PiuPiuGlobals.winSize.height = this.baseHeight;
-        PiuPiuGlobals.winSize.scale = this.scale;
+        this.view.style.scale = PiuPiuGlobals.winSize.scale;
     };
 
     this.initializeGame = function () {

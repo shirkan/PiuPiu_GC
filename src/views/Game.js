@@ -16,16 +16,15 @@ import src.game.Player as Player;
 import src.game.Hands as Hands;
 import src.game.Bullets as Bullets;
 import src.game.Enemies as Enemies;
+import src.game.Powerups as Powerups;
 
 exports = Class(ImageView, function (supr) {
 	this.init = function (opts) {
-		var map = randomMap();
 
 		opts = merge(opts, {
 			name: "Game",
 			x: 0,
-			y: 0,
-			image: map
+			y: 0
 		});
 
 		supr(this, 'init', [opts]);
@@ -38,7 +37,8 @@ exports = Class(ImageView, function (supr) {
 		this.gameLayer = new View({
 			parent: this,
 			width: PiuPiuGlobals.winSize.width,
-			height: PiuPiuGlobals.winSize.height
+			height: PiuPiuGlobals.winSize.height,
+			zIndex: PiuPiuConsts.gameZIndex
 		});
 
 		//  Add Status view
@@ -51,10 +51,11 @@ exports = Class(ImageView, function (supr) {
 		this.bullets = new Bullets({ parent: this.gameLayer });
 		//  Prepare enemies
 		this.enemies = new Enemies({ parent: this.gameLayer });
-		this.invokeEnemy();
+		//  Prepare powerups
+		this.powerups = new Powerups({ parent: this.gameLayer });
 
 		//  Init settings
-		this.initSettings();
+		//this.initLevel();
 
 		//  Catch clicks
 		this.on('InputSelect', function (evt, pt) {
@@ -63,22 +64,58 @@ exports = Class(ImageView, function (supr) {
 		});
 	};
 
-	this.initSettings = function () {
-		PiuPiuGlobals.livesLeft = 2;
+	//  Init Level
+	this.initLevel = function () {
+		var map = randomMap();
+		this.style._view.setImage(map);
+
+		this.machineGunEnd();
+		this.captainEnd();
+		this.stopwatchEnd();
+		this.canContinueToNextScene = false;
+
+		if (PiuPiuGlobals.currentLevel == 1) {
+			PiuPiuGlobals.currentScore = 0;
+			PiuPiuGlobals.livesLeft = PiuPiuConsts.livesOnGameStart;
+			playSound(res.sound_ohedNichnasLamigrash);
+		}
+
 		this.status.updateLives(PiuPiuGlobals.livesLeft);
+		/*
+		//  Init & start enemies spwaning
+		this.enemySM.init(this, this.spawnEnemy, PiuPiuLevelSettings.enemiesSpawnIntervalType,
+			PiuPiuLevelSettings.enemiesSpawnInterval, PiuPiuLevelSettings.enemiesSpawnIntervalMin,
+			PiuPiuLevelSettings.enemiesSpawnIntervalMax);
+		this.enemySM.start();
+
+		//  Init $ start powerups spawning
+		if (PiuPiuLevelSettings.powerupsTypes == "all") {
+			PiuPiuLevelSettings.powerupsTypes = PiuPiuConsts.powerupTypes;
+		}
+		this.powerupSM.init(this, this.spawnPowerup, PiuPiuLevelSettings.powerupsSpawnIntervalType,
+			PiuPiuLevelSettings.powerupsSpawnInterval, PiuPiuLevelSettings.powerupsSpawnIntervalMin,
+			PiuPiuLevelSettings.powerupsSpawnIntervalMax);
+		this.powerupSM.start();
+		*/
+
+		//TODO: This should be removed
+		this.invokeEnemy();
+
 	};
 
+	//  Spawnings
 	this.invokeEnemy = function () {
 		setTimeout(bind(this, function () {
 			this.enemies.spawnEnemy(1000,500);
+			this.powerups.spawnPowerup();
 		}), 2000);
 	};
 
 	this.shootBullet = function (pt) {
 		//  Angle limits - goes crazy beyond these angles
-		//if (pos.x < PiuPiuConsts.handsAnchor.x) {
-		//	return false;
-		//}
+		if (pt.x < PiuPiuGlobals.handsAnchor.x) {
+			return false;
+		}
 
 		var sound = res.sound_piu;
 
@@ -102,17 +139,28 @@ exports = Class(ImageView, function (supr) {
 		this.hands.rotateHands(endAngle);
 	};
 
+	//  Collisions
 	this.onBulletEnemyCollision = function (bullet, enemy) {
 		enemy.release();
 		bullet.release();
 
 		//  Update stats
 		PiuPiuLevelSettings.enemiesVanished++;
-		PiuPiuGlobals.currentScore += (PiuPiuGlobals.currentPointsMultiplier * PiuPiuConsts.pointsPerEnemyKill);
-		//this.statusLayer.updatePoints(PiuPiuGlobals.currentScore);
-
-		PiuPiuGlobals.totalPoints += (PiuPiuGlobals.currentPointsMultiplier * PiuPiuConsts.pointsPerEnemyKill);
 		PiuPiuGlobals.totalEnemyKilled++;
+
+		if (enemy.hitType == hitType.BulletEnemyHead) {
+			//  Headshot
+			PiuPiuGlobals.currentScore += (PiuPiuGlobals.currentPointsMultiplier * PiuPiuConsts.pointsPerEnemyHeadShot);
+			PiuPiuGlobals.totalPoints += (PiuPiuGlobals.currentPointsMultiplier * PiuPiuConsts.pointsPerEnemyHeadShot);
+
+			//  Display headshot in status
+			this.status.displayHeaderMessage("Headshot!");
+			//  Play headshot sound
+		} else if (enemy.hitType == hitType.BulletEnemy) {
+			//  Body shot
+			PiuPiuGlobals.currentScore += (PiuPiuGlobals.currentPointsMultiplier * PiuPiuConsts.pointsPerEnemyKill);
+			PiuPiuGlobals.totalPoints += (PiuPiuGlobals.currentPointsMultiplier * PiuPiuConsts.pointsPerEnemyKill);
+		}
 
 		this.status.updateScore(PiuPiuGlobals.currentScore);
 	};
@@ -132,22 +180,107 @@ exports = Class(ImageView, function (supr) {
 		}
 	};
 
+	this.onBulletPowerupCollision = function (bullet, powerup) {
+		bullet.release();
+		powerup.release();
+		PiuPiuGlobals.totalPowerUps++;
+		eval((powerup.getData()).callback);
+	};
+
+	//  Powerups handling
+	this.machineGunStart = function () {
+		if (this.isMachineGunMode) {
+			clearTimeout(this.machineGunEnd);
+		} else {
+			this.isMachineGunMode = true;
+			this.updateHandsType();
+		}
+		setTimeout(bind(this, this.machineGunEnd), PiuPiuConsts.powerupMachineGunPeriod);
+	};
+
+	this.machineGunEnd = function () {
+		LOG("machineGunEnd");
+		this.isMachineGunMode = false;
+		this.updateHandsType();
+	};
+
+	this.addLife = function () {
+		PiuPiuGlobals.livesLeft++;
+		this.status.updateLives(PiuPiuGlobals.livesLeft);
+	};
+
+	this.captainStart = function () {
+		if (this.isCaptainMode) {
+			clearTimeout(this.captainEnd);
+		} else {
+			this.isCaptainMode = true;
+			PiuPiuGlobals.currentPointsMultiplier = PiuPiuConsts.powerupCaptainMultiplier;
+			this.updateHandsType();
+		}
+		setTimeout(bind(this, this.captainEnd), PiuPiuConsts.powerupCaptainPeriod);
+	};
+
+	this.captainEnd = function () {
+		LOG("captainEnd");
+		this.isCaptainMode = false;
+		PiuPiuGlobals.currentPointsMultiplier = PiuPiuConsts.pointsNormalMultiplier;
+		this.updateHandsType();
+	};
+
+	this.stopwatchStart = function () {
+		LOG("stopwatchStart");
+	};
+
+	this.stopwatchEnd = function () {
+		LOG("stopwatchEnd");
+	};
+
+	this.updateHandsType = function () {
+		if (this.isMachineGunMode) {
+			//  Machine Gun mode on
+			if (this.isCaptainMode) {
+				//  Captain mode on
+				this.hands.setMachineGunCaptain();
+			} else {
+				//  Captain Mode off
+				this.hands.setMachineGun();
+			}
+		} else {
+			//  Machine Gun mode off
+			if (this.isCaptainMode) {
+				//  Captain mode on
+				this.hands.setCaptain();
+			} else {
+				//  Captain Mode off
+				this.hands.setNormal();
+			}
+		}
+	};
+
+	//  Game endings
 	this.endGame = function () {
+
+	};
+
+	this.levelCompleted = function () {
 
 	};
 
 	this.tick = function(dt) {
 		// speed up or slow down the passage of time - TODO: understand what is 100
 		dt = Math.min(PiuPiuGlobals.currentUpdateRate * dt, 100);
-
+	LOG("dt is " + dt);
 		// update entities
 		//this.player.update(dt);
 		this.bullets.update(dt);
 		this.enemies.update(dt);
 
 		//  Check collisions detections
-		// collide bullets with enemies
+		//  Collide bullets with enemies
 		this.bullets.onFirstPoolCollisions(this.enemies, this.onBulletEnemyCollision, this);
+		//  Collide bullets with powerups
+		this.bullets.onFirstPoolCollisions(this.powerups, this.onBulletPowerupCollision, this);
+		//  Collide enemies with player
 		this.enemies.onFirstCollision(this.player, this.onEnemyPlayerCollision, this);
 
 		// players vertical movement determines view offset for everything

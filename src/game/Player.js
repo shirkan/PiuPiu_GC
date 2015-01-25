@@ -19,6 +19,7 @@ var playerConfig = {
 exports = Class(Entity, function() {
 	var sup = Entity.prototype;
 	this.viewClass = ImageView;
+	this.name = "Player";
 
 	this.init = function(opts) {
 		opts = merge(opts, playerConfig);

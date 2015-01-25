@@ -44,6 +44,8 @@ exports = Class(ImageView, function (supr) {
                 strokeWidth: PiuPiuConsts.fontStrokeSize,
                 width: width,
                 height: PiuPiuConsts.fontSizeBig,
+                anchorX: width / 2,
+                anchorY: PiuPiuConsts.fontSizeBig / 2,
                 zIndex: 1,
                 x: (PiuPiuGlobals.winSize.width - width) / 2,
                 y: y
@@ -82,9 +84,11 @@ exports = Class(ImageView, function (supr) {
         animate(obj).now(bind(this,function () {
             obj._opts.color = "blue";
             obj._opts.strokeColor= "yellow";
+            obj.__view.scale = 1.25;
         })).wait(150).then(bind(this,function () {
             obj._opts.color = "yellow";
             obj._opts.strokeColor= "blue";
+            obj.__view.scale = 1;
         }));
     };
 

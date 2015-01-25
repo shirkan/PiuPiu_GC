@@ -45,6 +45,7 @@ exports = Class(GC.Application, function () {
         var game = new Game();
         this.mainMenu.on('game:start', bind(this, function () {
             this.rootView.push(game);
+            game.initLevel();
         }));
     };
 

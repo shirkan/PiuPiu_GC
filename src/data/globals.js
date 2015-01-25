@@ -87,19 +87,20 @@ exports
         PiuPiuConsts.pointsPerEnemyHeadShot = 10;
         PiuPiuConsts.pointsNormalMultiplier = 1;
         PiuPiuConsts.normalUpdateRate = 1;
+        PiuPiuConsts.gameZIndex = 1;
 
         //  Status view
-        PiuPiuConsts.statusZOrder = 10;
+        PiuPiuConsts.statusZIndex = 10;
 
         //  Bullet
         PiuPiuConsts.framesPerSeconds = 1000;
-        PiuPiuConsts.bulletZOrder = 5;
+        PiuPiuConsts.bulletZIndex = 5;
 
         //  Enemy
         PiuPiuConsts.enemyMoveToPoint = (30,240);
         PiuPiuConsts.enemyHeadRadius = 10;
         PiuPiuConsts.enemyHeadOffset = (-6,22);
-        PiuPiuConsts.enemyLocalZOrder = 3;
+        PiuPiuConsts.enemyZIndex = 3;
 
         //  Player
         PiuPiuConsts.handsLength = 83;
@@ -111,14 +112,15 @@ exports
         //  Powerups
         PiuPiuConsts.powerupRadius = 7;
         PiuPiuConsts.powerupCenterPoint = (0,0);
-        PiuPiuConsts.powerupPeriod = 3;
-        PiuPiuConsts.powerupLocalZOrder = 1;
-        PiuPiuConsts.powerupTypes = ["MachineGunPowerUp", "OneUpPowerUp", "CaptainPowerUp", "StopwatchPowerUp"];
-        PiuPiuConsts.powerupMachineGunPeriod = 10;
-        PiuPiuConsts.powerupCaptainPeriod = 20;
+        PiuPiuConsts.powerupPeriod = 3000;
+        PiuPiuConsts.powerupLocalZIndex = 1;
+        PiuPiuConsts.powerupTypes = ["machineGun", "oneUp", "captain", "stopwatch"];
+        PiuPiuConsts.powerupMachineGunPeriod = 10000;
+        PiuPiuConsts.powerupCaptainPeriod = 20000;
         PiuPiuConsts.powerupCaptainMultiplier = 2;
-        PiuPiuConsts.powerupStopwatchPeriod = 10;
+        PiuPiuConsts.powerupStopwatchPeriod = 10000;
         PiuPiuConsts.powerupStopwatchUpdateRate = 5;
+        PiuPiuConsts.powerupZIndex = 2;
 
         //  Facebook
         PiuPiuConsts.FB_appid = "331202163734875";

@@ -9,7 +9,7 @@ import ui.ImageView as ImageView;
 const BULLET_WIDTH = 10;
 const BULLET_HEIGHT = 4;
 var bulletConfig = {
-	zIndex: PiuPiuConsts.bulletZOrder,
+	zIndex: PiuPiuConsts.bulletZIndex,
 	width: BULLET_WIDTH,
 	height: BULLET_HEIGHT,
 	hitBounds: {
@@ -45,25 +45,21 @@ var Bullet = Class(Entity, function() {
 
 exports = Class(EntityPool, function() {
 	var sup = EntityPool.prototype;
-	//var SPAWN_COOLDOWN = config.bullets.spawnCooldown;
 
 	this.init = function(opts) {
-		//this.spawnCooldown = 0;
 		opts.ctor = Bullet;
 		sup.init.call(this, opts);
 	};
 
-	//this.reset = function() {
-	//	this.spawnCooldown = SPAWN_COOLDOWN;
-	//	sup.reset.call(this);
-	//};
-	//
+	this.reset = function() {
+		sup.reset.call(this);
+	};
+
 	this.update = function(dt) {
 		sup.update.call(this, dt);
 	};
 
 	this.spawnBullet = function(bulletStartPoint, bulletPathLengths, endAngle) {
-		//if (app.model.gameOver) { return; }
 		var vx = PiuPiuGlobals.currentUpdateRate * bulletPathLengths.x / PiuPiuConsts.framesPerSeconds;
 		var vy = PiuPiuGlobals.currentUpdateRate * bulletPathLengths.y / PiuPiuConsts.framesPerSeconds;
 		LOG("velocity x: " + vx + " y: " + vy);
@@ -71,7 +67,6 @@ exports = Class(EntityPool, function() {
 		var opts = merge({vx: vx, vy: vy}, bulletConfig);
 		var bullet = this.obtain(bulletStartPoint.x, bulletStartPoint.y, opts);
 		bullet.view.style.r = endAngle;
-		//bullet.view.style.scale = 1;
-		bullet.showHitBounds();
+		//bullet.showHitBounds();
 	};
 });

@@ -232,7 +232,7 @@ exports
     }
 
     initGlobals = function () {
-        PiuPiuGlobals.currentLevel = 0;
+        PiuPiuGlobals.currentLevel = 1;
         PiuPiuGlobals.soundEnabled = parseInt(localStorage.soundEnabled);
         if (PiuPiuGlobals.soundEnabled === undefined || isNaN(PiuPiuGlobals.soundEnabled)) {
             localStorage.soundEnabled = PiuPiuGlobals.soundEnabled = 1;

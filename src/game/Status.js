@@ -5,6 +5,7 @@
 import ui.View as View;
 import ui.ImageView as ImageView;
 import ui.TextView as TextView;
+import animate;
 
 const LIFE_WIDTH = 40;
 const LIFE_HEIGHT = 60;
@@ -29,7 +30,7 @@ exports = Class(View, function (supr) {
 			horizontalAlign: 'left',
 			width: PiuPiuGlobals.winSize.width * 0.2,
 			height: PiuPiuConsts.fontSizeStatus,
-			zIndex: PiuPiuConsts.statusZOrder,
+			zIndex: PiuPiuConsts.statusZIndex,
 			x: PiuPiuGlobals.winSize.width * 0.8,
 			y: (LIFE_HEIGHT  - PiuPiuConsts.fontSizeStatus) / 2
 		});
@@ -54,7 +55,7 @@ exports = Class(View, function (supr) {
 			horizontalAlign: 'left',
 			width: PiuPiuGlobals.winSize.width,
 			height: PiuPiuConsts.fontSizeStatus,
-			zIndex: PiuPiuConsts.statusZOrder,
+			zIndex: PiuPiuConsts.statusZIndex,
 			x: LIFE_WIDTH + 10,
 			y: (LIFE_HEIGHT  - PiuPiuConsts.fontSizeStatus) / 2
 		});
@@ -69,7 +70,24 @@ exports = Class(View, function (supr) {
 	};
 
 	this.displayHeaderMessage = function (msg) {
-
+		var headerMessage = new TextView({
+			name: "headerMessage",
+			superview: this,
+			fontFamily : PiuPiuConsts.fontName,
+			size: PiuPiuConsts.fontSizeStatus,
+			text: msg,
+			color: "yellow",
+			strokeColor: "blue",
+			strokeWidth: PiuPiuConsts.fontStrokeSizeStatus,
+			horizontalAlign: 'center',
+			width: PiuPiuGlobals.winSize.width,
+			height: PiuPiuConsts.fontSizeStatus,
+			zIndex: PiuPiuConsts.statusZIndex,
+			opacity : 1,
+			x: 0,
+			y: (LIFE_HEIGHT  - PiuPiuConsts.fontSizeStatus) / 2
+		});
+		animate(headerMessage).now({opacity : 0}, 2000);
 	};
 
 	this.displayGameOver = function () {

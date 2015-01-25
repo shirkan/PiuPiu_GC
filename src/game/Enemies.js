@@ -6,8 +6,6 @@ import entities.Entity as Entity;
 import entities.EntityPool as EntityPool;
 import ui.ImageView as ImageView;
 
-const ENEMY_WIDTH = 95;
-const ENEMY_HEIGHT = 125;
 const BODY_X = 0;
 const BODY_Y = 45;
 const BODY_WIDTH = 95;
@@ -166,9 +164,12 @@ exports = Class(EntityPool, function() {
 		sup.update.call(this, dt);
 	};
 
-	this.spawnEnemy = function(x, y) {
-		var vx = PiuPiuGlobals.currentUpdateRate * (PiuPiuGlobals.sourcePoint.x - x) / PiuPiuConsts.framesPerSeconds;
-		var vy = PiuPiuGlobals.currentUpdateRate * (PiuPiuGlobals.sourcePoint.y - y) / PiuPiuConsts.framesPerSeconds;
+	this.spawnEnemy = function(x, y, speed) {
+		x = x || PiuPiuGlobals.winSize.width;
+		y = y || randomNumber(0, PiuPiuGlobals.winSize.height);
+		speed = speed || randomNumber(0.5, 1.5);
+		var vx = PiuPiuGlobals.currentUpdateRate * speed * (PiuPiuGlobals.sourcePoint.x - x) / PiuPiuConsts.framesPerSeconds;
+		var vy = PiuPiuGlobals.currentUpdateRate * speed * (PiuPiuGlobals.sourcePoint.y - y) / PiuPiuConsts.framesPerSeconds;
 		var opts = merge({vx: vx, vy: vy}, enemyConfig);
 		var enemy = this.obtain(x, y, opts);
 		enemy.showHitBounds();

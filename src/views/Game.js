@@ -62,6 +62,12 @@ exports = Class(ImageView, function (supr) {
 			this.shootBullet(pt);
 			this.invokeEnemy();
 		});
+
+		this.on('InputMove', function (evt, pt) {
+			if (this.isMachineGunMode) {
+				this.shootBullet(pt, res.sound_machineGun);
+			}
+		});
 	};
 
 	//  Init Level
@@ -103,21 +109,23 @@ exports = Class(ImageView, function (supr) {
 
 	};
 
+
+
 	//  Spawnings
 	this.invokeEnemy = function () {
 		setTimeout(bind(this, function () {
-			this.enemies.spawnEnemy(1000,500);
+			this.enemies.spawnEnemy();
 			this.powerups.spawnPowerup();
 		}), 2000);
 	};
 
-	this.shootBullet = function (pt) {
+	this.shootBullet = function (pt, sound) {
 		//  Angle limits - goes crazy beyond these angles
 		if (pt.x < PiuPiuGlobals.handsAnchor.x) {
 			return false;
 		}
 
-		var sound = res.sound_piu;
+		var sound = sound || res.sound_piu;
 
 		var bulletData = calculateBulletTrigonometry(pt);
 		bulletData.push(sound);
@@ -138,6 +146,9 @@ exports = Class(ImageView, function (supr) {
 
 		this.hands.rotateHands(endAngle);
 	};
+
+
+
 
 	//  Collisions
 	this.onBulletEnemyCollision = function (bullet, enemy) {
@@ -187,19 +198,21 @@ exports = Class(ImageView, function (supr) {
 		eval((powerup.getData()).callback);
 	};
 
+
+
+
 	//  Powerups handling
 	this.machineGunStart = function () {
 		if (this.isMachineGunMode) {
-			clearTimeout(this.machineGunEnd);
+			clearTimeout(this.machineGunTimeOut);
 		} else {
 			this.isMachineGunMode = true;
 			this.updateHandsType();
 		}
-		setTimeout(bind(this, this.machineGunEnd), PiuPiuConsts.powerupMachineGunPeriod);
+		this.machineGunTimeOut = setTimeout(bind(this, this.machineGunEnd), PiuPiuConsts.powerupMachineGunPeriod);
 	};
 
 	this.machineGunEnd = function () {
-		LOG("machineGunEnd");
 		this.isMachineGunMode = false;
 		this.updateHandsType();
 	};
@@ -211,28 +224,34 @@ exports = Class(ImageView, function (supr) {
 
 	this.captainStart = function () {
 		if (this.isCaptainMode) {
-			clearTimeout(this.captainEnd);
+			clearTimeout(this.captainTimeOut);
 		} else {
 			this.isCaptainMode = true;
 			PiuPiuGlobals.currentPointsMultiplier = PiuPiuConsts.powerupCaptainMultiplier;
 			this.updateHandsType();
 		}
-		setTimeout(bind(this, this.captainEnd), PiuPiuConsts.powerupCaptainPeriod);
+		this.captainTimeOut = setTimeout(bind(this, this.captainEnd), PiuPiuConsts.powerupCaptainPeriod);
 	};
 
 	this.captainEnd = function () {
-		LOG("captainEnd");
 		this.isCaptainMode = false;
 		PiuPiuGlobals.currentPointsMultiplier = PiuPiuConsts.pointsNormalMultiplier;
 		this.updateHandsType();
 	};
 
 	this.stopwatchStart = function () {
-		LOG("stopwatchStart");
+		if (this.isStopwatchMode) {
+			clearTimeout(this.stopwatchTimeOut);
+		} else {
+			this.isStopwatchMode = true;
+		}
+		PiuPiuGlobals.currentUpdateRate = PiuPiuConsts.powerupStopwatchUpdateRate;
+		this.stopwatchTimeOut = setTimeout(bind(this, this.stopwatchEnd), PiuPiuConsts.powerupStopwatchPeriod);
 	};
 
 	this.stopwatchEnd = function () {
-		LOG("stopwatchEnd");
+		this.isStopwatchMode = false;
+		PiuPiuGlobals.currentUpdateRate = PiuPiuConsts.normalUpdateRate;
 	};
 
 	this.updateHandsType = function () {
@@ -257,6 +276,9 @@ exports = Class(ImageView, function (supr) {
 		}
 	};
 
+
+
+
 	//  Game endings
 	this.endGame = function () {
 
@@ -266,10 +288,13 @@ exports = Class(ImageView, function (supr) {
 
 	};
 
+
+
+	//  Tick
 	this.tick = function(dt) {
 		// speed up or slow down the passage of time - TODO: understand what is 100
 		dt = Math.min(PiuPiuGlobals.currentUpdateRate * dt, 100);
-	LOG("dt is " + dt);
+
 		// update entities
 		//this.player.update(dt);
 		this.bullets.update(dt);

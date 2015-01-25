@@ -101,6 +101,8 @@ exports
         PiuPiuConsts.enemyHeadRadius = 10;
         PiuPiuConsts.enemyHeadOffset = (-6,22);
         PiuPiuConsts.enemyZIndex = 3;
+        PiuPiuConsts.enemyWidth = 95;
+        PiuPiuConsts.enemyHeight= 125;
 
         //  Player
         PiuPiuConsts.handsLength = 83;
@@ -119,7 +121,7 @@ exports
         PiuPiuConsts.powerupCaptainPeriod = 20000;
         PiuPiuConsts.powerupCaptainMultiplier = 2;
         PiuPiuConsts.powerupStopwatchPeriod = 10000;
-        PiuPiuConsts.powerupStopwatchUpdateRate = 5;
+        PiuPiuConsts.powerupStopwatchUpdateRate = 0.5;
         PiuPiuConsts.powerupZIndex = 2;
 
         //  Facebook

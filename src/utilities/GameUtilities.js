@@ -240,7 +240,7 @@ exports
 
         //  Calculate hands anchor and source point
         PiuPiuGlobals.handsAnchor = makePoint(0.35 * PiuPiuConsts.playerWidth, PiuPiuGlobals.winSize.height / 2 - 0.14 * PiuPiuConsts.playerHeight);
-        PiuPiuGlobals.sourcePoint = makePoint(0, PiuPiuGlobals.winSize.height / 2);
+        PiuPiuGlobals.sourcePoint = makePoint(0, (PiuPiuGlobals.winSize.height - PiuPiuConsts.enemyHeight) / 2);
     }
 
     loadStats = function () {

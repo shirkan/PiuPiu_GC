@@ -98,7 +98,6 @@ exports = Class(EntityPool, function() {
 		//  Check if type exists
 		if (PiuPiuConsts.powerupTypes.indexOf(type) == -1) {
 			type = PiuPiuConsts.powerupTypes[randomNumber(0, PiuPiuConsts.powerupTypes.length, true)];
-			LOG("powerup doesn't exist, invoking random powerup " + type);
 		}
 		var opts = merge(opts, PowerupConfig);
 

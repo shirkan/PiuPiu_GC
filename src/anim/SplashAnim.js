@@ -2,29 +2,43 @@
  * Created by shirkan on 1/3/15.
  */
 
-import ui.ImageView as ImageView;
+//  TODO: implement old animation
 
-exports = Class(ImageView, function(supr) {
+import ui.View as View;
+import src.anim.Ball as Ball;
+import animate;
+
+const FPS = 15;
+const TIME_firstBounce = 2;
+const TIME_secondBounce = 2;
+const TIME_thirdBounce = 2;
+const TIME_roll = 2;
+const X_firstHit = 1/3;
+const X_secondHit = 2/3;
+const X_thirdHit = 5/6;
+const Y_Floor = PiuPiuGlobals.winSize.height - 20;
+const BOUNCE_firstHit = 8;
+const BOUNCE_secondHit = 8;
+const BOUNCE_thirdHit = 5;
+const BOUNCE_roll = 3;
+
+exports = Class(View, function(supr) {
     this.init = function (opts) {
-        opts = merge(opts, {
-            x: 0,
-            y: 0,
-            image: "resources/images/title_screen.png"
-        });
-
         supr(this, 'init', [opts]);
-
         this.build();
     };
 
-    var imageview = new ImageView({
-        superview: parent,
-        image: res.Ball_png,
-        width: 64,
-        height: 64,
-        x: 0,
-        y: 0
-    });
+    this.build = function () {
+        var ball = new Ball({parent: this});
+        const Y_Floor = PiuPiuGlobals.winSize.height - ball.style.height - 20;
+
+        ball.style.x = -ball.style.width;
+        ball.style.y = Y_Floor;
+        ball.style.anchorX = ball.style.width / 2;
+        ball.style.anchorY = ball.style.height / 2;
+
+        animate(ball).now({x : PiuPiuGlobals.winSize.width * 0.8, r : Math.PI * 16}, 4000, animate.easeOut);
+    };
 });
  /*
 var SplashAnim = cc.LayerColor.extend({

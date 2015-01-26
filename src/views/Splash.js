@@ -4,7 +4,7 @@
 
 import ui.View;
 import ui.TextView;
-//import src.anim.SplashAnim as SplashAnim;
+import src.anim.SplashAnim as SplashAnim;
 
 exports = Class(ui.View, function (supr) {
 	this.init = function (opts) {
@@ -36,6 +36,6 @@ exports = Class(ui.View, function (supr) {
 			horizontalAlign: 'center'
 		});
 
-		//var anim = new SplashAnim();
+		var anim = new SplashAnim({parent: this});
 	};
 });

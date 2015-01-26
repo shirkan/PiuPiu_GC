@@ -105,7 +105,9 @@ exports = Class(GC.Application, function () {
 
     this.showMenu = function() {
         clearTimeout(this.switchToMenu);
-        dissolvePushScenes(this.rootView, this.mainMenu, 2000);
+        dissolvePushScenes(this.rootView, this.mainMenu, 2000, bind(this, function() {
+            this.mainMenu.animate();
+        }));
     }
 });
 

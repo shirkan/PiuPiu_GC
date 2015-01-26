@@ -3,6 +3,8 @@ import ui.TextView as TextView;
 import ui.View;
 import animate;
 
+import src.anim.MainMenuAnim as MainMenuAnim;
+
 var yGap = 10;
 var startY = 100;
 var widthRatio = 0.8;
@@ -77,8 +79,11 @@ exports = Class(ImageView, function (supr) {
 
         // Play music
         startMusic();
-
     };
+
+    this.animate = function () {
+        var anim = new MainMenuAnim({parent: this});
+    }
 
     animateText = function ( obj ) {
         animate(obj).now(bind(this,function () {

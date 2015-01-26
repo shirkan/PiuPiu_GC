@@ -57,6 +57,8 @@ exports
         //  Animations
         Goal_png: "resources/images/anim/goal.png",
         Ball_png: "resources/images/anim/ball.png",
+        Player_new_png: "resources/images/anim/Player_new.png",
+        Enemy_new_png: "resources/images/anim/Enemy.png",
 
         //  Main Menu
         FB_png: "resources/images/mainmenu/facebook.png",

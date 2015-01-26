@@ -60,7 +60,7 @@ exports
         PiuPiuConsts = {};
 
         //  Splash screen
-        PiuPiuConsts.splashScreenTimeOut = 3000;
+        PiuPiuConsts.splashScreenTimeOut = 7000;
 
         //  Styles
         //PiuPiuConsts.fontName = res.arcadepi_font;

@@ -68,9 +68,10 @@ exports
         PiuPiuConsts.fontSizeBig = 72;
         PiuPiuConsts.fontSizeNormal = 48;
         PiuPiuConsts.fontSizeSmall = 28;
+        PiuPiuConsts.fontSizeStatus = 32;
+
         PiuPiuConsts.fontStrokeSize = 8;
         PiuPiuConsts.fontStrokeSizeSmall = 4;
-        PiuPiuConsts.fontSizeStatus = 32;
         PiuPiuConsts.fontStrokeSizeStatus = 6;
 
         //  Music
@@ -88,6 +89,7 @@ exports
         PiuPiuConsts.pointsNormalMultiplier = 1;
         PiuPiuConsts.normalUpdateRate = 1;
         PiuPiuConsts.gameZIndex = 1;
+        PiuPiuConsts.canContinueToNextSceneTimeOut = 2000;
 
         //  Status view
         PiuPiuConsts.statusZIndex = 10;

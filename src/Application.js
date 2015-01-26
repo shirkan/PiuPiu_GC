@@ -4,7 +4,9 @@ import src.data.globals;
 import src.utilities.Utilities;
 import src.utilities.GameUtilities;
 import src.utilities.AudioUtilities;
+import src.utilities.AnimationUtilities;
 import device;
+import animate;
 
 import src.views.Splash as Splash;
 import src.views.MainMenu as MainMenu;
@@ -42,10 +44,19 @@ exports = Class(GC.Application, function () {
             this.showMenu();
         }), PiuPiuConsts.splashScreenTimeOut);
 
-        var game = new Game();
+        this.game = new Game();
         this.mainMenu.on('game:start', bind(this, function () {
-            this.rootView.push(game);
-            game.initLevel();
+            dissolvePushScenes(this.rootView, this.game, 3000, bind(this, function() {
+                this.game.startLevel();
+            }));
+        }));
+
+        this.on('game:end', bind (this, function() {
+            dissolvePopScenes(this.rootView, 3000);
+        }));
+
+        this.on('game:levelCompleted', bind (this, function() {
+            //this.rootView.pop();
         }));
     };
 
@@ -94,7 +105,7 @@ exports = Class(GC.Application, function () {
 
     this.showMenu = function() {
         clearTimeout(this.switchToMenu);
-        this.rootView.push(this.mainMenu);
+        dissolvePushScenes(this.rootView, this.mainMenu, 2000);
     }
 });
 

@@ -18,6 +18,8 @@ import src.game.Bullets as Bullets;
 import src.game.Enemies as Enemies;
 import src.game.Powerups as Powerups;
 
+import src.utilities.SpawningMechanism as SpawningMechanism;
+
 exports = Class(ImageView, function (supr) {
 	this.init = function (opts) {
 
@@ -54,24 +56,18 @@ exports = Class(ImageView, function (supr) {
 		//  Prepare powerups
 		this.powerups = new Powerups({ parent: this.gameLayer });
 
-		//  Init settings
-		//this.initLevel();
+		//  Init SM
+		this.enemySM = new SpawningMechanism();
+		this.powerupSM = new SpawningMechanism();
 
-		//  Catch clicks
-		this.on('InputSelect', function (evt, pt) {
-			this.shootBullet(pt);
-			this.invokeEnemy();
-		});
-
-		this.on('InputMove', function (evt, pt) {
-			if (this.isMachineGunMode) {
-				this.shootBullet(pt, res.sound_machineGun);
-			}
-		});
+		//  Register for "ViewDidAppear"
+		this.on('ViewWillAppear', this.initLevel);
 	};
 
 	//  Init Level
 	this.initLevel = function () {
+		loadLevelSettings();
+
 		var map = randomMap();
 		this.style._view.setImage(map);
 
@@ -87,36 +83,44 @@ exports = Class(ImageView, function (supr) {
 		}
 
 		this.status.updateLives(PiuPiuGlobals.livesLeft);
-		/*
+
 		//  Init & start enemies spwaning
 		this.enemySM.init(this, this.spawnEnemy, PiuPiuLevelSettings.enemiesSpawnIntervalType,
 			PiuPiuLevelSettings.enemiesSpawnInterval, PiuPiuLevelSettings.enemiesSpawnIntervalMin,
 			PiuPiuLevelSettings.enemiesSpawnIntervalMax);
-		this.enemySM.start();
 
 		//  Init $ start powerups spawning
 		if (PiuPiuLevelSettings.powerupsTypes == "all") {
 			PiuPiuLevelSettings.powerupsTypes = PiuPiuConsts.powerupTypes;
 		}
-		this.powerupSM.init(this, this.spawnPowerup, PiuPiuLevelSettings.powerupsSpawnIntervalType,
+		this.powerupSM.init(this.powerups, this.powerups.spawnPowerup, PiuPiuLevelSettings.powerupsSpawnIntervalType,
 			PiuPiuLevelSettings.powerupsSpawnInterval, PiuPiuLevelSettings.powerupsSpawnIntervalMin,
 			PiuPiuLevelSettings.powerupsSpawnIntervalMax);
+
+		//  Catch clicks
+		this.on('InputSelect', function (evt, pt) {
+			this.shootBullet(pt);
+		});
+
+		this.on('InputMove', function (evt, pt) {
+			if (this.isMachineGunMode) {
+				this.shootBullet(pt, res.sound_machineGun);
+			}
+		});
+	};
+
+	this.startLevel = function () {
+		this.enemySM.start();
 		this.powerupSM.start();
-		*/
-
-		//TODO: This should be removed
-		this.invokeEnemy();
-
 	};
 
 
 
 	//  Spawnings
-	this.invokeEnemy = function () {
-		setTimeout(bind(this, function () {
-			this.enemies.spawnEnemy();
-			this.powerups.spawnPowerup();
-		}), 2000);
+	this.spawnEnemy = function () {
+		this.enemies.spawnEnemy();
+		PiuPiuLevelSettings.totalEnemiesToSpawn--;
+		PiuPiuLevelSettings.totalEnemiesToSpawn ? this.enemySM.step() : this.enemySM.stop();
 	};
 
 	this.shootBullet = function (pt, sound) {
@@ -174,6 +178,7 @@ exports = Class(ImageView, function (supr) {
 		}
 
 		this.status.updateScore(PiuPiuGlobals.currentScore);
+		this.checkLevelComplete();
 	};
 
 	this.onEnemyPlayerCollision = function (enemy, player) {
@@ -185,9 +190,9 @@ exports = Class(ImageView, function (supr) {
 		PiuPiuGlobals.livesLeft--;
 		if (PiuPiuGlobals.livesLeft < 0) {
 			this.endGame( true, false);
-
 		} else {
 			this.status.updateLives(PiuPiuGlobals.livesLeft);
+			this.checkLevelComplete();
 		}
 	};
 
@@ -196,6 +201,7 @@ exports = Class(ImageView, function (supr) {
 		powerup.release();
 		PiuPiuGlobals.totalPowerUps++;
 		eval((powerup.getData()).callback);
+		this.checkLevelComplete();
 	};
 
 
@@ -281,11 +287,47 @@ exports = Class(ImageView, function (supr) {
 
 	//  Game endings
 	this.endGame = function () {
-
+		//  Display "Game over" message
+		this.status.displayGameOver();
+		//  Stop playing and emit game end
+		this.stopPlaying("game:end");
 	};
 
 	this.levelCompleted = function () {
+		//  Display "Level completed" message
+		this.status.displayLevelCompleted();
+		//  Stop playing and emit game end
+		this.stopPlaying("game:levelCompleted");
+		PiuPiuGlobals.currentLevel++;
+	};
 
+	//  This function checks for completion conditions and invoke levelCompleted if all conditions apply
+	this.checkLevelComplete = function () {
+		if (PiuPiuLevelSettings.totalEnemiesToSpawn == 0 &&
+			PiuPiuLevelSettings.enemiesVanished >= PiuPiuLevelSettings.totalEnemiesToKill) {
+			//PiuPiuGlobals.gameState = GameStates.LevelCompleted;
+			this.levelCompleted();
+			return true;
+		}
+		return false;
+	};
+
+	this.stopPlaying = function ( nextEvent ) {
+		//  Remove all enemies & powerups and stop spawning
+		this.enemySM.stop();
+		this.enemies.reset();
+		this.powerupSM.stop();
+		this.powerups.reset();
+
+		//  Handle moving to next scene
+		setTimeout(bind(this, function () { this.canContinueToNextScene = true}), PiuPiuConsts.canContinueToNextSceneTimeOut);
+		this.unsubscribe("InputSelect", this);
+		this.on('InputSelect', function (evt, pt) {
+			if (this.canContinueToNextScene) {
+				this.status.emit('removeMessages');
+				GC.app.emit(nextEvent);
+			}
+		});
 	};
 
 

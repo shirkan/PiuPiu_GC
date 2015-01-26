@@ -9,7 +9,7 @@ exports
 {
     makePoint = function (x, y) {
         return {"x":x, "y" : y}
-    }
+    };
 
     calculateBulletTrigonometry = function ( point ) {
         var bulletEndPoint = {};
@@ -66,28 +66,28 @@ exports
 
         return [bulletStartPoint, bulletPathLengths, endAngle];
 
-    }
+    };
 
     calculateDistanceBetween2Points = function ( p1, p2) {
         return Math.sqrt( Math.pow((p2.x - p1.x), 2) + Math.pow((p2.y - p1.y), 2));
-    }
+    };
 
     calculateGradientOfLine = function (p1, p2) {
         var dx = p1.x - p2.x;
         var dy = p1.y - p2.y;
         return (dy / dx);
-    }
+    };
 
     sinusSentence = function ( alpha, lineLength ) {
         return lineLength/Math.sin(alpha);
-    }
+    };
 
     //  return (a = value of x, b = free value): y = ax + b
     calculateLineFrom2points = function (p1, p2) {
         var a = (p2.y - p1.y) / (p2.x - p1.x);
         var b = (p2.x * p1.y - p1.x * p2.y) / (p2.x - p1.x);
         return (a,b);
-    }
+    };
 
     //  p11, p12 are points on line 1, p21, p22 are points on line 2
     calculateAngleBetween2Lines = function (p11, p12, p21, p22) {
@@ -95,7 +95,7 @@ exports
         var m2 = calculateGradientOfLine(p21, p22);
         tan = Math.abs((m2 - m1) / (1+ m1 * m2));
         return Math.atan(tan);
-    }
+    };
 
     calculateHalfCirclePathFrom2Points = function ( ps, pe, steps, direction, clockwise) {
         if (steps < 3) {
@@ -129,7 +129,7 @@ exports
         }
 
         return points;
-    }
+    };
 
     //  TODO: FIX THIS FUNC
     calculateHalfCirclePathFrom3Points = function ( ps, pm, pe, steps, direction, clockwise) {
@@ -195,7 +195,7 @@ exports
 
         //points.push(pe);
         return points;
-    }
+    };
 
     //  ps - p for start, pe - p for end, pc - p for center
     //  TODO: FIX THIS FUNC
@@ -229,7 +229,7 @@ exports
         }
 
         return points;
-    }
+    };
 
     initGlobals = function () {
         PiuPiuGlobals.currentLevel = 1;
@@ -241,7 +241,7 @@ exports
         //  Calculate hands anchor and source point
         PiuPiuGlobals.handsAnchor = makePoint(0.35 * PiuPiuConsts.playerWidth, PiuPiuGlobals.winSize.height / 2 - 0.14 * PiuPiuConsts.playerHeight);
         PiuPiuGlobals.sourcePoint = makePoint(0, (PiuPiuGlobals.winSize.height - PiuPiuConsts.enemyHeight) / 2);
-    }
+    };
 
     loadStats = function () {
         for (var i in PiuPiuGlobals.statsNames) {
@@ -254,14 +254,14 @@ exports
         if (localStorage.highScore) {
             PiuPiuGlobals.highScore = localStorage.highScore;
         }
-    }
+    };
 
     updateStats = function () {
         for (var i in PiuPiuGlobals.statsNames) {
             var val = eval("PiuPiuGlobals." + PiuPiuGlobals.statsNames[i]);
             localStorage.setItem(PiuPiuGlobals.statsNames[i], val);
         }
-    }
+    };
 
     handleHighScore = function () {
         var localHighScore = PiuPiuGlobals.highScore;
@@ -280,17 +280,12 @@ exports
         if (FBisLoggedIn()) {
             FBpostHighScore(highScore);
         }
-    }
+    };
 
     randomMap = function () {
         var mapNum = randomNumber(1, 10, true);
         return res["BG_grass" + mapNum + "_png"];
-    }
-
-    var powerupTag = SpriteTag.MinPowerup;
-    function getTag() {
-        return powerupTag++;
-    }
+    };
 
     //  Levels load
     loadAllLevels = function () {
@@ -300,54 +295,40 @@ exports
             LOG("loading file " + fileName);
             PiuPiuLevels[i] = {};
             PiuPiuLevels[i] = JSON.parse(CACHE[fileName]);
+
+            //  Check defaults
+
+            //  Type of level
+            PiuPiuLevels[i].levelType = PiuPiuLevels[i].levelType || levelType.EliminateAllEnemies;
+            //  Enemies to spawn
             PiuPiuLevels[i].totalEnemiesToKill = PiuPiuLevels[i].totalEnemiesToSpawn = PiuPiuLevels[i].totalEnemies;
+            PiuPiuLevels[i].enemiesVanished = 0;
+            PiuPiuLevels[i].enemiesSpawnInterval = PiuPiuLevels[i].enemiesSpawnInterval || 2;
+            PiuPiuLevels[i].enemiesSpawnIntervalMin = PiuPiuLevels[i].enemiesSpawnIntervalMin || 0;
+            PiuPiuLevels[i].enemiesSpawnIntervalMax = PiuPiuLevels[i].enemiesSpawnIntervalMax || 0;
+            PiuPiuLevels[i].enemiesSpawnIntervalType = PiuPiuLevels[i].enemiesSpawnIntervalType || "constantTempo";
+
+            //  Power ups policy
+            PiuPiuLevels[i].powerupsSpawnInterval = PiuPiuLevels[i].powerupsSpawnInterval || 2;
+            PiuPiuLevels[i].powerupsSpawnIntervalMin = PiuPiuLevels[i].powerupsSpawnIntervalMin || 0;
+            PiuPiuLevels[i].powerupsSpawnIntervalMax = PiuPiuLevels[i].powerupsSpawnIntervalMax || 0;
+            PiuPiuLevels[i].powerupsSpawnIntervalType = PiuPiuLevels[i].powerupsSpawnIntervalType || "none";
+            PiuPiuLevels[i].powerupsTypes = PiuPiuLevels[i].powerupsTypes || "";
+
+            //  Animation
+            PiuPiuLevels[i].animation = PiuPiuLevels[i].animation || "";
+
+            //  Special notations
+            PiuPiuLevels[i].specialNotations = PiuPiuLevels[i].specialNotations || [];
+            PiuPiuLevels[i].hint = PiuPiuLevels[i].hint || "";
+
             fileName = "resources/levels/level" + (++i) + ".json";
         }
-    }
-
-    //loadAllLevels = function () {
-    //    var self = this;
-    //    var i = 1;
-    //    var fileName = "src/levels/level" + i + ".json";
-    //    while (isFileExist(fileName) && i <=4) {
-    //        (function (_i) {
-    //            cc.loader.loadJson(fileName, function (error, data) {
-    //                LOG("loadAllLevels: loading level " + _i);
-    //                PiuPiuLevels[_i] = {};
-    //                //  Type of level
-    //                PiuPiuLevels[_i].levelType = data["levelType"] || levelType.EliminateAllEnemies;
-    //                //  Enemies to spawn
-    //                PiuPiuLevels[_i].totalEnemiesToKill = PiuPiuLevels[_i].totalEnemiesToSpawn = data["totalEnemies"];
-    //                PiuPiuLevels[_i].enemiesVanished = 0;
-    //                PiuPiuLevels[_i].enemiesSpawnInterval = data["enemiesSpawnInterval"] || 2;
-    //                PiuPiuLevels[_i].enemiesSpawnIntervalMin = data["enemiesSpawnIntervalMin"] || 0;
-    //                PiuPiuLevels[_i].enemiesSpawnIntervalMax = data["enemiesSpawnIntervalMax"] || 0;
-    //                PiuPiuLevels[_i].enemiesSpawnIntervalType = data["enemiesSpawnIntervalType"] || "constantTempo";
-    //
-    //                //  Power ups policy
-    //                PiuPiuLevels[_i].powerupsSpawnInterval = data["powerupsSpawnInterval"] || 2;
-    //                PiuPiuLevels[_i].powerupsSpawnIntervalMin = data["powerupsSpawnIntervalMin"] || 0;
-    //                PiuPiuLevels[_i].powerupsSpawnIntervalMax = data["powerupsSpawnIntervalMax"] || 0;
-    //                PiuPiuLevels[_i].powerupsSpawnIntervalType = data["powerupsSpawnIntervalType"] || "none";
-    //                PiuPiuLevels[_i].powerupsTypes = data["powerupsTypes"] || "";
-    //
-    //                //  Animation
-    //                PiuPiuLevels[_i].animation = data["animation"] || "";
-    //
-    //                //  Special notations
-    //                PiuPiuLevels[_i].specialNotations = data["specialNotations"] || [];
-    //                PiuPiuLevels[_i].hint = data["hint"] || "";
-    //            });
-    //        })(i);
-    //
-    //        var fileName = "src/levels/level" + (++i) + ".json";
-    //    }
-    //}
-
+    };
     loadLevelSettings = function () {
         LOG("loadLevelSettings: loading level " + PiuPiuGlobals.currentLevel);
         PiuPiuLevelSettings = JSON.parse(JSON.stringify(PiuPiuLevels[PiuPiuGlobals.currentLevel]));
-    }
+    };
 
     getLevelTypeString = function () {
         switch (PiuPiuLevelSettings.levelType) {
@@ -364,7 +345,7 @@ exports
                 return "Achieve X points"
             }
         }
-    }
+    };
 
     specialNotationDoesContain = function ( item ) {
         var i = PiuPiuLevelSettings.specialNotations.length;
@@ -374,5 +355,5 @@ exports
             }
         }
         return false;
-    }
+    };
 }

@@ -4,16 +4,16 @@
 
 import ui.ImageView as ImageView;
 
-const ENEMY_WIDTH = 80;
-const ENEMY_HEIGHT = 200;
+const PLAYER_WIDTH = 200;
+const PLAYER_HEIGHT = 125;
 
 exports = Class(ImageView, function(supr) {
 	this.init = function (opts) {
-		this.name = "AnimEnemy";
+		this.name = "AnimGoal";
 		opts = merge(opts, {
-			width: ENEMY_WIDTH,
-			height: ENEMY_HEIGHT,
-			image: res.Enemy_new_png
+			width: PLAYER_WIDTH,
+			height: PLAYER_HEIGHT,
+			image: res.Goal_png
 		});
 
 		supr(this, 'init', [opts]);

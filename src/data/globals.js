@@ -6,7 +6,6 @@ import src.data.resources;
 
 exports
 {
-    console.log("loading globals");
 
     if(typeof TagOfLayer == "undefined") {
         TagOfLayer = {};
@@ -117,7 +116,6 @@ exports
         PiuPiuConsts.powerupRadius = 7;
         PiuPiuConsts.powerupCenterPoint = (0,0);
         PiuPiuConsts.powerupPeriod = 3000;
-        PiuPiuConsts.powerupLocalZIndex = 1;
         PiuPiuConsts.powerupTypes = ["machineGun", "oneUp", "captain", "stopwatch"];
         PiuPiuConsts.powerupMachineGunPeriod = 10000;
         PiuPiuConsts.powerupCaptainPeriod = 20000;

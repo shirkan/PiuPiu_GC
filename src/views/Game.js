@@ -22,15 +22,13 @@ import src.utilities.SpawningMechanism as SpawningMechanism;
 
 exports = Class(ImageView, function (supr) {
 	this.init = function (opts) {
-
+		this.name = "GameView";
 		opts = merge(opts, {
 			name: "Game",
 			x: 0,
 			y: 0
 		});
-
 		supr(this, 'init', [opts]);
-
 		this.build();
 	};
 
@@ -66,8 +64,6 @@ exports = Class(ImageView, function (supr) {
 
 	//  Init Level
 	this.initLevel = function () {
-		loadLevelSettings();
-
 		var map = randomMap();
 		this.style._view.setImage(map);
 

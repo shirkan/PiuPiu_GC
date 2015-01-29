@@ -2,6 +2,5 @@
   "totalEnemies": 3,
   "enemiesSpawnInterval": 300,
   "specialNotations": ["center"],
-  "hint" : "Shoot down enemies and avoid being hit by them!",
-  "animation" : "Level1Anim"
+  "hint" : "Touch the screen to shoot down enemies.\nAvoid being hit by them!"
 }

@@ -7,41 +7,70 @@ import src.anim.Ball as Ball;
 import src.anim.Player as Player;
 import src.anim.Enemy as Enemy;
 
+const CIRCLE = Math.PI * 2;
+
 exports = Class(View, function(supr) {
     this.init = function (opts) {
         supr(this, 'init', [opts]);
-        this.build();
+        this.player = new Player({parent: this});
+        this.enemy = new Enemy({parent: this});
+        this.ball = new Ball({parent: this});
+        this.resetAnimation();
     };
 
-    this.build = function () {
-        var player = new Player({parent: this});
-        var enemy = new Enemy({parent: this});
-        var ball = new Ball({parent: this});
-        const Y_Floor = PiuPiuGlobals.winSize.height - 20;
+    this.resetAnimation = function () {
+        clearInterval(this.timer);
+        animate(this.player).clear();
+        animate(this.ball).clear();
+        animate(this.enemy).clear();
+
+        this.Y_FLOOR = PiuPiuGlobals.winSize.height - 20;
 
         //  Init
-        player.style.x = -player.style.width;
-        player.style.y = Y_Floor - player.style.height;
-        var xPlayerStanding = PiuPiuGlobals.winSize.width * 0.1;
+        this.player.style.x = -this.player.style.width;
+        this.player.style.y = this.Y_FLOOR - this.player.style.height;
+        this.xPlayerStanding = PiuPiuGlobals.winSize.width * 0.1;
+        
+        this.ball.style.x = -this.ball.style.width;
+        this.ball.style.y = this.Y_FLOOR - this.ball.style.height;
+        this.ball.style.anchorX = this.ball.style.width / 2;
+        this.ball.style.anchorY = this.ball.style.height / 2;
+        this.ball.style.scale = 0.7;
 
-        ball.style.x = -ball.style.width;
-        ball.style.y = Y_Floor - ball.style.height;
-        ball.style.anchorX = ball.style.width / 2;
-        ball.style.anchorY = ball.style.height / 2;
-        ball.style.scale = 0.7;
+        var playerBallGap = this.player.style.width - this.ball.style.width;
+        this.xBallStanding = this.xPlayerStanding + playerBallGap;
 
-        var playerBallGap = player.style.width - ball.style.width;
-        var xBallStanding = xPlayerStanding + playerBallGap;
+        this.enemy.style.x = PiuPiuGlobals.winSize.width;
+        this.enemy.style.y = this.Y_FLOOR - this.enemy.style.height;
+        this.enemy.style.anchorX = this.enemy.style.width / 2;
+        this.enemy.style.anchorY = this.enemy.style.height / 2;
+        this.xEnemyStanding = PiuPiuGlobals.winSize.width * 0.9 - this.enemy.style.width;
+    };
 
-        enemy.style.x = PiuPiuGlobals.winSize.width;
-        enemy.style.y = Y_Floor - enemy.style.height;
-        var xEnemyStanding = PiuPiuGlobals.winSize.width * 0.9 - enemy.style.width;
+    this.restartAnimation = function () {
+        this.ENTER_TIME = 2000;
+        this.SHOOT_TIME = 300;
+        this.ENEMY_SPINNING_TIME = 500;
+        this.ENEMY_WAITING_TIME = 2000;
 
         //  Animate
-        animate(player).now({x : xPlayerStanding}, 2000, animate.easeOut);
-        animate(ball).now({x : xBallStanding, r : Math.PI * 8}, 2000, animate.easeOut);
-        animate(enemy).now({x : xEnemyStanding}, 2000, animate.easeOut);
+        animate(this.player).now({x : this.xPlayerStanding}, this.ENTER_TIME, animate.easeOut);
+        animate(this.ball).now({x : this.xBallStanding, r : CIRCLE * 4}, this.ENTER_TIME, animate.easeOut);
+        animate(this.enemy).now({x : this.xEnemyStanding}, this.ENTER_TIME, animate.easeOut);
+
+        animate(this).wait(this.ENTER_TIME).then(bind(this, this.loop));
+        //this.timer = setInterval(bind(this, this.loop), 7000);
     };
+    
+    this.loop = function () {
+        this.enemy.style.r = 0;
+        animate(this.ball).now({x: this.xEnemyStanding, y: this.enemy.style.y, r: CIRCLE}, this.SHOOT_TIME, animate.linear).
+            then({x: this.xBallStanding,  y: this.Y_FLOOR - this.ball.style.height,  r: -CIRCLE * 4}, this.SHOOT_TIME, animate.linear);
+        animate(this.enemy).wait(this.SHOOT_TIME).
+            then({x: PiuPiuGlobals.winSize.width, r: CIRCLE * 2}, this.ENEMY_SPINNING_TIME, animate.linear).
+            wait(this.ENEMY_WAITING_TIME).
+            then({x : this.xEnemyStanding}, this.ENTER_TIME, animate.easeOut);
+    }
 });
 
     /*

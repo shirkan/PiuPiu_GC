@@ -11,6 +11,10 @@ import animate;
 import src.views.Splash as Splash;
 import src.views.MainMenu as MainMenu;
 import src.views.Game as Game;
+import src.views.Statistics as Statistics;
+
+import src.anim.IntroAnim as IntroAnim;
+import src.anim.LevelAnim as LevelAnim;
 
 import ui.TextView;
 
@@ -30,12 +34,19 @@ exports = Class(GC.Application, function () {
             height: PiuPiuGlobals.winSize.height,
             clip: true
         });
+        
+        const ANIMATING_SCENES_TIME = 500;
 
         var splash = new Splash();
+        this.mainMenu = new MainMenu();
+        this.introAnim = new IntroAnim();
+        this.levelAnim = new LevelAnim();
+        this.game = new Game();
+        this.stats = new Statistics();
+
         this.rootView.push(splash);
 
-        this.mainMenu = new MainMenu();
-
+        //  Splash screen handling
         splash.on('InputSelect', bind(this, function () {
             this.showMenu();
         }));
@@ -44,20 +55,58 @@ exports = Class(GC.Application, function () {
             this.showMenu();
         }), PiuPiuConsts.splashScreenTimeOut);
 
-        this.game = new Game();
-        this.mainMenu.on('game:start', bind(this, function () {
-            dissolvePushScenes(this.rootView, this.game, 3000, bind(this, function() {
-                this.game.startLevel();
+        //  Main Menu handling - Start
+        this.mainMenu.on("intro:start", bind(this, function() {
+            dissolvePushScenes(this.rootView, this.introAnim, ANIMATING_SCENES_TIME, bind(this, function() {
+                this.introAnim.restart();
+                this.mainMenu.resetView();
             }));
         }));
 
+        this.on('intro:end', bind(this, function () {
+            loadLevelSettings();
+            dissolvePushScenes(this.rootView, this.levelAnim, ANIMATING_SCENES_TIME, bind(this, function() {
+                this.rootView.remove(this.introAnim);
+                this.introAnim.reset();
+                this.levelAnim.animateLevel();
+            }));
+        }));
+
+        this.on('cutscene:end', bind(this, function () {
+            dissolvePushScenes(this.rootView, this.game, ANIMATING_SCENES_TIME, bind(this, function() {
+                this.game.startLevel();
+
+                this.rootView.remove(this.levelAnim);
+                this.levelAnim.reset();
+            }));
+        }));
+
+        //  Game handling
         this.on('game:end', bind (this, function() {
-            dissolvePopScenes(this.rootView, 3000);
+            PiuPiuGlobals.currentLevel = 1;
+            updateStats();
+            dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate))
         }));
 
         this.on('game:levelCompleted', bind (this, function() {
-            //this.rootView.pop();
+            loadLevelSettings();
+            updateStats();
+            dissolvePushScenes(this.rootView, this.levelAnim, ANIMATING_SCENES_TIME, bind(this, function() {
+                this.rootView.remove(this.game);
+                this.levelAnim.animateLevel();
+            }));
         }));
+
+        //  Main Menu handling - Statistics
+        this.mainMenu.on('stats:start', bind (this, function () {
+            dissolvePushScenes(this.rootView, this.stats, ANIMATING_SCENES_TIME, bind(this, function () {
+                this.stats.build();
+                this.mainMenu.resetView();
+            }));
+        }));
+        this.on('stats:end', function () {
+            dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate))
+        });
     };
 
     this.launchUI = function () {};
@@ -104,8 +153,9 @@ exports = Class(GC.Application, function () {
     };
 
     this.showMenu = function() {
+        const SPLASH_TO_MENU_TIME = 1500;
         clearTimeout(this.switchToMenu);
-        dissolvePushScenes(this.rootView, this.mainMenu, 2000, bind(this, function() {
+        dissolvePushScenes(this.rootView, this.mainMenu, SPLASH_TO_MENU_TIME, bind(this, function() {
             this.mainMenu.animate();
         }));
     }

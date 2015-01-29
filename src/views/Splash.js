@@ -8,6 +8,7 @@ import src.anim.SplashAnim as SplashAnim;
 
 exports = Class(ui.View, function (supr) {
 	this.init = function (opts) {
+		this.name = "SplashView";
 		opts = merge(opts, {
 			x: 0,
 			y: 0,

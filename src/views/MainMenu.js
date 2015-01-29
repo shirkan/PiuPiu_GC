@@ -5,13 +5,13 @@ import animate;
 
 import src.anim.MainMenuAnim as MainMenuAnim;
 
-var yGap = 10;
-var startY = 100;
-var widthRatio = 0.8;
+const yGap = 10;
+const startY = 100;
+const widthRatio = 0.8;
 
 exports = Class(ImageView, function (supr) {
     this.init = function (opts) {
-        //  Set BG
+        this.name = "MainMenuView";
         opts = merge(opts, {
             x: 0,
             y: 0,
@@ -20,6 +20,7 @@ exports = Class(ImageView, function (supr) {
 
         supr(this, 'init', [opts]);
 
+        this.anim = new MainMenuAnim({parent: this});
         this.build();
     };
 
@@ -30,7 +31,6 @@ exports = Class(ImageView, function (supr) {
             entries[1] = "Sound off";
         }
         this.menu = {};
-        var self = this;
 
         for (var i=0; i< entries.length; i++) {
             var y = startY + i * (PiuPiuConsts.fontSizeBig + yGap );
@@ -54,36 +54,55 @@ exports = Class(ImageView, function (supr) {
             });
         }
 
+        this.isMenuClickable = true;
         this.menu[0].on('InputSelect', bind (this, function() {
-            //animate(this.menu[0]).now({scale: 1.5}, 100).then({scale: 1}, 100);
+            if (!this.isMenuClickable) { return }
+            this.isMenuClickable = false;
+
             animateText(this.menu[0]);
             LOG(entries[0]);
-            this.emit('game:start');
+            this.emit('intro:start');
         }));
         this.menu[1].on('InputSelect', bind (this, function() {
             animateText(this.menu[1]);
             this.soundToggle();
         }));
         this.menu[2].on('InputSelect', bind (this, function() {
+            if (!this.isMenuClickable) { return }
+            this.isMenuClickable = false;
+
             animateText(this.menu[2]);
             LOG(entries[2]);
+            this.emit('stats:start');
         }));
         this.menu[3].on('InputSelect', bind (this, function() {
+            //if (!this.isMenuClickable) { return }
+            //this.isMenuClickable = false;
+
             animateText(this.menu[3]);
             LOG(entries[3]);
         }));
         this.menu[4].on('InputSelect', bind (this, function() {
+            //if (!this.isMenuClickable) { return }
+            //this.isMenuClickable = false;
+
             animateText(this.menu[4]);
             LOG(entries[4]);
         }));
 
         // Play music
         startMusic();
+        this.reset
     };
 
     this.animate = function () {
-        var anim = new MainMenuAnim({parent: this});
-    }
+        this.anim.restartAnimation();
+    };
+
+    this.resetView = function () {
+        this.isMenuClickable = true;
+        this.anim.resetAnimation();
+    };
 
     animateText = function ( obj ) {
         animate(obj).now(bind(this,function () {

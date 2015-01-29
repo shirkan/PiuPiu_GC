@@ -9,6 +9,7 @@ const PLAYER_HEIGHT = 170;
 
 exports = Class(ImageView, function(supr) {
 	this.init = function (opts) {
+		this.name = "AnimPlayer";
 		opts = merge(opts, {
 			width: PLAYER_WIDTH,
 			height: PLAYER_HEIGHT,

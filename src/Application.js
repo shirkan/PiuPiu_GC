@@ -58,7 +58,7 @@ exports = Class(GC.Application, function () {
         //  Main Menu handling - Start
         this.mainMenu.on("intro:start", bind(this, function() {
             dissolvePushScenes(this.rootView, this.introAnim, ANIMATING_SCENES_TIME, bind(this, function() {
-                this.introAnim.restart();
+                this.introAnim.restartAnimation();
                 this.mainMenu.resetView();
             }));
         }));
@@ -67,7 +67,7 @@ exports = Class(GC.Application, function () {
             loadLevelSettings();
             dissolvePushScenes(this.rootView, this.levelAnim, ANIMATING_SCENES_TIME, bind(this, function() {
                 this.rootView.remove(this.introAnim);
-                this.introAnim.reset();
+                this.introAnim.resetAnimation();
                 this.levelAnim.animateLevel();
             }));
         }));

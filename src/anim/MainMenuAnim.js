@@ -15,16 +15,26 @@ exports = Class(View, function(supr) {
         this.player = new Player({parent: this});
         this.enemy = new Enemy({parent: this});
         this.ball = new Ball({parent: this});
+
+        this.Y_FLOOR = PiuPiuGlobals.winSize.height - 20;
+        this.ENTER_TIME = 2000;
+        this.SHOOT_TIME = 300;
+        this.ENEMY_SPINNING_TIME = 500;
+        this.ENEMY_WAITING_TIME = 2000;
+        this.ANIMATION_PART_A = this.SHOOT_TIME / (this.ENTER_TIME + this.SHOOT_TIME);
+
         this.resetAnimation();
     };
 
-    this.resetAnimation = function () {
-        clearInterval(this.timer);
+    this.clearAll = function () {
         animate(this.player).clear();
         animate(this.ball).clear();
         animate(this.enemy).clear();
+    };
 
-        this.Y_FLOOR = PiuPiuGlobals.winSize.height - 20;
+    this.resetAnimation = function () {
+        this.isRunning = false;
+        this.clearAll();
 
         //  Init
         this.player.style.x = -this.player.style.width;
@@ -33,6 +43,7 @@ exports = Class(View, function(supr) {
         
         this.ball.style.x = -this.ball.style.width;
         this.ball.style.y = this.Y_FLOOR - this.ball.style.height;
+        this.ball.style.r = 0;
         this.ball.style.anchorX = this.ball.style.width / 2;
         this.ball.style.anchorY = this.ball.style.height / 2;
         this.ball.style.scale = 0.7;
@@ -42,34 +53,56 @@ exports = Class(View, function(supr) {
 
         this.enemy.style.x = PiuPiuGlobals.winSize.width;
         this.enemy.style.y = this.Y_FLOOR - this.enemy.style.height;
+        this.enemy.style.r = 0;
         this.enemy.style.anchorX = this.enemy.style.width / 2;
         this.enemy.style.anchorY = this.enemy.style.height / 2;
         this.xEnemyStanding = PiuPiuGlobals.winSize.width * 0.9 - this.enemy.style.width;
     };
 
     this.restartAnimation = function () {
-        this.ENTER_TIME = 2000;
-        this.SHOOT_TIME = 300;
-        this.ENEMY_SPINNING_TIME = 500;
-        this.ENEMY_WAITING_TIME = 2000;
+        this.clearAll();
+        this.isRunning = true;
 
         //  Animate
         animate(this.player).now({x : this.xPlayerStanding}, this.ENTER_TIME, animate.easeOut);
-        animate(this.ball).now({x : this.xBallStanding, r : CIRCLE * 4}, this.ENTER_TIME, animate.easeOut);
-        animate(this.enemy).now({x : this.xEnemyStanding}, this.ENTER_TIME, animate.easeOut);
-
-        animate(this).wait(this.ENTER_TIME).then(bind(this, this.loop));
-        //this.timer = setInterval(bind(this, this.loop), 7000);
+        animate(this.ball).now({x : this.xBallStanding, r : CIRCLE * 4}, this.ENTER_TIME, animate.easeOut).
+            then(ballAnimation.bind(this));
+        animate(this.enemy).now({x : this.xEnemyStanding}, this.ENTER_TIME + this.SHOOT_TIME, animate.linear);
+            //then(enemyAnimation.bind(this));
     };
-    
-    this.loop = function () {
-        this.enemy.style.r = 0;
-        animate(this.ball).now({x: this.xEnemyStanding, y: this.enemy.style.y, r: CIRCLE}, this.SHOOT_TIME, animate.linear).
+
+    ballAnimation = function () {
+        if (!this.isRunning) {
+            return;
+        }
+        animate(this.ball).clear().
+            now({x: this.xEnemyStanding + this.enemy.style.width * 0.2, y: this.enemy.style.y, r: CIRCLE}, this.SHOOT_TIME, animate.linear).
+            then( bind(this, function () {
+                if (this.isRunning) {
+                    enemyAnimation.call(this);
+                }
+            })).
             then({x: this.xBallStanding,  y: this.Y_FLOOR - this.ball.style.height,  r: -CIRCLE * 4}, this.SHOOT_TIME, animate.linear);
-        animate(this.enemy).wait(this.SHOOT_TIME).
+
+    }
+    
+    enemyAnimation = function () {
+        if (!this.isRunning) {
+            return;
+        }
+
+        this.enemy.style.r = 0;
+
+        animate(this.enemy).clear().
             then({x: PiuPiuGlobals.winSize.width, r: CIRCLE * 2}, this.ENEMY_SPINNING_TIME, animate.linear).
             wait(this.ENEMY_WAITING_TIME).
-            then({x : this.xEnemyStanding}, this.ENTER_TIME, animate.easeOut);
+            then({x : this.xEnemyStanding + this.ANIMATION_PART_A * (PiuPiuGlobals.winSize.width - this.xEnemyStanding)}, this.ENTER_TIME, animate.linear).
+            then(bind(this, function () {
+                if (this.isRunning) {
+                    ballAnimation.call(this);
+                }
+            })).
+            then({x : this.xEnemyStanding}, this.SHOOT_TIME, animate.linear);
     }
 });
 

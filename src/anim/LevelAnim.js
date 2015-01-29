@@ -41,6 +41,15 @@ exports = Class(ImageView, function(supr) {
         this.enemy.hide();
         this.bullet.hide();
         this.levelText.hide();
+
+        this.clearAll();
+    }
+
+    this.clearAll = function () {
+        animate(this.player).clear();
+        animate(this.enemy).clear();
+        animate(this.bullet).clear();
+        clearTimeout(this.timer);
     }
 
     this.animateLevel1 = function () {
@@ -49,6 +58,8 @@ exports = Class(ImageView, function(supr) {
         const ENTERING_TIME = 1500;
         const ANIM_TIMEOUT = 10000;
         const SHOOT_TIME = 800;
+
+        this.clearAll();
 
         //  Init
         this.player.style.x = -this.player.style.width;

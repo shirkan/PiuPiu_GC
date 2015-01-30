@@ -12,6 +12,8 @@ var bulletConfig = {
 	zIndex: PiuPiuConsts.bulletZIndex,
 	width: BULLET_WIDTH,
 	height: BULLET_HEIGHT,
+	anchorX: BULLET_WIDTH / 2,
+	anchorY: BULLET_HEIGHT / 2,
 	hitBounds: {
 		x: 0,
 		y: 0,
@@ -28,13 +30,11 @@ var Bullet = Class(Entity, function() {
 	this.viewClass = ImageView;
 
 	this.init = function(opts) {
-		//opts = merge(opts, bulletConfig);
 		sup.init.call(this, opts);
 	};
 
 	this.update = function(dt) {
 		sup.update.call(this, dt);
-		//var b = this.viewBounds;
 		if (this.y >= PiuPiuGlobals.winSize.height ||
 			this.y <= 0 ||
 			this.x >= PiuPiuGlobals.winSize.width) {
@@ -60,13 +60,12 @@ exports = Class(EntityPool, function() {
 	};
 
 	this.spawnBullet = function(bulletStartPoint, bulletPathLengths, endAngle) {
-		var vx = PiuPiuGlobals.currentUpdateRate * bulletPathLengths.x / PiuPiuConsts.framesPerSeconds;
-		var vy = PiuPiuGlobals.currentUpdateRate * bulletPathLengths.y / PiuPiuConsts.framesPerSeconds;
-		LOG("velocity x: " + vx + " y: " + vy);
+		var vx = bulletPathLengths.x / PiuPiuConsts.framesPerSeconds;
+		var vy = bulletPathLengths.y / PiuPiuConsts.framesPerSeconds;
 
 		var opts = merge({vx: vx, vy: vy}, bulletConfig);
 		var bullet = this.obtain(bulletStartPoint.x, bulletStartPoint.y, opts);
 		bullet.view.style.r = endAngle;
-		//bullet.showHitBounds();
+		bullet.showHitBounds();
 	};
 });

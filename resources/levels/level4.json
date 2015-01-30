@@ -1,7 +1,7 @@
 {
   "totalEnemies" : -1,
-  "enemiesSpawnInterval": 0.4,
-  "powerupsSpawnInterval": 5,
+  "enemiesSpawnInterval": 400,
+  "powerupsSpawnInterval": 5000,
   "powerupsTypes": "all",
   "powerupsSpawnIntervalMin": 200,
   "powerupsSpawnIntervalMax": 300,

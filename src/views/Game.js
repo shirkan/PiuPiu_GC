@@ -106,6 +106,7 @@ exports = Class(ImageView, function (supr) {
 	};
 
 	this.startLevel = function () {
+		LOG("starting level")
 		this.enemySM.start();
 		this.powerupSM.start();
 	};
@@ -114,9 +115,14 @@ exports = Class(ImageView, function (supr) {
 
 	//  Spawnings
 	this.spawnEnemy = function () {
-		this.enemies.spawnEnemy();
-		PiuPiuLevelSettings.totalEnemiesToSpawn--;
-		PiuPiuLevelSettings.totalEnemiesToSpawn ? this.enemySM.step() : this.enemySM.stop();
+		LOG("spawn enemy started");
+		if (PiuPiuLevelSettings.totalEnemiesToSpawn > 0) {
+			this.enemies.spawnEnemy();
+			PiuPiuLevelSettings.totalEnemiesToSpawn--;
+			this.enemySM.step();
+		} else {
+			this.enemySM.stop();
+		}
 	};
 
 	this.shootBullet = function (pt, sound) {
@@ -332,6 +338,7 @@ exports = Class(ImageView, function (supr) {
 	this.tick = function(dt) {
 		// speed up or slow down the passage of time - TODO: understand what is 100
 		dt = Math.min(PiuPiuGlobals.currentUpdateRate * dt, 100);
+		//dt = 10;
 
 		// update entities
 		//this.player.update(dt);

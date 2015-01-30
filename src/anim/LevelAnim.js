@@ -20,13 +20,18 @@ exports = Class(ImageView, function(supr) {
         //  Create LevelText
         this.levelText = new LevelText({parent: this});
         //  Hold levels animations here
-        this.levels = [null, this.animateLevel1, this.animateLevel2];
+        this.levels = [null, this.animateLevel1, this.animateLevel2, this.animateLevel3, this.animateLevel4];
         
         //  Create objects required here
         this.player = new Player({parent: this});
         this.enemy = new Enemy({parent: this});
         this.bullet = new Bullet({parent: this});
         this.reset();
+
+        this.on("InputSelect", bind(this, function () {
+            clearTimeout(this.timer);
+            GC.app.emit("cutscene:end");
+        }));
     };
 
     this.animateLevel = function () {
@@ -34,6 +39,7 @@ exports = Class(ImageView, function(supr) {
 
         //  Invoke animation function
         (this.levels[PiuPiuGlobals.currentLevel]).call(this);
+        this.timer = setTimeout(function () { GC.app.emit("cutscene:end")}, ANIM_TIMEOUT);
     };
 
     this.reset = function () {
@@ -43,14 +49,14 @@ exports = Class(ImageView, function(supr) {
         this.levelText.hide();
 
         this.clearAll();
-    }
+    };
 
     this.clearAll = function () {
         animate(this.player).clear();
         animate(this.enemy).clear();
         animate(this.bullet).clear();
         clearTimeout(this.timer);
-    }
+    };
 
     this.animateLevel1 = function () {
         //  consts
@@ -89,14 +95,15 @@ exports = Class(ImageView, function(supr) {
             })
         );
 
-        //this.timer = setTimeout(function () { GC.app.emit("cutscene:end")}, ANIM_TIMEOUT);
-        this.on("InputSelect", bind(this, function () {
-            clearTimeout(this.timer);
-            GC.app.emit("cutscene:end");
-        }));
     };
 
     this.animateLevel2 = function () {
+
+    };
+    this.animateLevel3 = function () {
+
+    };
+    this.animateLevel4 = function () {
 
     };
 });

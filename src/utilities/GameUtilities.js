@@ -4,6 +4,7 @@
 
 import src.data.globals;
 import device;
+import math.geom.Point as Point;
 
 exports
 {
@@ -58,11 +59,13 @@ exports
             }
         }
 
-        //  Calculate length of X-axis & Y-axis, to determine spee on each axis
-        bulletPathLengths = makePoint(bulletEndPoint.x - bulletStartPoint.x, bulletEndPoint.y - bulletStartPoint.y);
+        //  Calculate length of X-axis & Y-axis, to determine speed on each axis
+        var p = new Point(bulletEndPoint.x - bulletStartPoint.x, bulletEndPoint.y - bulletStartPoint.y);
+        //  Need to normalize point so shooting will have same speed
+        p.setMagnitude(PiuPiuGlobals.winSize.width);
 
-        LOG("Shooting from x: " + bulletStartPoint.x + " y: " + bulletStartPoint.y + " to x: " + bulletEndPoint.x + " y: " + bulletEndPoint.y);
-        LOG("Path length x: " + bulletPathLengths.x + " y: " + bulletPathLengths.y);
+        bulletPathLengths = makePoint(p.x, p.y);
+        p = null;
 
         return [bulletStartPoint, bulletPathLengths, endAngle];
 

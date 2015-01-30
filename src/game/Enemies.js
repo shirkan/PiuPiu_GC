@@ -52,14 +52,14 @@ var EnemyHead = Class(Entity, function() {
 
 	this.reset = function(x, y, config) {
 		config.hitBounds = headConfig.hitBounds;
-		sup.reset.call(this, x + HEAD_X, y + HEAD_Y, config);
+		sup.reset.call(this, x, y, config);
 	};
 
 	this.update = function(dt, player) {
 		sup.update.call(this, dt);
 
-		this.x = player.x + HEAD_X;
-		this.y = player.y + HEAD_Y;
+		this.x = player.x;
+		this.y = player.y;
 	};
 
 	this.showHitBounds = function (view) {
@@ -76,14 +76,14 @@ var EnemyBody = Class(Entity, function() {
 
 	this.reset = function(x, y, config) {
 		config.hitBounds = bodyConfig.hitBounds;
-		sup.reset.call(this, x + BODY_X, y + BODY_Y, config);
+		sup.reset.call(this, x, y, config);
 	};
 
 	this.update = function(dt, player) {
 		sup.update.call(this, dt);
 
-		this.x = player.x + BODY_X;
-		this.y = player.y + BODY_Y;
+		this.x = player.x;
+		this.y = player.y;
 	};
 
 	this.showHitBounds = function (view) {
@@ -142,7 +142,6 @@ var Enemy = Class(Entity, function() {
 	};
 
 	this.showHitBounds = function () {
-		sup.showHitBounds.call(this);
 		this.head.showHitBounds(this.view);
 		this.body.showHitBounds(this.view);
 	}

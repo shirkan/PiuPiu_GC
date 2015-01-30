@@ -80,7 +80,7 @@ exports = Class(ImageView, function(supr) {
         animate(this.ball).now({x : this.xBallStanding, r : Math.PI * 8}, this.ENTER_TIME, animate.easeOut).
             then({x: this.goal.style.x + this.ball.style.width * this.BALL_SCALE, y: this.goal.style.y + this.ball.style.height / 2 * this.BALL_SCALE, r: Math.PI * 6}, 1000, animate.linear).
             then({x: this.goal.style.x + this.goal.style.width * 0.5, y: this.goal.style.y + this.goal.style.height / 2, r: Math.PI * 3}, 500, animate.linear).
-            then({y: this.Y_FLOOR - this.ball.style.height, r: Math.PI * 3}, this.ENTER_TIME, animate.linear);
+            then({y: this.Y_FLOOR - this.ball.style.height, r: Math.PI * 3}, 500, animate.linear);
         animate(this.enemy1).wait(this.ENEMY_WAITING_TIME).
             then({x : PiuPiuGlobals.winSize.width - this.enemy1.style.width, y:0}, this.ENTER_TIME, animate.easeOut);
         animate(this.enemy2).wait(this.ENEMY_WAITING_TIME).

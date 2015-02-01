@@ -5,6 +5,16 @@
 import src.utilities.Utilities;
 import src.data.globals;
 import facebook as FB;
+//
+//FB.onReady.run(function () {
+//    FB.init({
+//        appId: CONFIG.modules.facebook.facebookAppID,
+//        displayName: CONFIG.modules.facebook.facebookDisplayName,
+//        // other config
+//    });
+//
+//    // Ready to use FB!
+//});
 
 // ***** Facebook utilities *****
 exports
@@ -33,7 +43,7 @@ exports
     }
 
     FBlogin = function (target, success_callback, error_callback) {
-        LOG("FBlogin: asking for  the following permissions: " +PiuPiuConsts.FBpermissionsNeeded);
+        LOG("FBlogin: asking for the following permissions: " + PiuPiuConsts.FBpermissionsNeeded);
         FB.login(PiuPiuConsts.FBpermissionsNeeded, function(code, response){
             if(code == plugin.FacebookAgent.CODE_SUCCEED){
                 LOG("FBlogin: login succeeded");

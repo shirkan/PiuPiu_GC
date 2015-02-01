@@ -5,8 +5,11 @@ import src.utilities.Utilities;
 import src.utilities.GameUtilities;
 import src.utilities.AudioUtilities;
 import src.utilities.AnimationUtilities;
+import src.utilities.FBUtilities;
 import device;
 import animate;
+
+//import .parse as parse;
 
 import src.views.Splash as Splash;
 import src.views.MainMenu as MainMenu;
@@ -140,12 +143,20 @@ exports = Class(GC.Application, function () {
         PiuPiuGlobals.commonGrassMap = randomMap();
 
         //  Init Facebook
-        //FBinit();
+        FBinit();
 
         //handleHighScore();
 
         //  Load all levels
         loadAllLevels();
+
+        //parse.Parse.initialize("YfOISFZAxRmajUe9l6Sh3BL5lpekZfqBzRLFmCBU", "MxFgCdHsmFKt0VG2rwdxd1A1e7qpwRwHNFLpQcfS");
+        //var TestObject = parse.Parse.Object.extend("TestObject");
+        //var testObject = new TestObject();
+        //testObject.save({foo: "bar"}).then(function(object) {
+        //    alert("yay! it worked");
+        //});
+
     };
 
     this.showMenu = function() {

@@ -2,3 +2,4 @@ cocos/*
 modules/*
 .idea/*
 build/*
+tmp_resources/*

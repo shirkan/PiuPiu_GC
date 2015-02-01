@@ -56,6 +56,7 @@ exports = Class(ImageView, function (supr) {
 
         this.isMenuClickable = true;
         this.menu[0].on('InputSelect', bind (this, function() {
+            //  Start
             if (!this.isMenuClickable) { return }
             this.isMenuClickable = false;
 
@@ -64,10 +65,12 @@ exports = Class(ImageView, function (supr) {
             this.emit('intro:start');
         }));
         this.menu[1].on('InputSelect', bind (this, function() {
+            //  Sound
             animateText(this.menu[1]);
             this.soundToggle();
         }));
         this.menu[2].on('InputSelect', bind (this, function() {
+            //  Stats
             if (!this.isMenuClickable) { return }
             this.isMenuClickable = false;
 
@@ -76,13 +79,16 @@ exports = Class(ImageView, function (supr) {
             this.emit('stats:start');
         }));
         this.menu[3].on('InputSelect', bind (this, function() {
+            //  Leaderboard
             //if (!this.isMenuClickable) { return }
             //this.isMenuClickable = false;
 
             animateText(this.menu[3]);
             LOG(entries[3]);
+            this.runFBanimation();
         }));
         this.menu[4].on('InputSelect', bind (this, function() {
+            //  Achievements
             //if (!this.isMenuClickable) { return }
             //this.isMenuClickable = false;
 
@@ -92,7 +98,9 @@ exports = Class(ImageView, function (supr) {
 
         // Play music
         startMusic();
-        this.reset
+
+        //  Handle FB login
+        this.showFBlogo();
     };
 
     this.animate = function () {
@@ -102,6 +110,8 @@ exports = Class(ImageView, function (supr) {
     this.resetView = function () {
         this.isMenuClickable = true;
         this.anim.resetAnimation();
+        this.resetFBLogo();
+        this.resetFBText();
     };
 
     animateText = function ( obj ) {
@@ -126,7 +136,97 @@ exports = Class(ImageView, function (supr) {
             this.menu[1].setText("Sound on");
             startMusic();
         }
-    }
+    };
+
+    this.showFBlogo = function () {
+        this.FB_LOGO_SIZE = 64;
+        this.FBlogo = new ImageView({
+            name: "FB Logo",
+            superview: this,
+            width: this.FB_LOGO_SIZE,
+            height: this.FB_LOGO_SIZE,
+            image: res.FB_png,
+            zIndex: 1,
+            x: (PiuPiuGlobals.winSize.width - this.FB_LOGO_SIZE) / 2,
+            y: PiuPiuGlobals.winSize.height - this.FB_LOGO_SIZE - PiuPiuConsts.fontSizeSmall
+        });
+
+        var text = "You must login to Facebook to enable this feature. We are *NOT* going to post anything on your wall/timeline without clearly stating so.";
+        var textWidth = PiuPiuConsts.fontSizeSmall * text.length * widthRatio * 0.7;
+        this.FBtext = new TextView({
+            superview: this,
+            fontFamily : PiuPiuConsts.fontName,
+            size: PiuPiuConsts.fontSizeSmall,
+            text: text,
+            color: "yellow",
+            strokeColor: "blue",
+            strokeWidth: PiuPiuConsts.fontStrokeSizeSmall,
+            width: textWidth,
+            height: PiuPiuConsts.fontSizeSmall,
+            horizontalAlign: "left",
+            zIndex: 1,
+            x: PiuPiuGlobals.winSize.width + 1,
+            y: PiuPiuGlobals.winSize.height - PiuPiuConsts.fontSizeSmall
+        });
+        this.FBlogo.on('InputSelect', function () {
+
+        });
+    };
+
+    this.runFBanimation = function () {
+        this.animateFBlogo();
+        this.animateFBText();
+    };
+
+    this.animateFBlogo = function () {
+        if (this.isAnimatingFBLogin) {
+            return;
+        }
+
+        this.isAnimatingFBLogin = true;
+        const SHAKE_TIME = 50;
+        const BIAS = 20;
+        const LEFT = (PiuPiuGlobals.winSize.width - this.FB_LOGO_SIZE - BIAS) / 2;
+        const RIGHT = (PiuPiuGlobals.winSize.width - this.FB_LOGO_SIZE + BIAS) / 2;
+        const CENTER = (PiuPiuGlobals.winSize.width - this.FB_LOGO_SIZE ) / 2;
+
+        animate(this.FBlogo).now({x: LEFT},SHAKE_TIME).
+            then({x: CENTER}, SHAKE_TIME).
+            then({x: RIGHT}, SHAKE_TIME).
+            then({x: CENTER}, SHAKE_TIME).
+            then({x: LEFT}, SHAKE_TIME).
+            then({x: CENTER}, SHAKE_TIME).
+            then({x: RIGHT}, SHAKE_TIME).
+            then({x: CENTER}, SHAKE_TIME).
+            then({x: LEFT}, SHAKE_TIME).
+            then({x: CENTER}, SHAKE_TIME).
+            then({x: RIGHT}, SHAKE_TIME).
+            then({x: CENTER}, SHAKE_TIME).
+            then(this.resetFBLogo.bind(this));
+    };
+
+    this.resetFBLogo = function () {
+        animate(this.FBlogo).clear();
+        this.isAnimatingFBLogin = false;
+    };
+
+    this.animateFBText = function (){
+        if (this.isAnimatingText) {
+            return;
+        }
+
+        this.isAnimatingText = true;
+        const TEXT_TIME = 20000;
+
+        animate(this.FBtext).now({x: -1 * this.FBtext.style.width}, TEXT_TIME, animate.linear).
+            then(this.resetFBText.bind(this));
+    };
+
+    this.resetFBText = function () {
+        animate(this.FBtext).clear();
+        this.isAnimatingText = false;
+        this.FBtext.style.x = PiuPiuGlobals.winSize.width + 1;
+    };
 
 });
 

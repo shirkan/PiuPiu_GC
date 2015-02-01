@@ -171,6 +171,6 @@ exports = Class(EntityPool, function() {
 		var vy = PiuPiuGlobals.currentUpdateRate * speed * (PiuPiuGlobals.sourcePoint.y - y) / PiuPiuConsts.framesPerSeconds;
 		var opts = merge({vx: vx, vy: vy}, enemyConfig);
 		var enemy = this.obtain(x, y, opts);
-		enemy.showHitBounds();
+		//enemy.showHitBounds();
 	};
 });

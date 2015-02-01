@@ -16,7 +16,7 @@ const TIME_roll = 2;
 const X_firstHit = 1/3;
 const X_secondHit = 2/3;
 const X_thirdHit = 5/6;
-const Y_Floor = PiuPiuGlobals.winSize.height - 20;
+const Y_Floor = PiuPiuGlobals.winSize.height - PiuPiuConsts.fontSizeSmall;
 const BOUNCE_firstHit = 8;
 const BOUNCE_secondHit = 8;
 const BOUNCE_thirdHit = 5;
@@ -31,38 +31,29 @@ exports = Class(View, function(supr) {
     this.build = function () {
         const BALL_SIZE = 32;
         const FIRST_BOUNCE_TIME = 2000;
-        this.Y_FLOOR = (PiuPiuGlobals.winSize.height - BALL_SIZE - 20);
+        const SECOND_BOUNCE_TIME = 2000;
+        const THIRD_BOUNCE_TIME = 2000;
+        const FOURTH_BOUNCE_TIME = 2000;
+        this.Y_FLOOR = (PiuPiuGlobals.winSize.height - BALL_SIZE - PiuPiuConsts.fontSizeSmall);
 
         //  Points of ground hit
         //  Starting point
         var p1 = makePoint(0, PiuPiuGlobals.winSize.height / 2);
 
         //  Radial point is relative to p1
-        var p12 = makePoint(0, PiuPiuGlobals.winSize.height / 2 - BALL_SIZE - 20);
-
-        //  First hit = 28% width
-        var p2 = makePoint(PiuPiuGlobals.winSize.width * this.X_firstHit, this.Y_FLOOR);
+        var p12 = makePoint(0, PiuPiuGlobals.winSize.height / 2 - BALL_SIZE - PiuPiuConsts.fontSizeSmall);
 
         //  Radius point for second bounce
-        var p23 = makePoint(PiuPiuGlobals.winSize.width * 0.35, this.Y_FLOOR);
-
-        //  Second hit = 42%
-        var p3 = makePoint(PiuPiuGlobals.winSize.width * this.X_secondHit, this.Y_FLOOR);
+        var p23 = makePoint(PiuPiuGlobals.winSize.width * 0.3, BALL_SIZE / 2);
 
         //  Radius point for third bounce
-        var p34 = makePoint(PiuPiuGlobals.winSize.width * 0.46, this.Y_FLOOR);
-
-        //  Third hit = 50%
-        var p4 = makePoint(PiuPiuGlobals.winSize.width * this.X_thirdHit , this.Y_FLOOR);
+        var p34 = makePoint(PiuPiuGlobals.winSize.width * 0.43, BALL_SIZE / 2);
 
         //  Radius point for forth bounce
-        var p45 = makePoint(PiuPiuGlobals.winSize.width * 0.525, this.Y_FLOOR);
+        var p45 = makePoint(PiuPiuGlobals.winSize.width * 0.53, BALL_SIZE / 2);
 
-        //  Forth hit = 55%
-        var p5 = makePoint(PiuPiuGlobals.winSize.width * this.X_thirdHit , this.Y_FLOOR);
-
-        //  Roll over to 70%
-        var p6 = makePoint(PiuPiuGlobals.winSize.width * 0.7 , this.Y_FLOOR);
+        //  roll
+        var p5 = makePoint(PiuPiuGlobals.winSize.width * 0.65 , BALL_SIZE / 2);
 
         var ballView = new View({
             name: "ballView",
@@ -81,20 +72,67 @@ exports = Class(View, function(supr) {
         ball.style.anchorX = ball.style.width / 2;
         ball.style.anchorY = ball.style.height / 2;
 
-        //animate(ball).now({r : Math.PI * 16}, FIRST_BOUNCE_TIME, animate.easeInCubic);
-        animate(ballView).now({r : Math.PI * 0.5}, FIRST_BOUNCE_TIME, animate.easeInCubic).
-            wait(2000).
+        ballSpin = function (spins, time, type) {
+            if (type === undefined) {
+                type = animate.linear;
+            }
+            ball.animate({r: Math.PI * 2 * spins}, time, type);
+        }
+
+        //animate(ball).now({r : Math.PI * 16}, FIRST_BOUNCE_TIME, animate.linear);
+        ballSpin(6, FIRST_BOUNCE_TIME);
+        animate(ballView).now({r : Math.PI * 0.5}, FIRST_BOUNCE_TIME, animate.linear).
+            //wait(5000).
+            then(bind(this, function() {
+                LOG("x: " + ballView.style.x + " y: " + ballView.style.y);
+                //  Get position in ABSOLUTE cords, need to scale them.
+                var pos = ballView.getPosition();
+                ballView.style.x = (1 / PiuPiuGlobals.winSize.scale) * (pos.x) - BALL_SIZE;
+                ballView.style.y = (1 / PiuPiuGlobals.winSize.scale) * (pos.y) - BALL_SIZE / 2;
+                ballView.style.anchorY = p23.y;
+                ballView.style.anchorX = (1 / PiuPiuGlobals.winSize.scale) * (p23.x - pos.x);
+                ballView.style.r = 0;
+                //ball.style.r = Math.PI * 0.5;
+                ballSpin(10, FIRST_BOUNCE_TIME);
+                LOG("x: " + ballView.style.x + " y: " + ballView.style.y);
+            })).
+            then({r: Math.PI}, SECOND_BOUNCE_TIME, animate.linear).
+            //wait(2000).
             then(bind(this, function() {
                 //  Get position in ABSOLUTE cords, need to scale them.
                 var pos = ballView.getPosition();
                 ballView.style.x = (1 / PiuPiuGlobals.winSize.scale) * (pos.x) - BALL_SIZE;
-                ballView.style.y = (1 / PiuPiuGlobals.winSize.scale) * pos.y;
-                ballView.style.anchorY = 0;
-                ballView.style.anchorX = 0;
+                ballView.style.y = (1 / PiuPiuGlobals.winSize.scale) * (pos.y) - BALL_SIZE;
+                ballView.style.anchorY = p34.y;
+                ballView.style.anchorX = (1 / PiuPiuGlobals.winSize.scale) * (p34.x - pos.x);
                 ballView.style.r = 0;
-                ball.style.r = Math.PI * 0.5;
+                //ball.style.r = Math.PI;
+                ballSpin(14, SECOND_BOUNCE_TIME);
+                LOG("x: " + ballView.style.x + " y: " + ballView.style.y);
             })).
-            then({r: Math.PI}, FIRST_BOUNCE_TIME, animate.easeInCubic);
+            then({r: Math.PI}, THIRD_BOUNCE_TIME, animate.linear).
+            //wait(2000).
+            then(bind(this, function() {
+                //  Get position in ABSOLUTE cords, need to scale them.
+                var pos = ballView.getPosition();
+                ballView.style.x = (1 / PiuPiuGlobals.winSize.scale) * (pos.x) - BALL_SIZE;
+                ballView.style.y = (1 / PiuPiuGlobals.winSize.scale) * (pos.y) - BALL_SIZE;
+                ballView.style.anchorY = p45.y;
+                ballView.style.anchorX = (1 / PiuPiuGlobals.winSize.scale) * (p45.x - pos.x);
+                ballView.style.r = 0;
+                //ball.style.r = Math.PI;
+                ballSpin(16, THIRD_BOUNCE_TIME);
+                LOG("x: " + ballView.style.x + " y: " + ballView.style.y);
+            })).
+            then({r: Math.PI}, FOURTH_BOUNCE_TIME, animate.linear).
+            then(bind(this, function() {
+                //ball.style.r = Math.PI;
+                ballSpin(18, FOURTH_BOUNCE_TIME, animate.easeOut);
+            })).
+            then({x: p5.x},FOURTH_BOUNCE_TIME, animate.easeOut).
+            then(bind(this, function() {
+                GC.app.emit("splashAnim:end");
+            }))
     };
 });
  /*

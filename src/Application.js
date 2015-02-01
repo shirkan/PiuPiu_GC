@@ -135,9 +135,6 @@ exports = Class(GC.Application, function () {
         //  Load stats
         loadStats();
 
-        //  Loads hands
-        //cc.spriteFrameCache.addSpriteFrames(res.Hands_plist);
-
         setMusicVolume(PiuPiuConsts.musicVolume);
 
         PiuPiuGlobals.commonGrassMap = randomMap();
@@ -148,7 +145,6 @@ exports = Class(GC.Application, function () {
         //handleHighScore();
 
         //  Load all levels
-        //  PAY ATTENTION! THIS CAUSE A FAILURE AND STOPS LOADING OTHER THINGS AFTERWARDS!
         loadAllLevels();
     };
 

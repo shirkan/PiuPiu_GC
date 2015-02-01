@@ -66,6 +66,6 @@ exports = Class(EntityPool, function() {
 		var opts = merge({vx: vx, vy: vy}, bulletConfig);
 		var bullet = this.obtain(bulletStartPoint.x, bulletStartPoint.y, opts);
 		bullet.view.style.r = endAngle;
-		bullet.showHitBounds();
+		//bullet.showHitBounds();
 	};
 });

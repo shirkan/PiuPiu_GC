@@ -10,6 +10,10 @@ import facebook as FB;
 exports
 {
     FBinit = function () {
+        //  Check that the user has granted accessed before
+        if (!PiuPiuGlobals.FBdidAccessed) {
+            return;
+        }
         if (FBisLoggedIn()) {
             LOG("FBinit: logged in!");
         } else {

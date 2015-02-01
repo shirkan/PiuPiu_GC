@@ -25,6 +25,6 @@ exports = Class(Entity, function() {
 		opts = merge(opts, playerConfig);
 		sup.init.call(this, opts);
 		sup.reset.call(this, 0, (PiuPiuGlobals.winSize.height - PiuPiuConsts.playerHeight) / 2, playerConfig);
-		this.showHitBounds();
+		//this.showHitBounds();
 	};
 });

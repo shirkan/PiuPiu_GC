@@ -25,7 +25,7 @@ exports = Class(ImageView, function(supr) {
         this.goal = new Goal({parent: this});
 
         this.BALL_SCALE = 0.7;
-        this.Y_FLOOR = PiuPiuGlobals.winSize.height - 20;
+        this.Y_FLOOR = PiuPiuGlobals.winSize.height - PiuPiuConsts.fontSizeSmall;
         this.ENTER_TIME = 2000;
         this.ENEMY_WAITING_TIME = 7000;
         this.TIMEUP = 9000;

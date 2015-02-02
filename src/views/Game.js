@@ -100,7 +100,7 @@ exports = Class(ImageView, function (supr) {
 
 		this.on('InputMove', function (evt, pt) {
 			if (this.isMachineGunMode) {
-				this.shootBullet(pt, res.sound_machineGun);
+				this.shootBullet(pt, "machineGun");
 			}
 		});
 	};
@@ -115,7 +115,6 @@ exports = Class(ImageView, function (supr) {
 
 	//  Spawnings
 	this.spawnEnemy = function () {
-		LOG("spawn enemy started");
 		if (PiuPiuLevelSettings.totalEnemiesToSpawn > 0) {
 			this.enemies.spawnEnemy();
 			PiuPiuLevelSettings.totalEnemiesToSpawn--;
@@ -131,7 +130,7 @@ exports = Class(ImageView, function (supr) {
 			return false;
 		}
 
-		var sound = sound || res.sound_piu;
+		var sound = sound || "piu";
 
 		var bulletData = calculateBulletTrigonometry(pt);
 		bulletData.push(sound);
@@ -169,6 +168,7 @@ exports = Class(ImageView, function (supr) {
 			//  Headshot
 			PiuPiuGlobals.currentScore += (PiuPiuGlobals.currentPointsMultiplier * PiuPiuConsts.pointsPerEnemyHeadShot);
 			PiuPiuGlobals.totalPoints += (PiuPiuGlobals.currentPointsMultiplier * PiuPiuConsts.pointsPerEnemyHeadShot);
+			PiuPiuGlobals.totalHeadShots++;
 
 			//  Display headshot in status
 			this.status.displayHeaderMessage("Headshot!");
@@ -184,7 +184,6 @@ exports = Class(ImageView, function (supr) {
 	};
 
 	this.onEnemyPlayerCollision = function (enemy, player) {
-		LOG("Enemy hit player");
 		enemy.release();
 
 		//  Update level settings

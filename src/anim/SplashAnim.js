@@ -55,7 +55,7 @@ exports = Class(View, function(supr) {
         //  roll
         var p5 = makePoint(PiuPiuGlobals.winSize.width * 0.65 , BALL_SIZE / 2);
 
-        var ballView = new View({
+        this.ballView = new View({
             name: "ballView",
             parent: this,
             superview: this,
@@ -67,7 +67,7 @@ exports = Class(View, function(supr) {
             anchorX: p12.x,
             anchorY: p12.y
         });
-        var ball = new Ball({parent: ballView});
+        var ball = new Ball({parent: this.ballView});
 
         ball.style.anchorX = ball.style.width / 2;
         ball.style.anchorY = ball.style.height / 2;
@@ -81,51 +81,55 @@ exports = Class(View, function(supr) {
 
         //animate(ball).now({r : Math.PI * 16}, FIRST_BOUNCE_TIME, animate.linear);
         ballSpin(6, FIRST_BOUNCE_TIME);
-        animate(ballView).now({r : Math.PI * 0.5}, FIRST_BOUNCE_TIME, animate.linear).
+        animate(this.ballView).now({r : Math.PI * 0.5}, FIRST_BOUNCE_TIME, animate.linear).
             //wait(5000).
             then(bind(this, function() {
-                LOG("x: " + ballView.style.x + " y: " + ballView.style.y);
+                playSound("ballHitGround");
+                LOG("x: " + this.ballView.style.x + " y: " + this.ballView.style.y);
                 //  Get position in ABSOLUTE cords, need to scale them.
-                var pos = ballView.getPosition();
-                ballView.style.x = (1 / PiuPiuGlobals.winSize.scale) * (pos.x) - BALL_SIZE;
-                ballView.style.y = (1 / PiuPiuGlobals.winSize.scale) * (pos.y) - BALL_SIZE / 2;
-                ballView.style.anchorY = p23.y;
-                ballView.style.anchorX = (1 / PiuPiuGlobals.winSize.scale) * (p23.x - pos.x);
-                ballView.style.r = 0;
+                var pos = this.ballView.getPosition();
+                this.ballView.style.x = (1 / PiuPiuGlobals.winSize.scale) * (pos.x) - BALL_SIZE;
+                this.ballView.style.y = (1 / PiuPiuGlobals.winSize.scale) * (pos.y) - BALL_SIZE / 2;
+                this.ballView.style.anchorY = p23.y;
+                this.ballView.style.anchorX = (1 / PiuPiuGlobals.winSize.scale) * (p23.x - pos.x);
+                this.ballView.style.r = 0;
                 //ball.style.r = Math.PI * 0.5;
                 ballSpin(10, FIRST_BOUNCE_TIME);
-                LOG("x: " + ballView.style.x + " y: " + ballView.style.y);
+                LOG("x: " + this.ballView.style.x + " y: " + this.ballView.style.y);
             })).
             then({r: Math.PI}, SECOND_BOUNCE_TIME, animate.linear).
             //wait(2000).
             then(bind(this, function() {
+                playSound("ballHitGround");
                 //  Get position in ABSOLUTE cords, need to scale them.
-                var pos = ballView.getPosition();
-                ballView.style.x = (1 / PiuPiuGlobals.winSize.scale) * (pos.x) - BALL_SIZE;
-                ballView.style.y = (1 / PiuPiuGlobals.winSize.scale) * (pos.y) - BALL_SIZE;
-                ballView.style.anchorY = p34.y;
-                ballView.style.anchorX = (1 / PiuPiuGlobals.winSize.scale) * (p34.x - pos.x);
-                ballView.style.r = 0;
+                var pos = this.ballView.getPosition();
+                this.ballView.style.x = (1 / PiuPiuGlobals.winSize.scale) * (pos.x) - BALL_SIZE;
+                this.ballView.style.y = (1 / PiuPiuGlobals.winSize.scale) * (pos.y) - BALL_SIZE;
+                this.ballView.style.anchorY = p34.y;
+                this.ballView.style.anchorX = (1 / PiuPiuGlobals.winSize.scale) * (p34.x - pos.x);
+                this.ballView.style.r = 0;
                 //ball.style.r = Math.PI;
                 ballSpin(14, SECOND_BOUNCE_TIME);
-                LOG("x: " + ballView.style.x + " y: " + ballView.style.y);
+                LOG("x: " + this.ballView.style.x + " y: " + this.ballView.style.y);
             })).
             then({r: Math.PI}, THIRD_BOUNCE_TIME, animate.linear).
             //wait(2000).
             then(bind(this, function() {
+                playSound("ballHitGround");
                 //  Get position in ABSOLUTE cords, need to scale them.
-                var pos = ballView.getPosition();
-                ballView.style.x = (1 / PiuPiuGlobals.winSize.scale) * (pos.x) - BALL_SIZE;
-                ballView.style.y = (1 / PiuPiuGlobals.winSize.scale) * (pos.y) - BALL_SIZE;
-                ballView.style.anchorY = p45.y;
-                ballView.style.anchorX = (1 / PiuPiuGlobals.winSize.scale) * (p45.x - pos.x);
-                ballView.style.r = 0;
+                var pos = this.ballView.getPosition();
+                this.ballView.style.x = (1 / PiuPiuGlobals.winSize.scale) * (pos.x) - BALL_SIZE;
+                this.ballView.style.y = (1 / PiuPiuGlobals.winSize.scale) * (pos.y) - BALL_SIZE;
+                this.ballView.style.anchorY = p45.y;
+                this.ballView.style.anchorX = (1 / PiuPiuGlobals.winSize.scale) * (p45.x - pos.x);
+                this.ballView.style.r = 0;
                 //ball.style.r = Math.PI;
                 ballSpin(16, THIRD_BOUNCE_TIME);
-                LOG("x: " + ballView.style.x + " y: " + ballView.style.y);
+                LOG("x: " + this.ballView.style.x + " y: " + this.ballView.style.y);
             })).
             then({r: Math.PI}, FOURTH_BOUNCE_TIME, animate.linear).
             then(bind(this, function() {
+                playSound("ballHitGround");
                 //ball.style.r = Math.PI;
                 ballSpin(18, FOURTH_BOUNCE_TIME, animate.easeOut);
             })).
@@ -134,6 +138,10 @@ exports = Class(View, function(supr) {
                 GC.app.emit("splashAnim:end");
             }))
     };
+
+    this.resetAnimation = function () {
+        animate(this.ballView).clear();
+    }
 });
  /*
 var SplashAnim = cc.LayerColor.extend({

@@ -72,49 +72,6 @@ exports
         place4_png : "resources/images/leaderboard/place4.png",
         place5_png : "resources/images/leaderboard/place5.png",
         place6_png : "resources/images/leaderboard/place6.png",
-        place7_png : "resources/images/leaderboard/place7.png",
-
-        //  Sounds
-        sound_hineZeBa: "resources/sounds/hineZeBa.mp3",
-        sound_shaar: "resources/sounds/shaar.mp3",
-        sound_ohedNichnasLamigrash: "resources/sounds/ohedNichnasLamigrash.mp3",
-        sound_piu: "resources/sounds/piu.mp3",
-        sound_machineGun: "resources/sounds/machineGun.mp3",
-        sound_headshot: "resources/sounds/headshot.mp3",
-        sound_ballHitGround: "resources/sounds/ballHitGround.mp3",
-        sound_achievement_complete: "resources/sounds/achievement_complete.mp3",
-
-        //  Chants
-
-        music_arsenal1: "resources/music/arsenal1.mp3",
-        music_athletico1: "resources/music/athletico1.mp3",
-        music_barca1: "resources/music/barca1.mp3",
-        music_barca2: "resources/music/barca2.mp3",
-        music_barca3: "resources/music/barca3.mp3",
-        music_bayern1: "resources/music/bayern1.mp3",
-        music_boca1: "resources/music/boca1.mp3",
-        music_boca2: "resources/music/boca2.mp3",
-        music_chelsea1: "resources/music/chelsea1.mp3",
-        music_chelsea2: "resources/music/chelsea2.mp3",
-        music_dortmund1: "resources/music/dortmund1.mp3",
-        music_hapoel1: "resources/music/hapoel1.mp3",
-        music_juve1: "resources/music/juve1.mp3",
-        music_juve2: "resources/music/juve2.mp3",
-        music_liverpool1: "resources/music/liverpool1.mp3",
-        music_liverpool2: "resources/music/liverpool2.mp3",
-        music_maccabi1: "resources/music/maccabi1.mp3",
-        music_maccabi2: "resources/music/maccabi2.mp3",
-        music_mancity1: "resources/music/mancity1.mp3",
-        music_manutd1: "resources/music/manutd1.mp3",
-        music_manutd2: "resources/music/manutd2.mp3",
-        music_manutd3: "resources/music/manutd3.mp3",
-        music_milan1: "resources/music/milan1.mp3",
-        music_olympiakos1: "resources/music/olympiakos1.mp3",
-        music_pana1: "resources/music/pana1.mp3",
-        music_paok1: "resources/music/paok1.mp3",
-        music_psg1: "resources/music/psg1.mp3",
-        music_realmadrid1: "resources/music/realmadrid1.mp3",
-        music_realmadrid2: "resources/music/realmadrid2.mp3",
-        music_realmadrid3: "resources/music/realmadrid3.mp3"
+        place7_png : "resources/images/leaderboard/place7.png"
     };
 }

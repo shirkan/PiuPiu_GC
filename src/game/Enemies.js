@@ -125,12 +125,10 @@ var Enemy = Class(Entity, function() {
 		if (headShot || bodyShot) {
 			if (entity.name == "Bullet") {
 				if (headShot) {
-					LOG("COLLIDED HEADSHOT!")
 					this.hitType = hitType.BulletEnemyHead;
 					return true;
 				}
 				if (bodyShot) {
-					LOG("COLLIDED BODYSHOT!")
 					this.hitType = hitType.BulletEnemy;
 					return true;
 				}

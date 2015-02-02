@@ -81,6 +81,7 @@ exports = Class(View, function(supr) {
             now({x: this.xEnemyStanding + this.enemy.style.width * 0.5, y: this.enemy.style.y, r: CIRCLE}, this.SHOOT_TIME, animate.linear).
             then( bind(this, function () {
                 if (this.isRunning) {
+                    playSound("ballHitGround");
                     enemyAnimation.call(this);
                 }
             })).

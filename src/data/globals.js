@@ -74,12 +74,12 @@ exports
         PiuPiuConsts.fontStrokeSizeStatus = 6;
 
         //  Music
-        PiuPiuConsts.musicFiles = [res.music_arsenal1, res.music_athletico1, res.music_barca1, res.music_barca2, res.music_barca3,
-            res.music_bayern1, res.music_boca1, res.music_boca2, res.music_chelsea1, res.music_chelsea2, res.music_dortmund1,
-            res.music_hapoel1, res.music_juve1, res.music_juve2, res.music_liverpool1, res.music_liverpool2, res.music_maccabi1,
-            res.music_maccabi2, res.music_mancity1, res.music_manutd1, res.music_manutd2, res.music_manutd3, res.music_milan1,
-            res.music_olympiakos1, res.music_pana1, res.music_paok1, res.music_psg1, res.music_realmadrid1, res.music_realmadrid2,
-            res.music_realmadrid3];
+        PiuPiuConsts.musicFiles = ["music_arsenal1", "music_athletico1", "music_barca1", "music_barca2", "music_barca3",
+            "music_bayern1", "music_boca1", "music_boca2", "music_chelsea1", "music_chelsea2", "music_dortmund1",
+            "music_hapoel1", "music_juve1", "music_juve2", "music_liverpool1", "music_liverpool2", "music_maccabi1",
+            "music_maccabi2", "music_mancity1", "music_manutd1", "music_manutd2", "music_manutd3", "music_milan1",
+            "music_olympiakos1", "music_pana1", "music_paok1", "music_psg1", "music_realmadrid1", "music_realmadrid2",
+            "music_realmadrid3"];
         PiuPiuConsts.musicVolume = 0.5;
 
         //  Gameplay consts
@@ -145,6 +145,7 @@ exports
 
         //  Music
         PiuPiuGlobals.currentMusicFile = "";
+        PiuPiuGlobals.musicScheduler = "";
 
         //  Game vars
         PiuPiuGlobals.livesLeft = 0;

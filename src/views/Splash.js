@@ -37,6 +37,10 @@ exports = Class(ui.View, function (supr) {
 			horizontalAlign: 'center'
 		});
 
-		var anim = new SplashAnim({parent: this});
+		this.anim = new SplashAnim({parent: this});
 	};
+
+	this.reset = function() {
+		this.anim.resetAnimation();
+	}
 });

@@ -35,6 +35,7 @@ exports = Class(ImageView, function(supr) {
     };
 
     this.animateLevel = function () {
+        const ANIM_TIMEOUT = 10000;
         this.levelText.show();
 
         //  Invoke animation function
@@ -60,9 +61,8 @@ exports = Class(ImageView, function(supr) {
 
     this.animateLevel1 = function () {
         //  consts
-        const Y_FLOOR = PiuPiuGlobals.winSize.height - 20;
+        const Y_FLOOR = PiuPiuGlobals.winSize.height - PiuPiuConsts.fontSizeSmall;
         const ENTERING_TIME = 1500;
-        const ANIM_TIMEOUT = 10000;
         const SHOOT_TIME = 800;
 
         this.clearAll();
@@ -87,6 +87,7 @@ exports = Class(ImageView, function(supr) {
         animate(this.bullet).wait(ENTERING_TIME).then(
             bind(this, function() {
                 this.bullet.show();
+                playSound("piu");
             })).then(
             {x: xEnemyStanding + this.enemy.style.width *0.3}, SHOOT_TIME).then(
             bind(this, function () {

@@ -9,7 +9,7 @@ import src.utilities.FBUtilities;
 import device;
 import animate;
 
-//import .parse as parse;
+import .parse as parse;
 
 import src.views.Splash as Splash;
 import src.views.MainMenu as MainMenu;
@@ -40,17 +40,17 @@ exports = Class(GC.Application, function () {
         
         const ANIMATING_SCENES_TIME = 500;
 
-        var splash = new Splash();
+        this.splash = new Splash();
         this.mainMenu = new MainMenu();
         this.introAnim = new IntroAnim();
         this.levelAnim = new LevelAnim();
         this.game = new Game();
         this.stats = new Statistics();
 
-        this.rootView.push(splash);
+        this.rootView.push(this.splash);
 
         //  Splash screen handling
-        splash.on('InputSelect', bind(this, function () {
+        this.splash.on('InputSelect', bind(this, function () {
             this.showMenu();
         }));
 
@@ -128,8 +128,6 @@ exports = Class(GC.Application, function () {
     };
 
     this.initializeGame = function () {
-        LOG("Initializing game");
-
         this.scaleUI();
 
         //  Init globals
@@ -164,6 +162,7 @@ exports = Class(GC.Application, function () {
         clearTimeout(this.switchToMenu);
         dissolvePushScenes(this.rootView, this.mainMenu, SPLASH_TO_MENU_TIME, bind(this, function() {
             this.mainMenu.animate();
+            this.splash.reset();
         }));
     }
 });

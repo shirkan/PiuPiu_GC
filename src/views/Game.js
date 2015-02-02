@@ -172,7 +172,10 @@ exports = Class(ImageView, function (supr) {
 
 			//  Display headshot in status
 			this.status.displayHeaderMessage("Headshot!");
+
 			//  Play headshot sound
+			playSound("headshot");
+
 		} else if (enemy.hitType == hitType.BulletEnemy) {
 			//  Body shot
 			PiuPiuGlobals.currentScore += (PiuPiuGlobals.currentPointsMultiplier * PiuPiuConsts.pointsPerEnemyKill);

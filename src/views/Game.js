@@ -60,6 +60,9 @@ exports = Class(ImageView, function (supr) {
 
 		//  Register for "ViewDidAppear"
 		this.on('ViewWillAppear', this.initLevel);
+
+		//  Register for enemies completing dying animation
+		this.on('enemyDied', this.checkLevelComplete.bind(this));
 	};
 
 	//  Init Level
@@ -116,7 +119,7 @@ exports = Class(ImageView, function (supr) {
 	//  Spawnings
 	this.spawnEnemy = function () {
 		if (PiuPiuLevelSettings.totalEnemiesToSpawn > 0) {
-			this.enemies.spawnEnemy();
+			this.enemies.spawnEnemy(this);
 			PiuPiuLevelSettings.totalEnemiesToSpawn--;
 			this.enemySM.step();
 		} else {
@@ -157,7 +160,9 @@ exports = Class(ImageView, function (supr) {
 
 	//  Collisions
 	this.onBulletEnemyCollision = function (bullet, enemy) {
-		enemy.release();
+		//  animateDeath auto releases entity
+		enemy.animateDeath();
+		//enemy.release();
 		bullet.release();
 
 		//  Update stats
@@ -183,7 +188,7 @@ exports = Class(ImageView, function (supr) {
 		}
 
 		this.status.updateScore(PiuPiuGlobals.currentScore);
-		this.checkLevelComplete();
+		//this.checkLevelComplete();
 	};
 
 	this.onEnemyPlayerCollision = function (enemy, player) {

@@ -41,123 +41,153 @@ var musicManager = new AudioManager({
 	files: {
 		music_arsenal1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 28000
 		},
 		music_athletico1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 36000
 		},
 		music_barca1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 38000
 		},
 		music_barca2: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 38000
 		},
 		music_barca3: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 32000
 		},
 		music_bayern1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 41000
 		},
 		music_boca1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 55000
 		},
 		music_boca2: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 85000
 		},
 		music_chelsea1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 24000
 		},
 		music_chelsea2: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 26000
 		},
 		music_dortmund1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 69000
 		},
 		music_hapoel1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 43000
 		},
 		music_juve1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 40000
 		},
 		music_juve2: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 39000
 		},
 		music_liverpool1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 41000
 		},
 		music_liverpool2: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 66000
 		},
 		music_maccabi1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 111000
 		},
 		music_maccabi2: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 29000
 		},
 		music_mancity1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 24000
 		},
 		music_manutd1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 24000
 		},
 		music_manutd2: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 80000
 		},
 		music_manutd3: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 29000
 		},
 		music_milan1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 47000
 		},
 		music_olympiakos1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 38000
 		},
 		music_pana1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 55000
 		},
 		music_paok1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 234000
 		},
 		music_psg1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 33000
 		},
 		music_realmadrid1: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 34000
 		},
 		music_realmadrid2: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 12000
 		},
 		music_realmadrid3: {
 			background: true,
-			loop: false
+			loop: false,
+			length: 23000
 		}
 	}
 });
@@ -172,7 +202,7 @@ exports
 	};
 
 	stopAllSounds = function () {
-		for (var key in soundManager.files) {
+		for (var key in soundManager._map) {
 			soundManager.stop(key);
 		}
 	};
@@ -189,7 +219,7 @@ exports
 			musicFile = "";
 
 			//  Check if other file is playing, return if yes
-			if (musicManager.isPlaying(PiuPiuGlobals.currentMusicFile)) {
+			if (PiuPiuGlobals.currentMusicFile && musicManager.isPlaying(PiuPiuGlobals.currentMusicFile)) {
 				return;
 			}
 
@@ -208,11 +238,15 @@ exports
 		musicManager.setMusicMuted(false);
 		musicManager.play(PiuPiuGlobals.currentMusicFile, {loop: false});
 
-		//PiuPiuGlobals.musicScheduler = setTimeout(playMusic, musicManager.getDuration(PiuPiuGlobals.currentMusicFile));
+		PiuPiuGlobals.musicScheduler = setTimeout(playMusic, musicManager._map[PiuPiuGlobals.currentMusicFile].length);
 	};
 
 	stopMusic = function () {
-		musicManager.stop(PiuPiuGlobals.currentMusicFile);
+		if (PiuPiuGlobals.currentMusicFile != "") {
+			musicManager.stop(PiuPiuGlobals.currentMusicFile);
+		}
+
+		PiuPiuGlobals.currentMusicFile = "";
 		clearTimeout(PiuPiuGlobals.musicScheduler);
 	};
 
@@ -221,7 +255,7 @@ exports
 	};
 
 	setMusicVolume = function ( val ) {
-		for (var key in musicManager.files) {
+		for (var key in musicManager._map) {
 			musicManager.setVolume(key, val);
 		}
 	};

@@ -74,6 +74,7 @@ exports = Class(Entity, function() {
 		this.map.x = this.view._offsetX + handsConfig.anims.machineGunCaptain.x1
 	};
 	this.rotateHands = function (angle) {
+		logger.debug("angle is " + angle);
 		this.view.style.r = angle;
 	};
 });

@@ -6,6 +6,7 @@
 
 import ui.View as View;
 import src.anim.Ball as Ball;
+import src.anim.BallView as BallView;
 import animate;
 
 const FPS = 15;
@@ -55,18 +56,12 @@ exports = Class(View, function(supr) {
         //  roll
         var p5 = makePoint(PiuPiuGlobals.winSize.width * 0.65 , BALL_SIZE / 2);
 
-        this.ballView = new View({
-            name: "ballView",
-            parent: this,
-            superview: this,
-            zIndex: PiuPiuConsts.statusZIndex,
-            width: 32,
-            height: 32,
-            x: p1.x,
-            y: p1.y,
-            anchorX: p12.x,
-            anchorY: p12.y
-        });
+        this.ballView = new BallView({parent: this});
+        this.ballView.style.x = p1.x;
+        this.ballView.style.y = p1.y;
+        this.ballView.style.anchorX = p12.x;
+        this.ballView.style.anchorY = p12.y;
+
         var ball = new Ball({parent: this.ballView});
 
         ball.style.anchorX = ball.style.width / 2;

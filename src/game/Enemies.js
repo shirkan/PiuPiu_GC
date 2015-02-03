@@ -6,6 +6,8 @@ import entities.Entity as Entity;
 import entities.EntityPool as EntityPool;
 import ui.ImageView as ImageView;
 
+import animate;
+
 const BODY_X = 0;
 const BODY_Y = 45;
 const BODY_WIDTH = 95;
@@ -142,6 +144,27 @@ var Enemy = Class(Entity, function() {
 	this.showHitBounds = function () {
 		this.head.showHitBounds(this.view);
 		this.body.showHitBounds(this.view);
+	};
+
+	this.animateDeath = function () {
+		this.vx = this.vy = this.ax = this.ay = 0;
+		this.deathAnimation1();
+	};
+
+	this.deathAnimation1 = function() {
+		animate(this.view).now({r:Math.PI/2}, 500, animate.linear);
+		animate(this).now({x: this.x + 300}, 250, animate.linear).
+			then({y: PiuPiuGlobals.winSize.height * 1.1}, PiuPiuGlobals.winSize.height - this.y, animate.linear).
+			then(bind(this, function() {
+				this.release();
+				this.target.emit('enemyDied');
+			}));
+	};
+
+	this.release = function () {
+		this.view.style.r = 0;
+		sup.reset.call(this);
+		sup.release.call(this);
 	}
 });
 
@@ -161,7 +184,7 @@ exports = Class(EntityPool, function() {
 		sup.update.call(this, dt);
 	};
 
-	this.spawnEnemy = function(x, y, speed) {
+	this.spawnEnemy = function(target, x, y, speed) {
 		x = x || PiuPiuGlobals.winSize.width;
 		y = y || randomNumber(0, PiuPiuGlobals.winSize.height);
 		speed = speed || randomNumber(0.3, 1);
@@ -169,6 +192,7 @@ exports = Class(EntityPool, function() {
 		var vy = PiuPiuGlobals.currentUpdateRate * speed * (PiuPiuGlobals.sourcePoint.y - y) / PiuPiuConsts.framesPerSeconds;
 		var opts = merge({vx: vx, vy: vy}, enemyConfig);
 		var enemy = this.obtain(x, y, opts);
+		enemy.target = target;
 		//enemy.showHitBounds();
 	};
 });

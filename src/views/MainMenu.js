@@ -95,16 +95,14 @@ exports = Class(ImageView, function (supr) {
             animateText(this.menu[4]);
             LOG(entries[4]);
         }));
-
-        // Play music
-        startMusic();
-
         //  Handle FB login
         this.showFBlogo();
     };
 
     this.animate = function () {
         this.anim.restartAnimation();
+        // Play music
+        startMusic();
     };
 
     this.resetView = function () {

@@ -87,13 +87,13 @@ exports = Class(GC.Application, function () {
         //  Game handling
         this.on('game:end', bind (this, function() {
             PiuPiuGlobals.currentLevel = 1;
-            updateStats();
+            saveStats();
             dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate))
         }));
 
         this.on('game:levelCompleted', bind (this, function() {
             loadLevelSettings();
-            updateStats();
+            saveStats();
             dissolvePushScenes(this.rootView, this.levelAnim, ANIMATING_SCENES_TIME, bind(this, function() {
                 this.rootView.remove(this.game);
                 this.levelAnim.animateLevel();
@@ -134,7 +134,7 @@ exports = Class(GC.Application, function () {
         initGlobals();
 
         //  Load stats
-        loadStats();
+        loadAll();
 
         setMusicVolume(PiuPiuConsts.musicVolume);
 

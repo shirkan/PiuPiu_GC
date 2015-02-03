@@ -62,7 +62,10 @@ exports = Class(ImageView, function (supr) {
 		this.on('ViewWillAppear', this.initLevel);
 
 		//  Register for enemies completing dying animation
-		this.on('enemyDied', this.checkLevelComplete.bind(this));
+		this.on('enemyDied', bind(this, function() {
+			this.doneAnimatingDeadEnemies++;
+			this.checkLevelComplete();
+		}));
 	};
 
 	//  Init Level
@@ -74,6 +77,7 @@ exports = Class(ImageView, function (supr) {
 		this.captainEnd();
 		this.stopwatchEnd();
 		this.canContinueToNextScene = false;
+		this.doneAnimatingDeadEnemies = 0;
 
 		if (PiuPiuGlobals.currentLevel == 1) {
 			PiuPiuGlobals.currentScore = 0;
@@ -313,7 +317,8 @@ exports = Class(ImageView, function (supr) {
 	//  This function checks for completion conditions and invoke levelCompleted if all conditions apply
 	this.checkLevelComplete = function () {
 		if (PiuPiuLevelSettings.totalEnemiesToSpawn == 0 &&
-			PiuPiuLevelSettings.enemiesVanished >= PiuPiuLevelSettings.totalEnemiesToKill) {
+			PiuPiuLevelSettings.enemiesVanished >= PiuPiuLevelSettings.totalEnemiesToKill &&
+			this.doneAnimatingDeadEnemies == PiuPiuLevelSettings.totalEnemiesToKill) {
 			//PiuPiuGlobals.gameState = GameStates.LevelCompleted;
 			this.levelCompleted();
 			return true;

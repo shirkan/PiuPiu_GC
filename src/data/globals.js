@@ -126,7 +126,8 @@ exports
 
         //  Facebook
         PiuPiuConsts.FB_appid = "331202163734875";
-        PiuPiuConsts.FBpermissionsNeeded = ["public_profile", "user_activities", "user_about_me", "user_friends", "publish_actions"];
+        //PiuPiuConsts.FBpermissionsNeeded = ["public_profile", "user_activities", "user_about_me", "user_friends", "publish_actions"];
+        PiuPiuConsts.FBpermissionsNeeded = ["public_profile", "user_friends"];
         PiuPiuConsts.FBwaitForResultsInSeconds = 11;
         PiuPiuConsts.FBleaderboardShowTop = 7;
         PiuPiuConsts.FBpictureSize = 120;
@@ -159,7 +160,7 @@ exports
         PiuPiuGlobals.soundEnabled = 1;
 
         //  Load/Save stats
-        PiuPiuGlobals.loadSave = ["FBdidAccessed", "highScore"];
+        PiuPiuGlobals.loadSave = ["FBdidEverAccessed", "highScore"];
 
         //  Stats vars
         PiuPiuGlobals.statsNames = ["totalBulletsFired", "totalPowerUps", "totalEnemyKilled", "totalHeadShots", "totalPoints"];
@@ -169,7 +170,7 @@ exports
         });
 
         //  Facebook
-        PiuPiuGlobals.FBdidAccessed = 0;
+        PiuPiuGlobals.FBdidEverAccessed = 0;
         PiuPiuGlobals.FBpermissionsMissing = PiuPiuConsts.FBpermissionsNeeded;
         PiuPiuGlobals.FBpermissionsGranted = [];
         PiuPiuGlobals.FBallScoresData = null;

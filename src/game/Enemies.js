@@ -109,22 +109,32 @@ var Enemy = Class(Entity, function() {
 
 	this.reset = function(x, y, config) {
 		sup.reset.call(this, x, y, config);
+		animate(this.view).clear();
+		this.view.style.r = 0;
+		this.updatable = true;
 
 		this.head.reset(x, y, config);
 		this.body.reset(x, y, config);
 	};
 
 	this.update = function(dt) {
-		sup.update.call(this, dt);
-		this.head.update(dt, this);
-		this.body.update(dt, this);
+		//if (this.updatable) {
+			sup.update.call(this, dt);
+			this.head.update(dt, this);
+			this.body.update(dt, this);
+		//}
 	};
 
 	this.collidesWith = function(entity) {
+		if (!this.shotsLeft || !this.updatable) {
+			return false;
+		}
+
 		var headShot = this.head.collidesWith(entity);
 		var bodyShot = this.body.collidesWith(entity);
 
 		if (headShot || bodyShot) {
+			this.shotsLeft--;
 			if (entity.name == "Bullet") {
 				if (headShot) {
 					this.hitType = hitType.BulletEnemyHead;
@@ -148,24 +158,20 @@ var Enemy = Class(Entity, function() {
 
 	this.animateDeath = function () {
 		this.vx = this.vy = this.ax = this.ay = 0;
+		this.updatable = false;
 		this.deathAnimation1();
 	};
 
 	this.deathAnimation1 = function() {
-		animate(this.view).now({r:Math.PI/2}, 500, animate.linear);
-		animate(this).now({x: this.x + 300}, 250, animate.linear).
-			then({y: PiuPiuGlobals.winSize.height * 1.1}, PiuPiuGlobals.winSize.height - this.y, animate.linear).
+		animate(this.view).now({r:Math.PI/2}, 500, animate.linear).
+			then({r: Math.PI * 1.5}, 500, animate.linear);
+		animate(this).now({x: this.x + 300, y: this.y - 100}, 250, animate.linear).
+			then({y: PiuPiuGlobals.winSize.height * 1.1}, (PiuPiuGlobals.winSize.height - this.y), animate.linear).
 			then(bind(this, function() {
 				this.release();
 				this.target.emit('enemyDied');
 			}));
 	};
-
-	this.release = function () {
-		this.view.style.r = 0;
-		sup.reset.call(this);
-		sup.release.call(this);
-	}
 });
 
 exports = Class(EntityPool, function() {
@@ -193,6 +199,7 @@ exports = Class(EntityPool, function() {
 		var opts = merge({vx: vx, vy: vy}, enemyConfig);
 		var enemy = this.obtain(x, y, opts);
 		enemy.target = target;
+		enemy.shotsLeft = 1;
 		//enemy.showHitBounds();
 	};
 });

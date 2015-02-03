@@ -1,5 +1,10 @@
 {
-  "addons": {},
+  "addons": {
+    "facebook": {
+      "facebookAppID": 331202163734875,
+      "facebookDisplayName": "Piu Piu"
+    }
+  },
   "android": {
     "icons": {
       "144": "resources/icons/icon-144.png",
@@ -15,10 +20,6 @@
     "devkit-core": "https://github.com/gameclosure/devkit-core#v2.0.19",
     "devkit-entities": "https://github.com/gameclosure/devkit-entities#v0.2.4",
     "devkit-facebook": "https://github.com/gameclosure/facebook#v2.0.0"
-  },
-  "facebook": {
-    "facebookAppID": 331202163734875,
-    "facebookDisplayName": "Piu Piu"
   },
   "icon": "resources/icons/favicon.png",
   "ios": {

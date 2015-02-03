@@ -246,7 +246,7 @@ exports
         PiuPiuGlobals.sourcePoint = makePoint(0, (PiuPiuGlobals.winSize.height - PiuPiuConsts.enemyHeight) / 2);
     };
 
-    loadStats = function () {
+    loadAll = function () {
         //for (var i in PiuPiuGlobals.statsNames) {
         //    var val = parseInt(localStorage.getItem(PiuPiuGlobals.statsNames[i]));
         //    if (val != null && !isNaN(val)) {
@@ -278,11 +278,19 @@ exports
         //}
     };
 
-    updateStats = function () {
+    saveStats = function () {
         for (var i in PiuPiuGlobals.statsNames) {
             var val = eval("PiuPiuGlobals." + PiuPiuGlobals.statsNames[i]);
             localStorage.setItem(PiuPiuGlobals.statsNames[i], val);
         }
+    };
+
+    loadData = function (key) {
+        key = localStorage.getItem(key);
+    };
+
+    saveData = function (key, value) {
+        localStorage.setItem(key, value);
     };
 
     handleHighScore = function () {

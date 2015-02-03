@@ -166,11 +166,22 @@ exports = Class(ImageView, function (supr) {
             x: PiuPiuGlobals.winSize.width + 1,
             y: PiuPiuGlobals.winSize.height - PiuPiuConsts.fontSizeSmall
         });
-        this.FBlogo.on('InputSelect', function () {
-
-        });
+        this.FBlogo.on('InputSelect', this.onFBclick.bind(this));
     };
 
+    this.onFBclick = function () {
+        if (!PiuPiuGlobals.FBdidEverAccessed) {
+            if (FBfirstTime()) {
+                this.FBlogo.hide();
+            }
+        } else {
+            if (FBlogin()) {
+                this.FBlogo.hide();
+            }
+        }
+    };
+
+    //  FB animation
     this.runFBanimation = function () {
         this.animateFBlogo();
         this.animateFBText();

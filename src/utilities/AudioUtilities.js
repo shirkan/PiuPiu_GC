@@ -42,152 +42,152 @@ var musicManager = new AudioManager({
 		music_arsenal1: {
 			background: true,
 			loop: false,
-			length: 28000
+			duration: 28000
 		},
 		music_athletico1: {
 			background: true,
 			loop: false,
-			length: 36000
+			duration: 36000
 		},
 		music_barca1: {
 			background: true,
 			loop: false,
-			length: 38000
+			duration: 38000
 		},
 		music_barca2: {
 			background: true,
 			loop: false,
-			length: 38000
+			duration: 38000
 		},
 		music_barca3: {
 			background: true,
 			loop: false,
-			length: 32000
+			duration: 32000
 		},
 		music_bayern1: {
 			background: true,
 			loop: false,
-			length: 41000
+			duration: 41000
 		},
 		music_boca1: {
 			background: true,
 			loop: false,
-			length: 55000
+			duration: 55000
 		},
 		music_boca2: {
 			background: true,
 			loop: false,
-			length: 85000
+			duration: 85000
 		},
 		music_chelsea1: {
 			background: true,
 			loop: false,
-			length: 24000
+			duration: 24000
 		},
 		music_chelsea2: {
 			background: true,
 			loop: false,
-			length: 26000
+			duration: 26000
 		},
 		music_dortmund1: {
 			background: true,
 			loop: false,
-			length: 69000
+			duration: 69000
 		},
 		music_hapoel1: {
 			background: true,
 			loop: false,
-			length: 43000
+			duration: 43000
 		},
 		music_juve1: {
 			background: true,
 			loop: false,
-			length: 40000
+			duration: 40000
 		},
 		music_juve2: {
 			background: true,
 			loop: false,
-			length: 39000
+			duration: 39000
 		},
 		music_liverpool1: {
 			background: true,
 			loop: false,
-			length: 41000
+			duration: 41000
 		},
 		music_liverpool2: {
 			background: true,
 			loop: false,
-			length: 66000
+			duration: 66000
 		},
 		music_maccabi1: {
 			background: true,
 			loop: false,
-			length: 111000
+			duration: 111000
 		},
 		music_maccabi2: {
 			background: true,
 			loop: false,
-			length: 29000
+			duration: 29000
 		},
 		music_mancity1: {
 			background: true,
 			loop: false,
-			length: 24000
+			duration: 24000
 		},
 		music_manutd1: {
 			background: true,
 			loop: false,
-			length: 24000
+			duration: 24000
 		},
 		music_manutd2: {
 			background: true,
 			loop: false,
-			length: 80000
+			duration: 80000
 		},
 		music_manutd3: {
 			background: true,
 			loop: false,
-			length: 29000
+			duration: 29000
 		},
 		music_milan1: {
 			background: true,
 			loop: false,
-			length: 47000
+			duration: 47000
 		},
 		music_olympiakos1: {
 			background: true,
 			loop: false,
-			length: 38000
+			duration: 38000
 		},
 		music_pana1: {
 			background: true,
 			loop: false,
-			length: 55000
+			duration: 55000
 		},
 		music_paok1: {
 			background: true,
 			loop: false,
-			length: 234000
+			duration: 234000
 		},
 		music_psg1: {
 			background: true,
 			loop: false,
-			length: 33000
+			duration: 33000
 		},
 		music_realmadrid1: {
 			background: true,
 			loop: false,
-			length: 34000
+			duration: 34000
 		},
 		music_realmadrid2: {
 			background: true,
 			loop: false,
-			length: 12000
+			duration: 12000
 		},
 		music_realmadrid3: {
 			background: true,
 			loop: false,
-			length: 23000
+			duration: 23000
 		}
 	}
 });
@@ -238,7 +238,7 @@ exports
 		musicManager.setMusicMuted(false);
 		musicManager.play(PiuPiuGlobals.currentMusicFile, {loop: false});
 
-		PiuPiuGlobals.musicScheduler = setTimeout(playMusic, musicManager._map[PiuPiuGlobals.currentMusicFile].length);
+		PiuPiuGlobals.musicScheduler = setTimeout(playMusic, musicManager._map[PiuPiuGlobals.currentMusicFile].duration);
 	};
 
 	stopMusic = function () {

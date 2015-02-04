@@ -164,9 +164,6 @@ exports = Class(ImageView, function (supr) {
 
 	//  Collisions
 	this.onBulletEnemyCollision = function (bullet, enemy) {
-		//  animateDeath auto releases entity
-		enemy.animateDeath();
-		//enemy.release();
 		bullet.release();
 
 		//  Update stats
@@ -185,10 +182,16 @@ exports = Class(ImageView, function (supr) {
 			//  Play headshot sound
 			playSound("headshot");
 
+			//  animateDeath auto releases entity
+			enemy.animateHeadshot();
+
 		} else if (enemy.hitType == hitType.BulletEnemy) {
 			//  Body shot
 			PiuPiuGlobals.currentScore += (PiuPiuGlobals.currentPointsMultiplier * PiuPiuConsts.pointsPerEnemyKill);
 			PiuPiuGlobals.totalPoints += (PiuPiuGlobals.currentPointsMultiplier * PiuPiuConsts.pointsPerEnemyKill);
+
+			//  animateDeath auto releases entity
+			enemy.animateDeath();
 		}
 
 		this.status.updateScore(PiuPiuGlobals.currentScore);

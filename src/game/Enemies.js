@@ -4,26 +4,26 @@
 
 import entities.Entity as Entity;
 import entities.EntityPool as EntityPool;
-import ui.ImageView as ImageView;
+import ui.View as View;
+import src.anim.Enemy as EnemyAnim;
 
 import animate;
 
-const BODY_X = 0;
-const BODY_Y = 45;
-const BODY_WIDTH = 95;
-const BODY_HEIGHT = 80;
-const HEAD_X = 20;
-const HEAD_Y = 5;
-const HEAD_WIDTH = 30;
-const HEAD_HEIGHT = 40;
+const BODY_X = 125;
+const BODY_Y = 60;
+const BODY_WIDTH = 50;
+const BODY_HEIGHT = 144;
+const HEAD_X = 125;
+const HEAD_Y = 25;
+const HEAD_WIDTH = 25;
+const HEAD_HEIGHT = 35;
 
 //  Setting w,h to avoid image hitbounds auto-config
 var enemyConfig = {
 	zIndex: PiuPiuConsts.enemyZIndex,
 	hitBounds: {
 		w: 1
-	},
-	image: res.Enemy_png
+	}
 };
 
 var headConfig = {
@@ -97,7 +97,7 @@ var EnemyBody = Class(Entity, function() {
 var Enemy = Class(Entity, function() {
 	var sup = Entity.prototype;
 	this.name = "Enemy";
-	this.viewClass = ImageView;
+	this.viewClass = View;
 
 	this.init = function(opts) {
 		opts = merge(opts, enemyConfig);
@@ -105,13 +105,15 @@ var Enemy = Class(Entity, function() {
 
 		this.head = new EnemyHead(opts);
 		this.body = new EnemyBody(opts);
+		this.anim = new EnemyAnim({parent: this.view});
 	};
 
 	this.reset = function(x, y, config) {
 		sup.reset.call(this, x, y, config);
 		animate(this.view).clear();
 		this.view.style.r = 0;
-		this.updatable = true;
+
+		this.anim.run();
 
 		this.head.reset(x, y, config);
 		this.body.reset(x, y, config);
@@ -126,7 +128,7 @@ var Enemy = Class(Entity, function() {
 	};
 
 	this.collidesWith = function(entity) {
-		if (!this.shotsLeft || !this.updatable) {
+		if (!this.shotsLeft) {
 			return false;
 		}
 
@@ -158,7 +160,13 @@ var Enemy = Class(Entity, function() {
 
 	this.animateDeath = function () {
 		this.vx = this.vy = this.ax = this.ay = 0;
-		this.updatable = false;
+		this.anim.dead();
+		this.deathAnimation1();
+	};
+
+	this.animateHeadshot = function () {
+		this.vx = this.vy = this.ax = this.ay = 0;
+		this.anim.headshot();
 		this.deathAnimation1();
 	};
 
@@ -166,7 +174,7 @@ var Enemy = Class(Entity, function() {
 		animate(this.view).now({r:Math.PI/2}, 500, animate.linear).
 			then({r: Math.PI * 1.5}, 500, animate.linear);
 		animate(this).now({x: this.x + 300, y: this.y - 100}, 250, animate.linear).
-			then({y: PiuPiuGlobals.winSize.height * 1.1}, (PiuPiuGlobals.winSize.height - this.y), animate.linear).
+			then({y: PiuPiuGlobals.winSize.height + this.anim.style.height}, (PiuPiuGlobals.winSize.height - this.y), animate.linear).
 			then(bind(this, function() {
 				this.release();
 				this.target.emit('enemyDied');
@@ -193,7 +201,7 @@ exports = Class(EntityPool, function() {
 	this.spawnEnemy = function(target, x, y, speed) {
 		x = x || PiuPiuGlobals.winSize.width;
 		y = y || randomNumber(0, PiuPiuGlobals.winSize.height);
-		speed = speed || randomNumber(0.3, 1);
+		speed = 0.1 || speed || randomNumber(0.3, 1);
 		var vx = PiuPiuGlobals.currentUpdateRate * speed * (PiuPiuGlobals.sourcePoint.x - x) / PiuPiuConsts.framesPerSeconds;
 		var vy = PiuPiuGlobals.currentUpdateRate * speed * (PiuPiuGlobals.sourcePoint.y - y) / PiuPiuConsts.framesPerSeconds;
 		var opts = merge({vx: vx, vy: vy}, enemyConfig);

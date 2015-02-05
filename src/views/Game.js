@@ -200,6 +200,8 @@ exports = Class(ImageView, function (supr) {
 
 	this.onEnemyPlayerCollision = function (enemy, player) {
 		enemy.release();
+		//  TODO: animate enemy hitting player
+		this.doneAnimatingDeadEnemies++;
 
 		//  Update level settings
 		PiuPiuLevelSettings.enemiesVanished++;

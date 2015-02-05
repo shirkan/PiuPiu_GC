@@ -95,8 +95,45 @@ exports = Class(ImageView, function (supr) {
             animateText(this.menu[4]);
             LOG(entries[4]);
         }));
-        //  Handle FB login
-        this.showFBlogo();
+
+        //  Build FB assets
+        this.FB_LOGO_SIZE = 64;
+        this.FBlogo = new ImageView({
+            name: "FB Logo",
+            superview: this,
+            width: this.FB_LOGO_SIZE,
+            height: this.FB_LOGO_SIZE,
+            image: res.FB_png,
+            zIndex: 1,
+            x: (PiuPiuGlobals.winSize.width - this.FB_LOGO_SIZE) / 2,
+            y: PiuPiuGlobals.winSize.height - this.FB_LOGO_SIZE - PiuPiuConsts.fontSizeSmall
+        });
+
+        var text = "You must login to Facebook to enable this feature.";
+        var textWidth = PiuPiuConsts.fontSizeSmall * text.length * widthRatio * 0.7;
+        this.FBtext = new TextView({
+            superview: this,
+            fontFamily : PiuPiuConsts.fontName,
+            size: PiuPiuConsts.fontSizeSmall,
+            text: text,
+            color: "yellow",
+            strokeColor: "blue",
+            strokeWidth: PiuPiuConsts.fontStrokeSizeSmall,
+            width: textWidth,
+            height: PiuPiuConsts.fontSizeSmall,
+            horizontalAlign: "left",
+            zIndex: 1,
+            x: PiuPiuGlobals.winSize.width + 1,
+            y: PiuPiuGlobals.winSize.height - PiuPiuConsts.fontSizeSmall
+        });
+        this.FBlogo.on('InputSelect', this.onFBclick.bind(this));
+
+        this.hideFB();
+    };
+
+    this.checkFBstatus = function () {
+        //  Handle FB login - Display FB logo if not logged in
+        FBisLoggedIn(this, this.hideFB, this.showFB);
     };
 
     this.animate = function () {
@@ -136,52 +173,23 @@ exports = Class(ImageView, function (supr) {
         }
     };
 
-    this.showFBlogo = function () {
-        this.FB_LOGO_SIZE = 64;
-        this.FBlogo = new ImageView({
-            name: "FB Logo",
-            superview: this,
-            width: this.FB_LOGO_SIZE,
-            height: this.FB_LOGO_SIZE,
-            image: res.FB_png,
-            zIndex: 1,
-            x: (PiuPiuGlobals.winSize.width - this.FB_LOGO_SIZE) / 2,
-            y: PiuPiuGlobals.winSize.height - this.FB_LOGO_SIZE - PiuPiuConsts.fontSizeSmall
-        });
+    //  FB animation
+    this.hideFB = function () {
+        this.leaderboardEnabled = true;
+        this.FBlogo.hide();
+        this.FBtext.hide();
+    };
 
-        var text = "You must login to Facebook to enable this feature. We are *NOT* going to post anything on your wall/timeline without clearly stating so.";
-        var textWidth = PiuPiuConsts.fontSizeSmall * text.length * widthRatio * 0.7;
-        this.FBtext = new TextView({
-            superview: this,
-            fontFamily : PiuPiuConsts.fontName,
-            size: PiuPiuConsts.fontSizeSmall,
-            text: text,
-            color: "yellow",
-            strokeColor: "blue",
-            strokeWidth: PiuPiuConsts.fontStrokeSizeSmall,
-            width: textWidth,
-            height: PiuPiuConsts.fontSizeSmall,
-            horizontalAlign: "left",
-            zIndex: 1,
-            x: PiuPiuGlobals.winSize.width + 1,
-            y: PiuPiuGlobals.winSize.height - PiuPiuConsts.fontSizeSmall
-        });
-        this.FBlogo.on('InputSelect', this.onFBclick.bind(this));
+    this.showFB = function () {
+        this.leaderboardEnabled = false;
+        this.FBlogo.show();
+        this.FBtext.show();
     };
 
     this.onFBclick = function () {
-        if (!PiuPiuGlobals.FBdidEverAccessed) {
-            if (FBfirstTime()) {
-                this.FBlogo.hide();
-            }
-        } else {
-            if (FBlogin()) {
-                this.FBlogo.hide();
-            }
-        }
+        FBisLoggedIn(this, this.hideFB, FBfirstTime.bind(this, this, this.hideFB));
     };
 
-    //  FB animation
     this.runFBanimation = function () {
         this.animateFBlogo();
         this.animateFBText();
@@ -225,7 +233,7 @@ exports = Class(ImageView, function (supr) {
         }
 
         this.isAnimatingText = true;
-        const TEXT_TIME = 20000;
+        const TEXT_TIME = 10000;
 
         animate(this.FBtext).now({x: -1 * this.FBtext.style.width}, TEXT_TIME, animate.linear).
             then(this.resetFBText.bind(this));

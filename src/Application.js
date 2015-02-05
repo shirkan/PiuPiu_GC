@@ -160,6 +160,7 @@ exports = Class(GC.Application, function () {
     this.showMenu = function() {
         const SPLASH_TO_MENU_TIME = 1500;
         clearTimeout(this.switchToMenu);
+        this.mainMenu.checkFBstatus();
         dissolvePushScenes(this.rootView, this.mainMenu, SPLASH_TO_MENU_TIME, bind(this, function() {
             this.mainMenu.animate();
             this.splash.reset();

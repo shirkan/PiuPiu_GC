@@ -14,23 +14,28 @@ FB.onReady.run(function () {
 // ***** Facebook utilities *****
 exports
 {
-    FBfirstTime = function () {
+    FBfirstTime = function (target, success_callback, error_callback) {
+        LOG("FBfirstTime: trying to connect");
         return FBlogin(this, function () {
             LOG("FBfirstTime: success!");
             PiuPiuGlobals.FBdidEverAccessed = true;
-            saveData("FBdidEverAccessed", true);
-        });
+            saveData("FBdidEverAccessed", PiuPiuGlobals.FBdidEverAccessed);
+            target && success_callback && success_callback.call(target);
+        }, error_callback);
     };
 
     FBstatusChange = function (response, target, success_callback, error_callback) {
-        if (response.status === 'connected') {
-            LOG("FBstatusChange: connected! invoking " + success_callback);
-            target && success_callback && success_callback.call(target);
-            return true;
-        } else {
-            LOG("FBstatusChange: not connected! invoking " + error_callback);
+        if (!response || response.status != "connected") {
+            LOG("FBstatusChange: not connected!");
+            //  falsifying did Ever connect, to prevent user nagging
+            PiuPiuGlobals.FBdidEverAccessed = false;
+            saveData("FBdidEverAccessed", PiuPiuGlobals.FBdidEverAccessed);
             target && error_callback && error_callback.call(target);
             return false;
+        } else {
+            LOG("FBstatusChange: connected!");
+            target && success_callback && success_callback.call(target);
+            return true;
         }
     };
 
@@ -40,34 +45,22 @@ exports
             LOG("FBinit: user never logged in before.");
             return false;
         }
-
-        LOG("FBinit: logged in before, trying to login now.");
-        if (FBisLoggedIn()) {
-            LOG("FBinit: logged in!");
-        } else {
-            LOG("FBinit: not logged in!");
-            //  Try to get access token
-            if (!FBlogin()) {
-                LOG("FBinit: could not login in... giving up");
-                return false;
-            }
-        }
-        FBgetScore();
-        FBonLoginUpdates();
-        return true;
+        LOG("FBinit: checking is logged in");
+        return FBisLoggedIn(this, FBonLoginUpdates, FBlogin);
     };
 
     FBlogin = function (target, success_callback, error_callback) {
         var res = false;
         LOG("FBlogin: asking for the following permissions: " + PiuPiuConsts.FBpermissionsNeeded);
-        FB.login(bind(this, function (success) {
-            if (success) {
+        FB.login(function (response) {
+            if (!response || !response.status || response.status != "connected") {
+                LOG("FBlogin: response error " + JSON.stringify(response));
+                target && error_callback && error_callback.call(target);
+            } else {
                 res = true;
                 target && success_callback && success_callback.call(target);
-            } else {
-                target && error_callback && error_callback.call(target);
             }
-        }, {scope: PiuPiuConsts.FBpermissionsNeeded}));
+        }, {scope: PiuPiuConsts.FBpermissionsNeeded});
 
         return res;
     };
@@ -75,12 +68,65 @@ exports
     FBisLoggedIn = function ( target, loggedInCallback, notLoggedInCallback) {
         var res = false;
         FB.getLoginStatus(bind(this, function (response) {
+            LOG("FBisLoggedIn: received info regarding status");
             res = FBstatusChange(response, target, loggedInCallback, notLoggedInCallback)
         }));
 
         return res;
     };
 
+    FBonLoginUpdates = function () {
+        LOG("FBonLoginUpdates Getting score");
+        FBgetScore();
+
+        LOG("FBonLoginUpdates Getting all scores");
+        FBgetAllScores();
+    };
+
+    FBgetScore = function (target, success_callback, error_callback) {
+        PiuPiuGlobals.FBplayerScoreData = null;
+        FB.api("/me/scores", 'GET', function (response) {
+            if (!response || response.error) {
+                LOG("FBgetScore: response error " + JSON.stringify(response));
+                target && error_callback && error_callback.call(target);
+            } else {
+                LOG("FBgetScore: " + JSON.stringify(response));
+                PiuPiuGlobals.FBplayerScoreData = response.data[0];
+
+                //  Check if score exists
+                if (!PiuPiuGlobals.FBplayerScoreData.score) {
+                    PiuPiuGlobals.FBplayerScoreData.score = 0;
+                }
+
+                ////  Check if need to update local high score
+                //if (PiuPiuGlobals.FBplayerScoreData.score > PiuPiuGlobals.highScore) {
+                //    PiuPiuGlobals.highScore = PiuPiuGlobals.FBplayerScoreData.score;
+                //    localStorage.setItem("highScore", PiuPiuGlobals.highScore);
+                //}
+                target && success_callback && success_callback.call(target);
+            }
+        });
+    };
+
+    FBgetAllScores = function ( target, success_callback, error_callback ) {
+        PiuPiuGlobals.FBallScoresData = null;
+
+        FB.api("/" + PiuPiuConsts.FB_appid + "/scores", "GET", function (response) {
+            if (!response || response.error) {
+                LOG("FBgetAllScores: response error " + JSON.stringify(response));
+                target && error_callback && error_callback.call(target);
+            } else {
+                PiuPiuGlobals.FBallScoresData = response.data;
+                LOG("FBgetAllScores: " + JSON.stringify(PiuPiuGlobals.FBallScoresData));
+
+                //  Check if score exists
+                if (!PiuPiuGlobals.FBplayerScoreData.score) {
+                    PiuPiuGlobals.FBplayerScoreData.score = 0;
+                }
+                target && success_callback && success_callback.call(target);
+            }
+        });
+    };
 
     //  OLD LEGACY CODE
 

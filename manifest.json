@@ -22,7 +22,6 @@
     "devkit-facebook": "https://github.com/gameclosure/facebook#v2.0.0"
   },
   "icon": "resources/icons/favicon.png",
-  "ttf": "resources/fonts/arcadepi.ttf",
   "ios": {
     "appleID": 946898089,
     "bundleID": "com.shirkan.piupiu",
@@ -51,5 +50,8 @@
     "landscape"
   ],
   "title": "Piu Piu",
-  "version": "0.6"
+  "version": "0.6",
+  "ttf": [
+    "resources/fonts/arcadepi.ttf"
+  ]
 }

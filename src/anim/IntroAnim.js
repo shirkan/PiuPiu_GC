@@ -37,8 +37,11 @@ exports = Class(ImageView, function(supr) {
         animate(this.player).clear();
         animate(this.ball).clear();
         animate(this.enemy1).clear();
+        this.enemy1.run();
         animate(this.enemy2).clear();
+        this.enemy2.run();
         animate(this.enemy3).clear();
+        this.enemy3.run();
         clearTimeout(this.timer);
     };
     
@@ -83,11 +86,14 @@ exports = Class(ImageView, function(supr) {
             then({x: this.goal.style.x + this.goal.style.width * 0.5, y: this.goal.style.y + this.goal.style.height / 2, r: Math.PI * 3}, 500, animate.linear).
             then({y: this.Y_FLOOR - this.ball.style.height, r: Math.PI * 3}, 500, animate.linear);
         animate(this.enemy1).wait(this.ENEMY_WAITING_TIME).
-            then({x : PiuPiuGlobals.winSize.width - this.enemy1.style.width, y:0}, this.ENTER_TIME, animate.easeOut);
+            then({x : PiuPiuGlobals.winSize.width - this.enemy1.style.width, y:0}, this.ENTER_TIME, animate.easeOut).
+            then(this.enemy1.stand.bind(this.enemy1));
         animate(this.enemy2).wait(this.ENEMY_WAITING_TIME).
-            then({x : PiuPiuGlobals.winSize.width - this.enemy2.style.width, y:this.enemy2.style.height}, this.ENTER_TIME, animate.easeOut);
+            then({x : PiuPiuGlobals.winSize.width - this.enemy2.style.width, y:this.enemy2.style.height}, this.ENTER_TIME, animate.easeOut).
+            then(this.enemy2.stand.bind(this.enemy2));
         animate(this.enemy3).wait(this.ENEMY_WAITING_TIME).
-            then({x : PiuPiuGlobals.winSize.width - this.enemy3.style.width * 2, y:0}, this.ENTER_TIME, animate.easeOut);
+            then({x : PiuPiuGlobals.winSize.width - this.enemy3.style.width * 2, y:0}, this.ENTER_TIME, animate.easeOut).
+            then(this.enemy3.stand.bind(this.enemy3));
 
         this.timer = setTimeout(function () { GC.app.emit("intro:end")}, this.TIMEUP);
         this.on("InputSelect", bind(this, function () {

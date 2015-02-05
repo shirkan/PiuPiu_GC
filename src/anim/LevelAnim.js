@@ -55,6 +55,7 @@ exports = Class(ImageView, function(supr) {
     this.clearAll = function () {
         animate(this.player).clear();
         animate(this.enemy).clear();
+        this.enemy.run();
         animate(this.bullet).clear();
         clearTimeout(this.timer);
     };
@@ -86,6 +87,7 @@ exports = Class(ImageView, function(supr) {
         animate(this.enemy).now({x : xEnemyStanding}, ENTERING_TIME, animate.easeOut);
         animate(this.bullet).wait(ENTERING_TIME).then(
             bind(this, function() {
+                this.enemy.stand();
                 this.bullet.show();
                 playSound("piu");
             })).then(

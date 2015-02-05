@@ -22,6 +22,18 @@ exports
         });
     };
 
+    FBstatusChange = function (response, target, success_callback, error_callback) {
+        if (response.status === 'connected') {
+            LOG("FBstatusChange: connected! invoking " + success_callback);
+            target && success_callback && success_callback.call(target);
+            return true;
+        } else {
+            LOG("FBstatusChange: not connected! invoking " + error_callback);
+            target && error_callback && error_callback.call(target);
+            return false;
+        }
+    };
+
     FBinit = function () {
         //  Check that the user has granted accessed before
         if (!PiuPiuGlobals.FBdidEverAccessed) {
@@ -63,12 +75,7 @@ exports
     FBisLoggedIn = function ( target, loggedInCallback, notLoggedInCallback) {
         var res = false;
         FB.getLoginStatus(bind(this, function (response) {
-            if (response.status === 'connected') {
-                res = true;
-                target && loggedInCallback && loggedInCallback.call(target);
-            } else {
-                target && notLoggedInCallback && notLoggedInCallback.call(target);
-            }
+            res = FBstatusChange(response, target, loggedInCallback, notLoggedInCallback)
         }));
 
         return res;

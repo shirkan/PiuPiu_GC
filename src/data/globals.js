@@ -130,7 +130,7 @@ exports
         PiuPiuConsts.FBpermissionsNeeded = ["public_profile", "user_friends"];
         PiuPiuConsts.FBwaitForResultsInSeconds = 11;
         PiuPiuConsts.FBleaderboardShowTop = 7;
-        PiuPiuConsts.FBpictureSize = 120;
+        PiuPiuConsts.FBpictureSize = 40;
         PiuPiuConsts.FBpictureScale = 0.5;
     }
 

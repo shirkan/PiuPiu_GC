@@ -15,6 +15,7 @@ import src.views.Splash as Splash;
 import src.views.MainMenu as MainMenu;
 import src.views.Game as Game;
 import src.views.Statistics as Statistics;
+import src.views.Leaderboard as Leaderboard;
 
 import src.anim.IntroAnim as IntroAnim;
 import src.anim.LevelAnim as LevelAnim;
@@ -46,6 +47,7 @@ exports = Class(GC.Application, function () {
         this.levelAnim = new LevelAnim();
         this.game = new Game();
         this.stats = new Statistics();
+        this.leaderboard = new Leaderboard();
 
         this.rootView.push(this.splash);
 
@@ -110,6 +112,22 @@ exports = Class(GC.Application, function () {
         this.on('stats:end', function () {
             dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate))
         });
+
+        //  Main Menu handling - Statistics
+        this.mainMenu.on('leaderboard:start', bind (this, function () {
+            dissolvePushScenes(this.rootView, this.leaderboard, ANIMATING_SCENES_TIME, bind(this, function () {
+                this.leaderboard.build();
+                this.mainMenu.resetView();
+            }));
+        }));
+        this.on('leaderboard:end', function () {
+            dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate))
+        });
+
+
+
+        //  Schedule to grab FB profile photos for leaderboard when connected
+        this.on('facebook:loggedin', bind(this, this.leaderboard.getFBImages.bind(this.leaderboard)));
     };
 
     this.launchUI = function () {};
@@ -141,7 +159,7 @@ exports = Class(GC.Application, function () {
         PiuPiuGlobals.commonGrassMap = randomMap();
 
         //  Init Facebook
-        FBinit();
+        //FBinit();
 
         //handleHighScore();
 

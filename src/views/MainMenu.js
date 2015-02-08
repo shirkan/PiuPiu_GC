@@ -80,12 +80,17 @@ exports = Class(ImageView, function (supr) {
         }));
         this.menu[3].on('InputSelect', bind (this, function() {
             //  Leaderboard
-            //if (!this.isMenuClickable) { return }
-            //this.isMenuClickable = false;
+            if (!this.isMenuClickable) { return }
 
             animateText(this.menu[3]);
             LOG(entries[3]);
-            this.runFBanimation();
+
+            if (this.leaderboardEnabled) {
+                this.isMenuClickable = false;
+                this.emit('leaderboard:start');
+            } else {
+                this.runFBanimation();
+            }
         }));
         this.menu[4].on('InputSelect', bind (this, function() {
             //  Achievements

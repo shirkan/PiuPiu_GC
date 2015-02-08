@@ -4,13 +4,6 @@
 
 import facebook as FB;
 
-FB.onReady.run(function () {
-    FB.init({
-        appId: CONFIG.modules.facebook.facebookAppID,
-        displayName: CONFIG.modules.facebook.facebookDisplayName,
-    });
-});
-
 // ***** Facebook utilities *****
 exports
 {
@@ -31,11 +24,9 @@ exports
             PiuPiuGlobals.FBdidEverAccessed = false;
             saveData("FBdidEverAccessed", PiuPiuGlobals.FBdidEverAccessed);
             target && error_callback && error_callback.call(target);
-            return false;
         } else {
             LOG("FBstatusChange: connected!");
             target && success_callback && success_callback.call(target);
-            return true;
         }
     };
 
@@ -43,44 +34,41 @@ exports
         //  Check that the user has granted accessed before
         if (!PiuPiuGlobals.FBdidEverAccessed) {
             LOG("FBinit: user never logged in before.");
-            return false;
         }
         LOG("FBinit: checking is logged in");
         return FBisLoggedIn(this, FBonLoginUpdates, FBlogin);
     };
 
     FBlogin = function (target, success_callback, error_callback) {
-        var res = false;
         LOG("FBlogin: asking for the following permissions: " + PiuPiuConsts.FBpermissionsNeeded);
         FB.login(function (response) {
             if (!response || !response.status || response.status != "connected") {
                 LOG("FBlogin: response error " + JSON.stringify(response));
                 target && error_callback && error_callback.call(target);
             } else {
-                res = true;
+                FBonLoginUpdates();
                 target && success_callback && success_callback.call(target);
             }
-        }, {scope: PiuPiuConsts.FBpermissionsNeeded});
-
-        return res;
+        });
     };
 
     FBisLoggedIn = function ( target, loggedInCallback, notLoggedInCallback) {
-        var res = false;
         FB.getLoginStatus(bind(this, function (response) {
             LOG("FBisLoggedIn: received info regarding status");
-            res = FBstatusChange(response, target, loggedInCallback, notLoggedInCallback)
+            FBstatusChange(response, target, loggedInCallback, notLoggedInCallback)
         }));
-
-        return res;
     };
 
     FBonLoginUpdates = function () {
         LOG("FBonLoginUpdates Getting score");
         FBgetScore();
 
+        //  Since this is the last operation we are doing here, tell application FB is logged-in in case any other
+        // things need to be done.
         LOG("FBonLoginUpdates Getting all scores");
-        FBgetAllScores();
+        FBgetAllScores(this, function () {
+            GC.app.emit("facebook:loggedin");
+        });
     };
 
     FBgetScore = function (target, success_callback, error_callback) {
@@ -126,6 +114,19 @@ exports
                 target && success_callback && success_callback.call(target);
             }
         });
+    };
+
+    FBgetPicture = function (userid, target, cb ) {
+        FB.api("/" + userid + "/picture", "GET",
+            {"type" : "normal", "height" : PiuPiuConsts.FBpictureSize.toString(),
+            "width" : PiuPiuConsts.FBpictureSize.toString(), "redirect": false.toString()}, function (response) {
+                if (response && !response.error) {
+                    LOG("FBgetPicture: " + JSON.stringify(response));
+                    if (cb) { cb.call(target, userid, response.data.url) }
+                } else {
+                    LOG("FBgetPicture: Graph API request failed: " + JSON.stringify(response));
+                }
+            });
     };
 
     //  OLD LEGACY CODE
@@ -300,20 +301,12 @@ exports
     //        }
     //    });
     //}
-    //
-    //FBgetPicture = function ( userid, target, cb ) {
-    //    if (!FBisLoggedIn()) {
-    //        return false;
-    //    }
-    //
-    //    FB.api("/" + userid + "/picture", "GET",
-    //        {"type" : "normal", "height" : PiuPiuConsts.FBpictureSize, "width" : PiuPiuConsts.FBpictureSize}, function (type, response) {
-    //            if (type == plugin.FacebookAgent.CODE_SUCCEED) {
-    //                LOG("FBgetPicture: " + JSON.stringify(response));
-    //                if (cb) { cb.call(target, userid, response.data.url) }
-    //            } else {
-    //                LOG("FBgetPicture: Graph API request failed, error #" + type + ": " + JSON.stringify(response));
-    //            }
-    //        });
-    //}
 }
+
+FB.onReady.run(function () {
+    FB.init({
+        appId: CONFIG.modules.facebook.facebookAppID,
+        displayName: CONFIG.modules.facebook.facebookDisplayName,
+    });
+    FBinit();
+});

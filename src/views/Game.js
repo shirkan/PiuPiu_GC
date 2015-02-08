@@ -149,10 +149,9 @@ exports = Class(ImageView, function (supr) {
 	this.addBullet = function ( bulletData ) {
 		var bulletStartPoint = bulletData[0];
 		var bulletPathLengths = bulletData[1];
-		var endAngle = bulletData[2];
+		var endAngle = parseFloat(bulletData[2]);   //  This actually fixes a bug in iOS and it's a good practice whatsoever
 		var sound = bulletData[3];
 
-		//var bullet = new Bullet( this, endPoint, bulletStartPoint, endAngle);
 		this.bullets.spawnBullet(bulletStartPoint, bulletPathLengths, endAngle);
 		playSound(sound);
 

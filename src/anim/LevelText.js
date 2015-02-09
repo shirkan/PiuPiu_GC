@@ -50,7 +50,7 @@ exports = Class(View, function(supr) {
 
 	this.show = function () {
 		supr(this, 'show');
-		const SHOW_HINT_TEXT_TIMEOUT = 1000;
+		/** @const */ var SHOW_HINT_TEXT_TIMEOUT = 1000;
 
 		this.levelHeader.setText("Level " + PiuPiuGlobals.currentLevel);
 		this.levelHeader.show();

@@ -295,7 +295,7 @@ exports
 
     handleHighScore = function () {
         var currentHighScore = Math.max(PiuPiuGlobals.highScore, PiuPiuGlobals.currentScore);
-        var storedHighScore = (localStorage.highScore ? localStorage.highScore : 0);
+        var storedHighScore = loadData("highScore") || 0;
 
         //  We retrieve FB high score on log-in so it should be updated by now.
         var FBHighscore = (PiuPiuGlobals.FBdata ? PiuPiuGlobals.FBdata.score : 0);

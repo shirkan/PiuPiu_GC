@@ -63,7 +63,10 @@ exports
 
         //  Styles
         //PiuPiuConsts.fontName = res.arcadepi_font;
-        PiuPiuConsts.fontName = "Arcadepix";
+        PiuPiuConsts.fontName = "ArcadepixRegular";
+        if (isRunningOniOS()) {
+            PiuPiuConsts.fontName = "Arcadepix";
+        }
         PiuPiuConsts.fontSizeBig = 72;
         PiuPiuConsts.fontSizeNormal = 48;
         PiuPiuConsts.fontSizeSmall = 28;

@@ -6,22 +6,22 @@
 
 import ui.View as View;
 import src.anim.Ball as Ball;
-import src.anim.BallView as BallView;
+import src.anim.Ballview as BallView;
 import animate;
 
-const FPS = 15;
-const TIME_firstBounce = 2;
-const TIME_secondBounce = 2;
-const TIME_thirdBounce = 2;
-const TIME_roll = 2;
-const X_firstHit = 1/3;
-const X_secondHit = 2/3;
-const X_thirdHit = 5/6;
-const Y_Floor = PiuPiuGlobals.winSize.height - PiuPiuConsts.fontSizeSmall;
-const BOUNCE_firstHit = 8;
-const BOUNCE_secondHit = 8;
-const BOUNCE_thirdHit = 5;
-const BOUNCE_roll = 3;
+/** @const */ var FPS = 15;
+/** @const */ var TIME_firstBounce = 2;
+/** @const */ var TIME_secondBounce = 2;
+/** @const */ var TIME_thirdBounce = 2;
+/** @const */ var TIME_roll = 2;
+/** @const */ var X_firstHit = 1/3;
+/** @const */ var X_secondHit = 2/3;
+/** @const */ var X_thirdHit = 5/6;
+/** @const */ var Y_Floor = PiuPiuGlobals.winSize.height - PiuPiuConsts.fontSizeSmall;
+/** @const */ var BOUNCE_firstHit = 8;
+/** @const */ var BOUNCE_secondHit = 8;
+/** @const */ var BOUNCE_thirdHit = 5;
+/** @const */ var BOUNCE_roll = 3;
 
 exports = Class(View, function(supr) {
     this.init = function (opts) {
@@ -30,11 +30,11 @@ exports = Class(View, function(supr) {
     };
 
     this.build = function () {
-        const BALL_SIZE = 32;
-        const FIRST_BOUNCE_TIME = 2000;
-        const SECOND_BOUNCE_TIME = 2000;
-        const THIRD_BOUNCE_TIME = 2000;
-        const FOURTH_BOUNCE_TIME = 2000;
+        /** @const */ var BALL_SIZE = 32;
+        /** @const */ var FIRST_BOUNCE_TIME = 2000;
+        /** @const */ var SECOND_BOUNCE_TIME = 2000;
+        /** @const */ var THIRD_BOUNCE_TIME = 2000;
+        /** @const */ var FOURTH_BOUNCE_TIME = 2000;
         this.Y_FLOOR = (PiuPiuGlobals.winSize.height - BALL_SIZE - PiuPiuConsts.fontSizeSmall);
 
         //  Points of ground hit

@@ -9,14 +9,14 @@ import src.anim.Enemy as EnemyAnim;
 
 import animate;
 
-const BODY_X = 125;
-const BODY_Y = 60;
-const BODY_WIDTH = 50;
-const BODY_HEIGHT = 144;
-const HEAD_X = 125;
-const HEAD_Y = 25;
-const HEAD_WIDTH = 25;
-const HEAD_HEIGHT = 35;
+/** @const */ var BODY_X = 125;
+/** @const */ var BODY_Y = 60;
+/** @const */ var BODY_WIDTH = 50;
+/** @const */ var BODY_HEIGHT = 144;
+/** @const */ var HEAD_X = 125;
+/** @const */ var HEAD_Y = 25;
+/** @const */ var HEAD_WIDTH = 25;
+/** @const */ var HEAD_HEIGHT = 35;
 
 //  Setting w,h to avoid image hitbounds auto-config
 var enemyConfig = {

@@ -4,8 +4,8 @@
 
 import ui.View as View;
 
-const BALL_WIDTH = 32;
-const BALL_HEIGHT = 32;
+/** @const */ var BALL_WIDTH = 32;
+/** @const */ var BALL_HEIGHT = 32;
 
 exports = Class(View, function(supr) {
 	this.init = function (opts) {
@@ -14,7 +14,7 @@ exports = Class(View, function(supr) {
 			name: "ballView",
 			zIndex: PiuPiuConsts.statusZIndex,
 			width: BALL_WIDTH,
-			height: BALL_HEIGHT,
+			height: BALL_HEIGHT
 		});
 
 		supr(this, 'init', [opts]);

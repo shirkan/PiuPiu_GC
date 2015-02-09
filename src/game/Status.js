@@ -7,9 +7,9 @@ import ui.ImageView as ImageView;
 import ui.TextView as TextView;
 import animate;
 
-const LIFE_WIDTH = 40;
-const LIFE_HEIGHT = 60;
-const positiveSentences = ["YEAH!!!", "You are the man!", "Beat'em all!", "This is how it should be done!", "MASTER!",
+/** @const */ var LIFE_WIDTH = 40;
+/** @const */ var LIFE_HEIGHT = 60;
+/** @const */ var positiveSentences = ["YEAH!!!", "You are the man!", "Beat'em all!", "This is how it should be done!", "MASTER!",
 	"They keep underestimating you!", "Way to go man!", "Ay Caramba!", "SWEET!", "KABOOM!"];
 
 exports = Class(View, function (supr) {

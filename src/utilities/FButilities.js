@@ -158,7 +158,7 @@ exports
             return;
         }
 
-        FB.api("/me/scores", "POST", {"score" : score}, function (response) {
+        FB.api("/me/scores", "POST", {"score" : score.toString()}, function (response) {
             if (response) {
                 LOG("FBpostHighScore succeed: " + JSON.stringify(response));
                 //  Invoke FBgetScore to verify written data and update local variable

@@ -5,9 +5,9 @@
 import ui.ImageView as ImageView;
 import ui.TextView as TextView;
 
-const yGap = 10;
-const startY = 100;
-const widthRatio = 0.8;
+/** @const */ var yGap = 10;
+/** @const */ var startY = 100;
+/** @const */ var widthRatio = 0.8;
 
 exports = Class(ImageView, function (supr) {
 	this.init = function (opts) {

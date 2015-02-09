@@ -6,8 +6,8 @@ import entities.Entity as Entity;
 import entities.EntityPool as EntityPool;
 import ui.ImageView as ImageView;
 
-const POWERUP_WIDTH = 20;
-const POWERUP_HEIGHT = 20;
+/** @const */ var POWERUP_WIDTH = 20;
+/** @const */ var POWERUP_HEIGHT = 20;
 
 var machineGun = {
 	name: "MachineGun",

@@ -4,8 +4,8 @@
 import ui.ImageView as ImageView;
 import entities.Entity as Entity;
 
-const HANDS_WIDTH = 83;
-const HANDS_HEIGHT = 43;
+/** @const */ var HANDS_WIDTH = 83;
+/** @const */ var HANDS_HEIGHT = 43;
 var handsConfig = {
 	isAnchored: true,
 	width: HANDS_WIDTH,

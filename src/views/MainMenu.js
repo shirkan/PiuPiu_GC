@@ -5,9 +5,9 @@ import animate;
 
 import src.anim.MainMenuAnim as MainMenuAnim;
 
-const yGap = 10;
-const startY = 100;
-const widthRatio = 0.8;
+/** @const */ var yGap = 10;
+/** @const */ var startY = 100;
+/** @const */ var widthRatio = 0.8;
 
 exports = Class(ImageView, function (supr) {
     this.init = function (opts) {
@@ -206,11 +206,11 @@ exports = Class(ImageView, function (supr) {
         }
 
         this.isAnimatingFBLogin = true;
-        const SHAKE_TIME = 50;
-        const BIAS = 20;
-        const LEFT = (PiuPiuGlobals.winSize.width - this.FB_LOGO_SIZE - BIAS) / 2;
-        const RIGHT = (PiuPiuGlobals.winSize.width - this.FB_LOGO_SIZE + BIAS) / 2;
-        const CENTER = (PiuPiuGlobals.winSize.width - this.FB_LOGO_SIZE ) / 2;
+        /** @const */ var SHAKE_TIME = 50;
+        /** @const */ var BIAS = 20;
+        /** @const */ var LEFT = (PiuPiuGlobals.winSize.width - this.FB_LOGO_SIZE - BIAS) / 2;
+        /** @const */ var RIGHT = (PiuPiuGlobals.winSize.width - this.FB_LOGO_SIZE + BIAS) / 2;
+        /** @const */ var CENTER = (PiuPiuGlobals.winSize.width - this.FB_LOGO_SIZE ) / 2;
 
         animate(this.FBlogo).now({x: LEFT},SHAKE_TIME).
             then({x: CENTER}, SHAKE_TIME).
@@ -238,7 +238,7 @@ exports = Class(ImageView, function (supr) {
         }
 
         this.isAnimatingText = true;
-        const TEXT_TIME = 10000;
+        /** @const */ var TEXT_TIME = 10000;
 
         animate(this.FBtext).now({x: -1 * this.FBtext.style.width}, TEXT_TIME, animate.linear).
             then(this.resetFBText.bind(this));

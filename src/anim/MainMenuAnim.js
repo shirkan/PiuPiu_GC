@@ -4,11 +4,11 @@
 import ui.View as View;
 import animate;
 import src.anim.Ball as Ball;
-import src.anim.BallView as BallView;
+import src.anim.Ballview as BallView;
 import src.anim.Player as Player;
 import src.anim.Enemy as Enemy;
 
-const CIRCLE = Math.PI * 2;
+/** @const */ var CIRCLE = Math.PI * 2;
 
 exports = Class(View, function(supr) {
     this.init = function (opts) {

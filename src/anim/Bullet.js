@@ -4,8 +4,8 @@
 
 import ui.ImageView as ImageView;
 
-const BULLET_WIDTH = 10;
-const BULLET_HEIGHT = 4;
+/** @const */ var BULLET_WIDTH = 10;
+/** @const */ var BULLET_HEIGHT = 4;
 
 exports = Class(ImageView, function(supr) {
 	this.init = function (opts) {

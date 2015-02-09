@@ -35,7 +35,7 @@ exports = Class(ImageView, function(supr) {
     };
 
     this.animateLevel = function () {
-        const ANIM_TIMEOUT = 10000;
+        /** @const */ var ANIM_TIMEOUT = 10000;
         this.levelText.show();
 
         //  Invoke animation function
@@ -62,9 +62,9 @@ exports = Class(ImageView, function(supr) {
 
     this.animateLevel1 = function () {
         //  consts
-        const Y_FLOOR = PiuPiuGlobals.winSize.height - PiuPiuConsts.fontSizeSmall;
-        const ENTERING_TIME = 1500;
-        const SHOOT_TIME = 800;
+        /** @const */ var Y_FLOOR = PiuPiuGlobals.winSize.height - PiuPiuConsts.fontSizeSmall;
+        /** @const */ var ENTERING_TIME = 1500;
+        /** @const */ var SHOOT_TIME = 800;
 
         this.clearAll();
 

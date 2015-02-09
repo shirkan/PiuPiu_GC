@@ -1,7 +1,7 @@
 import ui.StackView as StackView;
 import src.data.resources;
-import src.data.globals;
 import src.utilities.Utilities;
+import src.data.globals;
 import src.utilities.GameUtilities;
 import src.utilities.AudioUtilities;
 import src.utilities.AnimationUtilities;
@@ -22,8 +22,8 @@ import src.anim.LevelAnim as LevelAnim;
 
 import ui.TextView;
 
-const BOUNDS_WIDTH = 720;
-const BOUNDS_HEIGHT = 1280;
+/** @const */ var BOUNDS_WIDTH = 720;
+/** @const */ var BOUNDS_HEIGHT = 1280;
 
 exports = Class(GC.Application, function () {
 
@@ -39,7 +39,7 @@ exports = Class(GC.Application, function () {
             clip: true
         });
 
-        const ANIMATING_SCENES_TIME = 500;
+        /** @const */ var ANIMATING_SCENES_TIME = 500;
 
         this.splash = new Splash();
         this.mainMenu = new MainMenu();
@@ -172,7 +172,7 @@ exports = Class(GC.Application, function () {
     };
 
     this.showMenu = function() {
-        const SPLASH_TO_MENU_TIME = 1500;
+        /** @const */ var SPLASH_TO_MENU_TIME = 1500;
         clearTimeout(this.switchToMenu);
         this.mainMenu.checkFBstatus();
         dissolvePushScenes(this.rootView, this.mainMenu, SPLASH_TO_MENU_TIME, bind(this, function() {

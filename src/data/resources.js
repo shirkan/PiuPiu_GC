@@ -38,7 +38,7 @@ exports
         //  Game
         EnemyBig_png : "resources/images/game/enemy.png",
         Enemy_png : "resources/images/game/enemy_mid.png",
-        Enemy_anim : "resources/images/game/enemy/orig/enemy",
+        Enemy_anim : "resources/images/game/enemy/enemy",
         Player_png : "resources/images/game/player.png",
         Hands_png : "resources/images/game/hands.png",
         Hands_plist: "resources/images/game/hands.plist",

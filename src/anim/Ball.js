@@ -4,8 +4,8 @@
 
 import ui.ImageView as ImageView;
 
-const BALL_WIDTH = 32;
-const BALL_HEIGHT = 32;
+/** @const */ var BALL_WIDTH = 32;
+/** @const */ var BALL_HEIGHT = 32;
 
 exports = Class(ImageView, function(supr) {
 	this.init = function (opts) {

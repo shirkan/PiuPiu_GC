@@ -4,8 +4,8 @@
 
 import ui.ImageView as ImageView;
 
-const PLAYER_WIDTH = 57;
-const PLAYER_HEIGHT = 170;
+/** @const */ var PLAYER_WIDTH = 57;
+/** @const */ var PLAYER_HEIGHT = 170;
 
 exports = Class(ImageView, function(supr) {
 	this.init = function (opts) {

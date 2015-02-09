@@ -2,6 +2,8 @@
  * Created by shirkan on 11/24/14.
  */
 
+import device;
+
 exports
 {
     isNumber = function (n) {
@@ -24,15 +26,15 @@ exports
     }
 
     isRunningOnAndroid = function () {
-        //return (cc.sys.platform == cc.sys.ANDROID);
+        return device.isAndroid;
     }
 
     isRunningOniOS = function () {
-        //return (cc.sys.platform == cc.sys.IPAD || cc.sys.platform == cc.sys.IPHONE);
+        return device.isIOS;
     }
 
     isRunningOnMobile = function () {
-        return (cc.sys.isMobile);
+        return device.isMobileNative;
     }
 
     isDebugMode = function () {

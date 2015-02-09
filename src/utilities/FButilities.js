@@ -20,12 +20,14 @@ exports
     FBstatusChange = function (response, target, success_callback, error_callback) {
         if (!response || response.status != "connected") {
             LOG("FBstatusChange: not connected!");
+            PiuPiuGlobals.FBisConnected = false;
             //  falsifying did Ever connect, to prevent user nagging
             PiuPiuGlobals.FBdidEverAccessed = false;
             saveData("FBdidEverAccessed", PiuPiuGlobals.FBdidEverAccessed);
             target && error_callback && error_callback.call(target);
         } else {
             LOG("FBstatusChange: connected!");
+            PiuPiuGlobals.FBisConnected = true;
             target && success_callback && success_callback.call(target);
         }
     };
@@ -36,7 +38,7 @@ exports
             LOG("FBinit: user never logged in before.");
         }
         LOG("FBinit: checking is logged in");
-        return FBisLoggedIn(this, FBonLoginUpdates, FBlogin);
+        return FBisLoggedIn(this, FBonLoginUpdates, null, true); //force check is logged in
     };
 
     FBlogin = function (target, success_callback, error_callback) {
@@ -44,15 +46,24 @@ exports
         FB.login(function (response) {
             if (!response || !response.status || response.status != "connected") {
                 LOG("FBlogin: response error " + JSON.stringify(response));
+                PiuPiuGlobals.FBisConnected = false;
                 target && error_callback && error_callback.call(target);
             } else {
+                PiuPiuGlobals.FBisConnected = true;
                 FBonLoginUpdates();
                 target && success_callback && success_callback.call(target);
             }
         });
     };
 
-    FBisLoggedIn = function ( target, loggedInCallback, notLoggedInCallback) {
+    //  Generally force should be disabled. special case is on startup when we want to check if we are already logged in
+    FBisLoggedIn = function ( target, loggedInCallback, notLoggedInCallback, force) {
+        if (!PiuPiuGlobals.FBisConnected && !force) {
+            LOG("FBisLoggedIn: FB is not connected");
+            target && notLoggedInCallback && notLoggedInCallback.call(target);
+            return;
+        }
+
         FB.getLoginStatus(bind(this, function (response) {
             LOG("FBisLoggedIn: received info regarding status");
             FBstatusChange(response, target, loggedInCallback, notLoggedInCallback)
@@ -60,8 +71,13 @@ exports
     };
 
     FBonLoginUpdates = function () {
+        if (!PiuPiuGlobals.FBisConnected) {
+            LOG("FBonLoginUpdates: FB is not connected");
+            return;
+        }
+
         LOG("FBonLoginUpdates Getting score");
-        FBgetScore();
+        FBgetScore(this, handleHighScore);
 
         //  Since this is the last operation we are doing here, tell application FB is logged-in in case any other
         // things need to be done.
@@ -72,25 +88,26 @@ exports
     };
 
     FBgetScore = function (target, success_callback, error_callback) {
-        PiuPiuGlobals.FBplayerScoreData = null;
+        if (!PiuPiuGlobals.FBisConnected) {
+            LOG("FBgetScore: FB is not connected");
+            target && error_callback && error_callback.call(target);
+            return;
+        }
+
+        PiuPiuGlobals.FBdata = null;
         FB.api("/me/scores", 'GET', function (response) {
             if (!response || response.error) {
                 LOG("FBgetScore: response error " + JSON.stringify(response));
                 target && error_callback && error_callback.call(target);
             } else {
                 LOG("FBgetScore: " + JSON.stringify(response));
-                PiuPiuGlobals.FBplayerScoreData = response.data[0];
+                PiuPiuGlobals.FBdata = response.data[0];
 
                 //  Check if score exists
-                if (!PiuPiuGlobals.FBplayerScoreData.score) {
-                    PiuPiuGlobals.FBplayerScoreData.score = 0;
+                if (!PiuPiuGlobals.FBdata.score) {
+                    PiuPiuGlobals.FBdata.score = 0;
                 }
 
-                ////  Check if need to update local high score
-                //if (PiuPiuGlobals.FBplayerScoreData.score > PiuPiuGlobals.highScore) {
-                //    PiuPiuGlobals.highScore = PiuPiuGlobals.FBplayerScoreData.score;
-                //    localStorage.setItem("highScore", PiuPiuGlobals.highScore);
-                //}
                 target && success_callback && success_callback.call(target);
             }
         });
@@ -99,6 +116,12 @@ exports
     FBgetAllScores = function ( target, success_callback, error_callback ) {
         PiuPiuGlobals.FBallScoresData = null;
 
+        if (!PiuPiuGlobals.FBisConnected) {
+            LOG("FBgetAllScores: FB is not connected");
+            target && error_callback && error_callback.call(target);
+            return;
+        }
+
         FB.api("/" + PiuPiuConsts.FB_appid + "/scores", "GET", function (response) {
             if (!response || response.error) {
                 LOG("FBgetAllScores: response error " + JSON.stringify(response));
@@ -106,17 +129,17 @@ exports
             } else {
                 PiuPiuGlobals.FBallScoresData = response.data;
                 LOG("FBgetAllScores: " + JSON.stringify(PiuPiuGlobals.FBallScoresData));
-
-                //  Check if score exists
-                if (!PiuPiuGlobals.FBplayerScoreData.score) {
-                    PiuPiuGlobals.FBplayerScoreData.score = 0;
-                }
                 target && success_callback && success_callback.call(target);
             }
         });
     };
 
     FBgetPicture = function (userid, target, cb ) {
+        if (!PiuPiuGlobals.FBisConnected) {
+            LOG("FBgetPicture: FB is not connected");
+            return;
+        }
+
         FB.api("/" + userid + "/picture", "GET",
             {"type" : "normal", "height" : PiuPiuConsts.FBpictureSize.toString(),
             "width" : PiuPiuConsts.FBpictureSize.toString(), "redirect": false.toString()}, function (response) {
@@ -129,178 +152,22 @@ exports
             });
     };
 
-    //  OLD LEGACY CODE
+    FBpostHighScore = function (score) {
+        if (!PiuPiuGlobals.FBisConnected) {
+            LOG("FBpostHighScore: FB is not connected");
+            return;
+        }
 
-    //FBlogin = function (target, success_callback, error_callback) {
-    //    LOG("FBlogin: asking for the following permissions: " + PiuPiuConsts.FBpermissionsNeeded);
-    //    FB.login(PiuPiuConsts.FBpermissionsNeeded, function(code, response){
-    //        if(code == plugin.FacebookAgent.CODE_SUCCEED){
-    //            LOG("FBlogin: login succeeded");
-    //            var allowedPermissions = response["permissions"];
-    //            var str = "";
-    //            for (var i = 0; i < allowedPermissions.length; ++i) {
-    //                str += allowedPermissions[i] + " ";
-    //            }
-    //            LOG("FBlogin Permissions: " + str);
-    //            PiuPiuGlobals.FBpermissionsGranted = allowedPermissions;
-    //
-    //            FBonLoginUpdates();
-    //
-    //            if (success_callback) { success_callback.call(target) }
-    //        } else {
-    //            LOG("FBlogin Login failed, error #" + code + ": " + JSON.stringify(response));
-    //            if (error_callback) { error_callback.call(target) }
-    //        }
-    //    });
-    //};
-    //
-    //FBonLoginUpdates = function () {
-    //
-    //    LOG("FBonLoginUpdates Has all permission?: " + FBcheckPermissions());
-    //
-    //    LOG("FBonLoginUpdates Getting score");
-    //    FBgetScore();
-    //
-    //    LOG("FBonLoginUpdates Getting all scores");
-    //    FBgetAllScores();
-    //}
-    //
-    //FBlogout = function () {
-    //    if (FBisLoggedIn()) {
-    //        FB.logout();
-    //    }
-    //    LOG("FBlogout Facebook logged out. IsloggedIn? " + FBisLoggedIn());
-    //}
-    //
-    //
-    //
-    //FBcheckPermissions = function () {
-    //    PiuPiuGlobals.FBpermissionsMissing = [];
-    //    for (var i = 0; i < PiuPiuConsts.FBpermissionsNeeded.length; ++i) {
-    //        if (PiuPiuGlobals.FBpermissionsGranted.indexOf(PiuPiuConsts.FBpermissionsNeeded[i]) == -1) {
-    //            LOG("FBcheckPermissions Missing permission: " + PiuPiuConsts.FBpermissionsNeeded[i]);
-    //            PiuPiuGlobals.FBpermissionsMissing.push(PiuPiuConsts.FBpermissionsNeeded[i]);
-    //            //PiuPiuGlobals.FBhaveAllPermissions = false;
-    //        }
-    //    }
-    //
-    //    return (PiuPiuGlobals.FBpermissionsMissing.length == 0);
-    //}
-    //
-    //FBpostScore = function ( score ) {
-    //    if (!FBisLoggedIn()) {
-    //        return false;
-    //    }
-    //
-    //    var updateHighScore = function () {
-    //        if (!isNumber(PiuPiuGlobals.FBplayerScoreData.score)){
-    //            LOG("PiuPiuGlobals.FBplayerScoreData.score is not a number " + PiuPiuGlobals.FBplayerScoreData.score);
-    //            return;
-    //        }
-    //        LOG("FB: " + PiuPiuGlobals.FBplayerScoreData.score + " < local: "+ PiuPiuGlobals.highScore);
-    //        if (PiuPiuGlobals.FBplayerScoreData.score < PiuPiuGlobals.highScore) {
-    //            LOG("Updated high score!");
-    //            FBpostHighScore();
-    //        } else {
-    //            LOG("High score wasn't updated");
-    //        }
-    //
-    //    };
-    //
-    //    //  We need to get high score from server and add the points of the last game.
-    //    //  By doing this, we are aligned on all platforms and not only on local device :)
-    //    var updateTotalScore = function ( score ) {
-    //        FBpostTotalScore( parseInt(score) + parseInt(PiuPiuGlobals.FBplayerScoreData.totalscore))
-    //    }
-    //
-    //    FBgetScore(this, function() { updateHighScore()});
-    //}
-    //
-    //FBpostHighScore = function () {
-    //    FB.api("/me/scores", "POST", {"score" : PiuPiuGlobals.highScore}, function (type, response) {
-    //        if (type == plugin.FacebookAgent.CODE_SUCCEED) {
-    //            LOG("FBpostHighScore: " + JSON.stringify(response));
-    //        } else {
-    //            LOG("FBpostHighScore: Graph API request failed, error #" + type + ": " + JSON.stringify(response));
-    //        }
-    //    });
-    //    return true;
-    //}
-    //
-    //FBgetScore = function ( target, success_callback, error_callback) {
-    //    if (!FBisLoggedIn()) {
-    //        return false;
-    //    }
-    //    PiuPiuGlobals.FBplayerScoreData = null;
-    //    FB.api("/me/scores", "GET", function (type, response) {
-    //        if (type == plugin.FacebookAgent.CODE_SUCCEED) {
-    //            LOG("FBgetScore: " + JSON.stringify(response));
-    //            PiuPiuGlobals.FBplayerScoreData = response.data[0];
-    //
-    //            //  Check if score exists
-    //            if (!PiuPiuGlobals.FBplayerScoreData.score) {
-    //                PiuPiuGlobals.FBplayerScoreData.score = 0;
-    //            }
-    //
-    //            ////  Check if need to update local high score
-    //            //if (PiuPiuGlobals.FBplayerScoreData.score > PiuPiuGlobals.highScore) {
-    //            //    PiuPiuGlobals.highScore = PiuPiuGlobals.FBplayerScoreData.score;
-    //            //    localStorage.setItem("highScore", PiuPiuGlobals.highScore);
-    //            //}
-    //            if (success_callback) { success_callback.call(target) }
-    //        } else {
-    //            LOG("FBgetScore: Graph API request failed, error #" + type + ": " + JSON.stringify(response));
-    //            if (error_callback) { error_callback.call(target) }
-    //        }
-    //    });
-    //}
-    //
-    //FBgetAllScores = function ( target, success_callback, error_callback ) {
-    //    if (!FBisLoggedIn()) {
-    //        return false;
-    //    }
-    //
-    //    PiuPiuGlobals.FBallScoresData = null;
-    //
-    //    FB.api("/" + PiuPiuConsts.FB_appid+ "/scores", "GET", function (type, response) {
-    //        if (type == plugin.FacebookAgent.CODE_SUCCEED) {
-    //            PiuPiuGlobals.FBallScoresData = response.data;
-    //            LOG("FBgetAllScores: " + JSON.stringify(PiuPiuGlobals.FBallScoresData));
-    //            if (success_callback) { success_callback.call(target) }
-    //        } else {
-    //            LOG("FBgetAllScores: Graph API request failed, error #" + type + ": " + JSON.stringify(response));
-    //            if (error_callback) { error_callback.call(target) }
-    //        }
-    //    });
-    //}
-    //
-    //FBdeleteAll = function () {
-    //    if (!FBisLoggedIn()) {
-    //        return false;
-    //    }
-    //    FB.api("/" + PiuPiuConsts.FB_appid+ "/scores", "DELETE", function (type, response) {
-    //        if (type == plugin.FacebookAgent.CODE_SUCCEED) {
-    //            PiuPiuGlobals.FBallScoresData = null;
-    //            LOG("FBdeleteAll: " + JSON.stringify(response));
-    //        } else {
-    //            LOG("FBdeleteAll: Graph API request failed, error #" + type + ": " + JSON.stringify(response));
-    //        }
-    //    });
-    //}
-    //
-    //FBdeleteMe = function () {
-    //    if (!FBisLoggedIn()) {
-    //        return false;
-    //    }
-    //    FB.api("/me/scores", "DELETE", function (type, response) {
-    //        if (type == plugin.FacebookAgent.CODE_SUCCEED) {
-    //            PiuPiuGlobals.FBallScoresData = null;
-    //            LOG("FBdeleteMe: " + JSON.stringify(response));
-    //        } else {
-    //            LOG("FBdeleteMe: Graph API request failed, error #" + type + ": " + JSON.stringify(response));
-    //        }
-    //    });
-    //}
+        FB.api("/me/scores", "POST", {"score" : score}, function (response) {
+            if (response) {
+                LOG("FBpostHighScore succeed: " + JSON.stringify(response));
+                //  Invoke FBgetScore to verify written data and update local variable
+                FBgetScore();
+            } else {
+                LOG("FBpostHighScore failed: Graph API request failed, error #" + type + ": " + JSON.stringify(response));
+            }
+        });
+    };
 }
 
 FB.onReady.run(function () {

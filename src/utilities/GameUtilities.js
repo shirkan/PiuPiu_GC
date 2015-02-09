@@ -294,22 +294,21 @@ exports
     };
 
     handleHighScore = function () {
-        var localHighScore = PiuPiuGlobals.highScore;
+        var currentHighScore = Math.max(PiuPiuGlobals.highScore, PiuPiuGlobals.currentScore);
         var storedHighScore = (localStorage.highScore ? localStorage.highScore : 0);
-        if (FBisLoggedIn(this, FBgetScore)) {
-            LOG("handleHighScore FB logged in!");
-        } else {
-            LOG("handleHighScore FB NOTTTTT logged in!");
+
+        //  We retrieve FB high score on log-in so it should be updated by now.
+        var FBHighscore = (PiuPiuGlobals.FBdata ? PiuPiuGlobals.FBdata.score : 0);
+
+        LOG("handleHighScore: current: " + currentHighScore + " stored: " + storedHighScore + " FB: " + FBHighscore);
+
+        PiuPiuGlobals.highScore = Math.max(currentHighScore, storedHighScore);
+
+        if (PiuPiuGlobals.highScore > FBHighscore) {
+            FBisLoggedIn(this, FBpostHighScore.bind(this, PiuPiuGlobals.highScore));
         }
-        var FBHighScore = (PiuPiuGlobals.FBplayerScoreData ? PiuPiuGlobals.FBplayerScoreData.score : 0);
 
-        var highScore = Math.max(localHighScore, storedHighScore, FBHighScore);
-
-        PiuPiuGlobals.highScore = localStorage.highScore = highScore;
-
-        if (FBisLoggedIn()) {
-            FBpostHighScore(highScore);
-        }
+        saveData("highScore", PiuPiuGlobals.highScore);
     };
 
     randomMap = function () {

@@ -3,3 +3,5 @@ modules/*
 .idea/*
 build/*
 tmp_resources/*
+shirkan.keystore
+init_env_vars

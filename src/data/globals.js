@@ -170,11 +170,12 @@ exports
         });
 
         //  Facebook
-        PiuPiuGlobals.FBdidEverAccessed = 0;
+        PiuPiuGlobals.FBdidEverAccessed = false;
+        PiuPiuGlobals.FBisConnected = false;
         PiuPiuGlobals.FBpermissionsMissing = PiuPiuConsts.FBpermissionsNeeded;
         PiuPiuGlobals.FBpermissionsGranted = [];
         PiuPiuGlobals.FBallScoresData = null;
-        PiuPiuGlobals.FBplayerScoreData = null;
+        PiuPiuGlobals.FBdata = null;
     }
 
     if (typeof PiuPiuLevelSettings == "undefined") {

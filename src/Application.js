@@ -22,8 +22,8 @@ import src.anim.LevelAnim as LevelAnim;
 
 import ui.TextView;
 
-var BOUNDS_WIDTH = 720;
-var BOUNDS_HEIGHT = 1280;
+const BOUNDS_WIDTH = 720;
+const BOUNDS_HEIGHT = 1280;
 
 exports = Class(GC.Application, function () {
 
@@ -38,7 +38,7 @@ exports = Class(GC.Application, function () {
             height: PiuPiuGlobals.winSize.height,
             clip: true
         });
-        
+
         const ANIMATING_SCENES_TIME = 500;
 
         this.splash = new Splash();
@@ -90,6 +90,7 @@ exports = Class(GC.Application, function () {
         this.on('game:end', bind (this, function() {
             PiuPiuGlobals.currentLevel = 1;
             saveStats();
+            handleHighScore();
             dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate))
         }));
 
@@ -157,11 +158,6 @@ exports = Class(GC.Application, function () {
         setMusicVolume(PiuPiuConsts.musicVolume);
 
         PiuPiuGlobals.commonGrassMap = randomMap();
-
-        //  Init Facebook
-        //FBinit();
-
-        //handleHighScore();
 
         //  Load all levels
         loadAllLevels();

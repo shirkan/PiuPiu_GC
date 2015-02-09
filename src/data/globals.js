@@ -163,7 +163,7 @@ exports
         PiuPiuGlobals.soundEnabled = 1;
 
         //  Load/Save stats
-        PiuPiuGlobals.loadSave = ["FBdidEverAccessed", "highScore"];
+        PiuPiuGlobals.loadSave = ["highScore"];
 
         //  Stats vars
         PiuPiuGlobals.statsNames = ["totalBulletsFired", "totalPowerUps", "totalEnemyKilled", "totalHeadShots", "totalPoints"];

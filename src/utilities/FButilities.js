@@ -33,6 +33,7 @@ exports
     };
 
     FBinit = function () {
+        loadData("FBdidEverAccessed");
         //  Check that the user has granted accessed before
         if (!PiuPiuGlobals.FBdidEverAccessed) {
             LOG("FBinit: user never logged in before.");
@@ -95,7 +96,7 @@ exports
         }
 
         PiuPiuGlobals.FBdata = null;
-        FB.api("/me/scores", 'GET', function (response) {
+        FB.api("/me/scores", 'get', function (response) {
             if (!response || response.error) {
                 LOG("FBgetScore: response error " + JSON.stringify(response));
                 target && error_callback && error_callback.call(target);
@@ -104,8 +105,8 @@ exports
                 PiuPiuGlobals.FBdata = response.data[0];
 
                 //  Check if score exists
-                if (!PiuPiuGlobals.FBdata.score) {
-                    PiuPiuGlobals.FBdata.score = 0;
+                if (!PiuPiuGlobals.FBdata || !PiuPiuGlobals.FBdata.score) {
+                    LOG("FBgetScore: something is wrong with FBdata: " + PiuPiuGlobals.FBdata);
                 }
 
                 target && success_callback && success_callback.call(target);
@@ -122,7 +123,7 @@ exports
             return;
         }
 
-        FB.api("/" + PiuPiuConsts.FB_appid + "/scores", "GET", function (response) {
+        FB.api("/" + PiuPiuConsts.FB_appid + "/scores", "get", function (response) {
             if (!response || response.error) {
                 LOG("FBgetAllScores: response error " + JSON.stringify(response));
                 target && error_callback && error_callback.call(target);
@@ -140,7 +141,7 @@ exports
             return;
         }
 
-        FB.api("/" + userid + "/picture", "GET",
+        FB.api("/" + userid + "/picture", "get",
             {"type" : "normal", "height" : PiuPiuConsts.FBpictureSize.toString(),
             "width" : PiuPiuConsts.FBpictureSize.toString(), "redirect": false.toString()}, function (response) {
                 if (response && !response.error) {
@@ -158,7 +159,7 @@ exports
             return;
         }
 
-        FB.api("/me/scores", "POST", {"score" : score.toString()}, function (response) {
+        FB.api("/me/scores", "post", {"score" : score.toString()}, function (response) {
             if (response) {
                 LOG("FBpostHighScore succeed: " + JSON.stringify(response));
                 //  Invoke FBgetScore to verify written data and update local variable

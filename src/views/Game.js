@@ -86,6 +86,7 @@ exports = Class(ImageView, function (supr) {
 		}
 
 		this.status.updateLives(PiuPiuGlobals.livesLeft);
+		this.status.updateScore(PiuPiuGlobals.currentScore);
 
 		//  Init & start enemies spwaning
 		this.enemySM.init(this, this.spawnEnemy, PiuPiuLevelSettings.enemiesSpawnIntervalType,

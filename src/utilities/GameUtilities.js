@@ -286,7 +286,8 @@ exports
     };
 
     loadData = function (key) {
-        key = localStorage.getItem(key);
+        PiuPiuGlobals[key] = localStorage.getItem(key);
+        return PiuPiuGlobals[key];
     };
 
     saveData = function (key, value) {
@@ -300,7 +301,7 @@ exports
         //  We retrieve FB high score on log-in so it should be updated by now.
         var FBHighscore = (PiuPiuGlobals.FBdata ? PiuPiuGlobals.FBdata.score : 0);
 
-        LOG("handleHighScore: current: " + currentHighScore + " stored: " + storedHighScore + " FB: " + FBHighscore);
+        LOG("handleHighScore: current highscore: " + currentHighScore + " stored: " + storedHighScore + " FB: " + FBHighscore);
 
         PiuPiuGlobals.highScore = Math.max(currentHighScore, storedHighScore);
 

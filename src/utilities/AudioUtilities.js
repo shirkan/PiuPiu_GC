@@ -208,6 +208,7 @@ exports
 	};
 
 	playMusic = function (musicFile) {
+		return; //DISABLED!
 		if (!PiuPiuGlobals.soundEnabled) {
 			stopMusic();
 			return;

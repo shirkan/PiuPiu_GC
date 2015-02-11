@@ -12,11 +12,13 @@ import src.anim.Enemy as Enemy;
 
 exports = Class(View, function(supr) {
     this.init = function (opts) {
+        opts = merge(opts, {zIndex: 10});
         supr(this, 'init', [opts]);
+
         this.player = new Player({parent: this});
         this.enemy = new Enemy({parent: this});
         this.ballView = new BallView({parent: this});
-        this.ball = new Ball({parent: this.ballView});
+        this.ball = new Ball({parent: this.ballView, zIndex: 10});
 
         this.Y_FLOOR = PiuPiuGlobals.winSize.height - PiuPiuConsts.fontSizeSmall;
         this.ENEMY_ENTER_TIME = 500;

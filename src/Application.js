@@ -9,8 +9,6 @@ import src.utilities.FBUtilities;
 import device;
 import animate;
 
-import .parse as parse;
-
 import src.views.Splash as Splash;
 import src.views.MainMenu as MainMenu;
 import src.views.Game as Game;
@@ -114,10 +112,9 @@ exports = Class(GC.Application, function () {
             dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate))
         });
 
-        //  Main Menu handling - Statistics
+        //  Main Menu handling - Leaderboard
         this.mainMenu.on('leaderboard:start', bind (this, function () {
             dissolvePushScenes(this.rootView, this.leaderboard, ANIMATING_SCENES_TIME, bind(this, function () {
-                this.leaderboard.build();
                 this.mainMenu.resetView();
             }));
         }));
@@ -126,6 +123,9 @@ exports = Class(GC.Application, function () {
         });
 
 
+
+        //  Schedule validating leaderboard data
+        this.on('scores:loaded', bind(this.leaderboard, this.leaderboard.validateData));
 
         //  Schedule to grab FB profile photos for leaderboard when connected
         this.on('facebook:loggedin', bind(this, this.leaderboard.getFBImages.bind(this.leaderboard)));
@@ -155,7 +155,7 @@ exports = Class(GC.Application, function () {
         //  Load stats
         loadAll();
 
-        setMusicVolume(PiuPiuConsts.musicVolume);
+        //setMusicVolume(PiuPiuConsts.musicVolume);
 
         PiuPiuGlobals.commonGrassMap = randomMap();
 

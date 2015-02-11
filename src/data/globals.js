@@ -6,7 +6,15 @@ import src.data.resources;
 
 exports
 {
-
+    if(typeof EnemyColor == "undefined") {
+        EnemyColor = {};
+        EnemyColor.Blue_Red = "blue_red";
+        EnemyColor.Blue_White = "blue_white";
+        EnemyColor.Grey_Black = "grey_black";
+        EnemyColor.Red_White = "red_white";
+        EnemyColor.All = ["Blue_Red", "Blue_White", "Grey_Black", "Red_White"];
+    };
+    
     if(typeof TagOfLayer == "undefined") {
         TagOfLayer = {};
         TagOfLayer.Background = 0;
@@ -133,7 +141,7 @@ exports
         PiuPiuConsts.FBpermissionsNeeded = ["public_profile", "user_friends"];
         PiuPiuConsts.FBwaitForResultsInSeconds = 11;
         PiuPiuConsts.FBleaderboardShowTop = 7;
-        PiuPiuConsts.FBpictureSize = 40;
+        PiuPiuConsts.FBpictureSize = 80;
         PiuPiuConsts.FBpictureScale = 0.5;
     }
 

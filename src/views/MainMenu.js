@@ -171,10 +171,10 @@ exports = Class(ImageView, function (supr) {
         if (PiuPiuGlobals.soundEnabled == 0) {
             this.menu[1].setText("Sound off");
             stopAllSounds();
-            stopMusic();
+            //stopMusic();
         } else {
             this.menu[1].setText("Sound on");
-            startMusic();
+            //startMusic();
         }
     };
 

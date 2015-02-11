@@ -5,9 +5,10 @@
 import entities.Entity as Entity;
 import entities.EntityPool as EntityPool;
 import ui.ImageView as ImageView;
+import animate;
 
-/** @const */ var POWERUP_WIDTH = 20;
-/** @const */ var POWERUP_HEIGHT = 20;
+/** @const */ var POWERUP_WIDTH = 50;
+/** @const */ var POWERUP_HEIGHT = 50;
 
 var machineGun = {
 	name: "MachineGun",
@@ -44,13 +45,18 @@ var PowerupConfig = {
 		h: POWERUP_HEIGHT
 	},
 	autoSize: true,
-	period: PiuPiuConsts.powerupPeriod
+	anchorX: POWERUP_WIDTH / 2,
+	anchorY: POWERUP_HEIGHT / 2
 };
 
 var Powerup = Class(Entity, function() {
 	var sup = Entity.prototype;
 	this.name = "Powerup";
 	this.viewClass = ImageView;
+
+	this.ANIMATION_TIME = 700;
+	this.MAX_SCALE = 1;
+	this.MIN_SCALE = 0.1
 
 	this.init = function(opts) {
 		opts = merge(opts, PowerupConfig);
@@ -60,6 +66,7 @@ var Powerup = Class(Entity, function() {
 	this.resetObject = function (data) {
 		this.setData(data);
 		this.view.setImage(data.image);
+		this.view.style.scale = this.MIN_SCALE;
 		this.name = data.name;
 		this.start();
 	};
@@ -67,15 +74,50 @@ var Powerup = Class(Entity, function() {
 	this.update = function(dt) {
 		sup.update.call(this, dt);
 	};
+
 	this.setData = function ( data ) {
 		this.data = data;
-	}
+	};
+
 	this.getData = function () {
 		return (this.data ? this.data : null);
-	}
+	};
+
 	this.start = function () {
-		setTimeout(this.release, this.period);
-	}
+		this.scheduler = setTimeout(this.animateOut.bind(this), PiuPiuConsts.powerupPeriod);
+		this.shootable = true;
+		this.animateIn();
+	};
+
+	this.collidesWith = function(entity) {
+		if (!this.shootable) {
+			return false;
+		}
+
+		if (sup.collidesWith.call(this, entity)) {
+			this.shootable = false;
+			return true;
+		}
+
+		return false;
+	};
+
+	this.animateIn = function () {
+		animate(this.view).clear().
+			now({scale: this.MAX_SCALE}, this.ANIMATION_TIME, animate.easeInOutElastic);
+	};
+
+	this.animateOut = function () {
+		this.shootable = false;
+		animate(this.view).clear().
+			now({scale: this.MIN_SCALE}, this.ANIMATION_TIME, animate.linear).
+			then(this.release.bind(this));
+	};
+
+	this.release = function () {
+		clearTimeout(this.scheduler);
+		sup.release.call(this);
+	};
 });
 
 exports = Class(EntityPool, function() {
@@ -106,6 +148,6 @@ exports = Class(EntityPool, function() {
 
 		var powerup = this.obtain(opts.x, opts.y, opts);
 		eval("powerup.resetObject(" + type+ ")");
-		powerup.showHitBounds();
+		//powerup.showHitBounds();
 	};
 });

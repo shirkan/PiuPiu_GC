@@ -12,15 +12,21 @@ import ui.SpriteView as SpriteView;
 /** @const */ var ENEMY_DEAD_HEIGHT = ENEMY_RUNNING_HEIGHT;
 /** @const */ var ENEMY_HEADSHOT_WIDTH = ENEMY_RUNNING_WIDTH;
 /** @const */ var ENEMY_HEADSHOT_HEIGHT = ENEMY_RUNNING_HEIGHT;
+/** @const */ var ENEMY_SPEED = 25;
 
 exports = Class(SpriteView, function(supr) {
 	this.init = function (opts) {
 		this.name = "AnimEnemy";
+
+		var color = (opts.color && EnemyColor[opts.color]) ? EnemyColor[opts.color] :
+			EnemyColor[EnemyColor.All[randomNumber(0, EnemyColor.All.length, true)]];
+		var url = res.Enemy_anim + color + "/enemy";
+
 		opts = merge(opts, {
 			width: ENEMY_RUNNING_WIDTH,
 			height: ENEMY_RUNNING_HEIGHT,
-			url: res.Enemy_anim,
-			frameRate: 25,
+			url: url,
+			frameRate: ENEMY_SPEED,
 			defaultAnimation: "stand"
 		});
 

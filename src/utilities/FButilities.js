@@ -54,7 +54,7 @@ exports
                 FBonLoginUpdates();
                 target && success_callback && success_callback.call(target);
             }
-        });
+        }, {scope: "public_profile, user_friends"});
     };
 
     //  Generally force should be disabled. special case is on startup when we want to check if we are already logged in
@@ -130,12 +130,13 @@ exports
             } else {
                 PiuPiuGlobals.FBallScoresData = response.data;
                 LOG("FBgetAllScores: " + JSON.stringify(PiuPiuGlobals.FBallScoresData));
+                GC.app.emit("scores:loaded");
                 target && success_callback && success_callback.call(target);
             }
         });
     };
 
-    FBgetPicture = function (userid, target, cb ) {
+    FBgetPicture = function (place, userid, target, cb ) {
         if (!PiuPiuGlobals.FBisConnected) {
             LOG("FBgetPicture: FB is not connected");
             return;
@@ -146,7 +147,7 @@ exports
             "width" : PiuPiuConsts.FBpictureSize.toString(), "redirect": false.toString()}, function (response) {
                 if (response && !response.error) {
                     LOG("FBgetPicture: " + JSON.stringify(response));
-                    if (cb) { cb.call(target, userid, response.data.url) }
+                    if (cb) { cb.call(target, place, userid, response.data.url) }
                 } else {
                     LOG("FBgetPicture: Graph API request failed: " + JSON.stringify(response));
                 }

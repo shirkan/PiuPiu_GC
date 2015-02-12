@@ -260,13 +260,13 @@ exports
                 var num = parseInt(data);
                 if (!isNaN(num)) {
                     PiuPiuGlobals[entry] = num;
-                } else {
+                } else if (typeof data == "string"){
                     if (data == "true") {
                         PiuPiuGlobals[entry] = true;
+                    } else if (data == "false") {
+                        PiuPiuGlobals[entry] = false;
                     } else {
-                        if (data == "false") {
-                            PiuPiuGlobals[entry] = false;
-                        }
+                        PiuPiuGlobals[entry] = data;
                     }
                 }
             }
@@ -294,22 +294,44 @@ exports
         localStorage.setItem(key, value);
     };
 
-    handleHighScore = function () {
-        var currentHighScore = Math.max(PiuPiuGlobals.highScore, PiuPiuGlobals.currentScore);
+    handleAllHighScores = function () {
+        PiuPiuGlobals.unlockedWorlds.forEach( function (world) {
+            ParseLoadMyScore(world);
+        });
+    };
+
+    handleHighScore = function ( world ) {
+        //var currentHighScore = Math.max(PiuPiuGlobals.highScore, PiuPiuGlobals.currentScore);
+        var currentHighScore = PiuPiuGlobals.highScore[world];
         var storedHighScore = loadData("highScore") || 0;
 
         //  We retrieve FB high score on log-in so it should be updated by now.
-        var FBHighscore = (PiuPiuGlobals.FBdata ? PiuPiuGlobals.FBdata.score : 0);
+        //var ParseHighscore = (PiuPiuGlobals.FBdata ? PiuPiuGlobals.FBdata.score : 0);
+        var ParseHighscore = 0;
 
-        LOG("handleHighScore: current highscore: " + currentHighScore + " stored: " + storedHighScore + " FB: " + FBHighscore);
+        LOG("handleHighScore: current highscore: " + currentHighScore + " stored: " + storedHighScore + " FB: " + ParseHighscore);
 
         PiuPiuGlobals.highScore = Math.max(currentHighScore, storedHighScore);
 
-        if (PiuPiuGlobals.highScore > FBHighscore) {
-            FBisLoggedIn(this, FBpostHighScore.bind(this, PiuPiuGlobals.highScore));
+        if (PiuPiuGlobals.highScore > ParseHighscore) {
+            ParseSaveScore();
         }
 
         saveData("highScore", PiuPiuGlobals.highScore);
+    };
+
+    updateHighScore = function () {
+        var world = PiuPiuConsts.worlds[PiuPiuGlobals.currentWorld];
+        LOG("current " + PiuPiuGlobals.currentScore + " saved: " + PiuPiuGlobals["highScores." + world]);
+        if (PiuPiuGlobals.currentScore > PiuPiuGlobals["highScores." + world]) {
+            PiuPiuGlobals["highScores." + world] = PiuPiuGlobals.currentScore;
+            saveData("highScores." + world, PiuPiuGlobals.currentScore);
+
+            //  Since by now highscores DBs are synced, we know we need to update Parse DB as well.
+            ParseSaveScore(world);
+
+            //  TODO: Refresh leaderboards
+        }
     };
 
     randomMap = function () {

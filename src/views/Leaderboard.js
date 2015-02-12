@@ -31,7 +31,7 @@ exports = Class(ImageView, function (supr) {
 			superview: this,
 			fontFamily : PiuPiuConsts.fontName,
 			size: PiuPiuConsts.fontSizeBig,
-			text: "Madrid",
+			text: PiuPiuConsts.worlds[0],
 			color: "yellow",
 			strokeColor: "blue",
 			strokeWidth: PiuPiuConsts.fontStrokeSize,
@@ -70,7 +70,8 @@ exports = Class(ImageView, function (supr) {
 			height: PiuPiuConsts.fontSizeNormal,
 			horizontalAlign: 'center',
 			x: PiuPiuGlobals.winSize.width / 2,
-			y: this.Y_PADDING + PiuPiuConsts.fontSizeBig
+			y: this.Y_PADDING + PiuPiuConsts.fontSizeBig,
+			opacity : 0.5
 		});
 
 		//  Build leaderboard
@@ -81,43 +82,31 @@ exports = Class(ImageView, function (supr) {
 		});
 	};
 
-	this.validateData = function () {
-		var entriesToLoad = Math.min(PiuPiuGlobals.FBallScoresData.length, PiuPiuConsts.FBleaderboardShowTop);
+	this.refreshLeaderboard = function () {
+		//var entriesToLoad = Math.min(PiuPiuGlobals.leaderboard.length, PiuPiuConsts.FBleaderboardShowTop);
+		var world = PiuPiuConsts.worlds[PiuPiuGlobals.currentWorld];
+		var entriesToLoad = PiuPiuGlobals.leaderboard[world].scores.length;
 
 		for (i = 0; i < entriesToLoad; i++) {
-			this.Fnames[i].setText(PiuPiuGlobals.FBallScoresData[i].user.name);
-			this.Fnames[i].style.visible = true;
-			this.Fscores[i].setText(PiuPiuGlobals.FBallScoresData[i].score);
-			this.Fscores[i].style.visible = true;
+			var uid = PiuPiuGlobals.leaderboard[world].scores[i];
+			var picture = PiuPiuGlobals.UIDtoData[uid].picture;
+			var name = PiuPiuGlobals.UIDtoData[uid].name;
+			var score = PiuPiuGlobals.leaderboard[world][uid].score;
+
 			this.FplaceImages[i].style.visible = true;
+			this.FFBprofilePictures[i].setImage(picture);
+			this.FFBprofilePictures[i].style.visible = true;
+			this.Fnames[i].setText(name);
+			this.Fnames[i].style.visible = true;
+			this.Fscores[i].setText(score);
+			this.Fscores[i].style.visible = true;
 		}
 
 		for (i = entriesToLoad; i < PiuPiuConsts.FBleaderboardShowTop; i++) {
+			this.FplaceImages[i].style.visible = false;
+			this.FFBprofilePictures[i].style.visible = false;
 			this.Fnames[i].style.visible = false;
 			this.Fscores[i].style.visible = false;
-			this.FplaceImages[i].style.visible = false;
-		}
-	};
-
-	this.getFBImages = function () {
-		var entriesToLoad = Math.min(PiuPiuGlobals.FBallScoresData.length, PiuPiuConsts.FBleaderboardShowTop);
-
-		for (var i = 0; i < entriesToLoad; i++) {
-			var uid = PiuPiuGlobals.FBallScoresData[i].user.id;
-			if (this.FFBImages[uid]) {
-				this.FFBprofilePictures[i].setImage(this.FFBImages[uid]);
-				this.FFBprofilePictures[i].style.visible = true;
-			} else {
-				FBgetPicture(i, uid, this, function (place, userid, url) {
-					this.FFBImages[userid] = url;
-					this.FFBprofilePictures[place].setImage(this.FFBImages[userid]);
-					this.FFBprofilePictures[place].style.visible = true;
-				});
-			}
-		}
-
-		for (i = entriesToLoad; i < PiuPiuConsts.FBleaderboardShowTop; i++) {
-			this.FFBprofilePictures[i].style.visible = false;
 		}
 	};
 

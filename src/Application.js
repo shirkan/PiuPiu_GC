@@ -88,8 +88,8 @@ exports = Class(GC.Application, function () {
         this.on('game:end', bind (this, function() {
             PiuPiuGlobals.currentLevel = 1;
             saveStats();
-            handleHighScore();
-            dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate))
+            updateHighScore();
+            dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate));
         }));
 
         this.on('game:levelCompleted', bind (this, function() {
@@ -109,7 +109,7 @@ exports = Class(GC.Application, function () {
             }));
         }));
         this.on('stats:end', function () {
-            dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate))
+            dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate));
         });
 
         //  Main Menu handling - Leaderboard
@@ -119,16 +119,11 @@ exports = Class(GC.Application, function () {
             }));
         }));
         this.on('leaderboard:end', function () {
-            dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate))
+            dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate));
         });
 
-
-
-        //  Schedule validating leaderboard data
-        this.on('scores:loaded', bind(this.leaderboard, this.leaderboard.validateData));
-
-        //  Schedule to grab FB profile photos for leaderboard when connected
-        this.on('facebook:loggedin', bind(this, this.leaderboard.getFBImages.bind(this.leaderboard)));
+        //  Schedule to grab online data from FB & Parse for leaderboard when connected
+        this.on('onlineData:ready', bind(this, this.leaderboard.refreshLeaderboard.bind(this.leaderboard)));
     };
 
     this.launchUI = function () {};
@@ -161,14 +156,6 @@ exports = Class(GC.Application, function () {
 
         //  Load all levels
         loadAllLevels();
-
-        //parse.Parse.initialize("YfOISFZAxRmajUe9l6Sh3BL5lpekZfqBzRLFmCBU", "MxFgCdHsmFKt0VG2rwdxd1A1e7qpwRwHNFLpQcfS");
-        //var TestObject = parse.Parse.Object.extend("TestObject");
-        //var testObject = new TestObject();
-        //testObject.save({foo: "bar"}).then(function(object) {
-        //    alert("yay! it worked");
-        //});
-
     };
 
     this.showMenu = function() {

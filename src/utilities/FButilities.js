@@ -3,6 +3,7 @@
  */
 
 import facebook as FB;
+import src.utilities.ParseUtilities;
 
 // ***** Facebook utilities *****
 exports
@@ -19,15 +20,16 @@ exports
 
     FBstatusChange = function (response, target, success_callback, error_callback) {
         if (!response || response.status != "connected") {
-            LOG("FBstatusChange: not connected!");
+            LOG("FBstatusChange: not connected! response: " + JSON.stringify(response));
             PiuPiuGlobals.FBisConnected = false;
             //  falsifying did Ever connect, to prevent user nagging
             PiuPiuGlobals.FBdidEverAccessed = false;
             saveData("FBdidEverAccessed", PiuPiuGlobals.FBdidEverAccessed);
             target && error_callback && error_callback.call(target);
         } else {
-            LOG("FBstatusChange: connected!");
+            LOG("FBstatusChange: connected! response: " + JSON.stringify(response));
             PiuPiuGlobals.FBisConnected = true;
+            PiuPiuGlobals.FBmyUID = response.authResponse.userID;
             target && success_callback && success_callback.call(target);
         }
     };
@@ -50,7 +52,9 @@ exports
                 PiuPiuGlobals.FBisConnected = false;
                 target && error_callback && error_callback.call(target);
             } else {
+                LOG("FBlogin: response success: " + JSON.stringify(response));
                 PiuPiuGlobals.FBisConnected = true;
+                PiuPiuGlobals.FBmyUID = response.authResponse.userID;
                 FBonLoginUpdates();
                 target && success_callback && success_callback.call(target);
             }
@@ -77,17 +81,85 @@ exports
             return;
         }
 
-        LOG("FBonLoginUpdates Getting score");
-        FBgetScore(this, handleHighScore);
+        LOG("FBonLoginUpdates Getting my scores");
+        //ParseLoadMyScore(PiuPiuConsts.worlds[PiuPiuGlobals.currentWorld], this, handleHighScore);
+        //FBgetScore(this, handleHighScore);
+        handleAllHighScores();
 
         //  Since this is the last operation we are doing here, tell application FB is logged-in in case any other
         // things need to be done.
         LOG("FBonLoginUpdates Getting all scores");
-        FBgetAllScores(this, function () {
-            GC.app.emit("facebook:loggedin");
+        //FBgetAllScores(this, function () {
+        ParseLoadAllScores(PiuPiuConsts.worlds[PiuPiuGlobals.currentWorld], this, function () {
+            GC.app.emit('onlineData:ready');
         });
     };
 
+    FBgetPicture = function (uid, cb ) {
+        if (!PiuPiuGlobals.FBisConnected) {
+            LOG("FBgetPicture: FB is not connected");
+            return;
+        }
+
+        FB.api("/" + uid + "/picture", "get",
+            {"type" : "normal", "height" : PiuPiuConsts.FBpictureSize.toString(),
+            "width" : PiuPiuConsts.FBpictureSize.toString(), "redirect": false.toString()}, function (response) {
+                if (response && !response.error) {
+                    LOG("FBgetPicture: " + JSON.stringify(response));
+                    PiuPiuGlobals.UIDtoDataResults.missingPictures--;
+                    PiuPiuGlobals.UIDtoData[uid].picture = response.data.url;
+                    cb.call(this);
+                } else {
+                    LOG("FBgetPicture: Graph API request failed: " + JSON.stringify(response));
+                }
+            });
+    };
+
+    FBgetInfoForUID = function (uid, cb) {
+        FB.api("/" + uid + "/", "get", function (response) {
+            if (response) {
+                LOG("FBgetInfoForUID succeed: " + JSON.stringify(response));
+                PiuPiuGlobals.UIDtoDataResults.missingNames--;
+                PiuPiuGlobals.UIDtoData[uid].name = response.name;
+                cb.call(this);
+            } else {
+                LOG("FBgetInfoForUID failed: Graph API request failed, error: " + JSON.stringify(response));
+            }
+        });
+    };
+
+    FBgetDataForUsers = function (target, cb) {
+
+        //  TODO: I'm not really happy with that solution, need to understand if there is a better solution
+        var checkDataCompletion = function () {
+            if (PiuPiuGlobals.UIDtoDataResults.missingNames == 0 &&
+                PiuPiuGlobals.UIDtoDataResults.missingPictures == 0 ){
+                //  All UIDs have names,
+                target && cb && cb.call(target);
+            }
+        };
+
+        PiuPiuGlobals.UIDtoDataResults.missingNames = 0;
+        PiuPiuGlobals.UIDtoDataResults.missingPictures = 0;
+
+        for (var uid in PiuPiuGlobals.UIDtoData) {
+            if (!PiuPiuGlobals.UIDtoData[uid].name || PiuPiuGlobals.UIDtoData[uid].name == "") {
+                PiuPiuGlobals.UIDtoDataResults.missingNames++;
+                FBgetInfoForUID(uid, checkDataCompletion);
+            }
+
+            if (!PiuPiuGlobals.UIDtoData[uid].picture || PiuPiuGlobals.UIDtoData[uid].picture == "") {
+                PiuPiuGlobals.UIDtoDataResults.missingPictures++;
+                FBgetPicture(uid, checkDataCompletion);
+            }
+        }
+
+        checkDataCompletion();
+    };
+
+
+
+    //  Obsolete functions, maybe we'll use them someday
     FBgetScore = function (target, success_callback, error_callback) {
         if (!PiuPiuGlobals.FBisConnected) {
             LOG("FBgetScore: FB is not connected");
@@ -115,7 +187,7 @@ exports
     };
 
     FBgetAllScores = function ( target, success_callback, error_callback ) {
-        PiuPiuGlobals.FBallScoresData = null;
+        PiuPiuGlobals.leaderboard = null;
 
         if (!PiuPiuGlobals.FBisConnected) {
             LOG("FBgetAllScores: FB is not connected");
@@ -128,30 +200,12 @@ exports
                 LOG("FBgetAllScores: response error " + JSON.stringify(response));
                 target && error_callback && error_callback.call(target);
             } else {
-                PiuPiuGlobals.FBallScoresData = response.data;
-                LOG("FBgetAllScores: " + JSON.stringify(PiuPiuGlobals.FBallScoresData));
+                PiuPiuGlobals.leaderboard = response.data;
+                LOG("FBgetAllScores: " + JSON.stringify(PiuPiuGlobals.leaderboard));
                 GC.app.emit("scores:loaded");
                 target && success_callback && success_callback.call(target);
             }
         });
-    };
-
-    FBgetPicture = function (place, userid, target, cb ) {
-        if (!PiuPiuGlobals.FBisConnected) {
-            LOG("FBgetPicture: FB is not connected");
-            return;
-        }
-
-        FB.api("/" + userid + "/picture", "get",
-            {"type" : "normal", "height" : PiuPiuConsts.FBpictureSize.toString(),
-            "width" : PiuPiuConsts.FBpictureSize.toString(), "redirect": false.toString()}, function (response) {
-                if (response && !response.error) {
-                    LOG("FBgetPicture: " + JSON.stringify(response));
-                    if (cb) { cb.call(target, place, userid, response.data.url) }
-                } else {
-                    LOG("FBgetPicture: Graph API request failed: " + JSON.stringify(response));
-                }
-            });
     };
 
     FBpostHighScore = function (score) {
@@ -166,7 +220,7 @@ exports
                 //  Invoke FBgetScore to verify written data and update local variable
                 FBgetScore();
             } else {
-                LOG("FBpostHighScore failed: Graph API request failed, error #" + type + ": " + JSON.stringify(response));
+                LOG("FBpostHighScore failed: Graph API request failed, error: " + JSON.stringify(response));
             }
         });
     };
@@ -177,5 +231,6 @@ FB.onReady.run(function () {
         appId: CONFIG.modules.facebook.facebookAppID,
         displayName: CONFIG.modules.facebook.facebookDisplayName,
     });
+    ParseInit();
     FBinit();
 });

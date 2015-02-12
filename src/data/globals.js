@@ -100,6 +100,7 @@ exports
         PiuPiuConsts.normalUpdateRate = 1;
         PiuPiuConsts.gameZIndex = 1;
         PiuPiuConsts.canContinueToNextSceneTimeOut = 2000;
+        PiuPiuConsts.worlds = ["Madrid"];
 
         //  Status view
         PiuPiuConsts.statusZIndex = 10;
@@ -109,9 +110,6 @@ exports
         PiuPiuConsts.bulletZIndex = 5;
 
         //  Enemy
-        PiuPiuConsts.enemyMoveToPoint = (30,240);
-        PiuPiuConsts.enemyHeadRadius = 10;
-        PiuPiuConsts.enemyHeadOffset = (-6,22);
         PiuPiuConsts.enemyZIndex = 3;
         PiuPiuConsts.enemyWidth = 95;
         PiuPiuConsts.enemyHeight= 125;
@@ -125,7 +123,6 @@ exports
 
         //  Powerups
         PiuPiuConsts.powerupRadius = 7;
-        PiuPiuConsts.powerupCenterPoint = (0,0);
         PiuPiuConsts.powerupPeriod = 3000;
         PiuPiuConsts.powerupTypes = ["machineGun", "oneUp", "captain", "stopwatch"];
         PiuPiuConsts.powerupMachineGunPeriod = 10000;
@@ -142,7 +139,6 @@ exports
         PiuPiuConsts.FBwaitForResultsInSeconds = 11;
         PiuPiuConsts.FBleaderboardShowTop = 7;
         PiuPiuConsts.FBpictureSize = 80;
-        PiuPiuConsts.FBpictureScale = 0.5;
     }
 
     if (typeof PiuPiuGlobals == "undefined") {
@@ -155,6 +151,9 @@ exports
         PiuPiuGlobals.handsAnchor = [];
         PiuPiuConsts.sourcePoint = [];
 
+        //  Load/Save stats
+        PiuPiuGlobals.loadSave = [];
+
         //  Music
         PiuPiuGlobals.currentMusicFile = "";
         PiuPiuGlobals.musicScheduler = "";
@@ -164,14 +163,16 @@ exports
         PiuPiuGlobals.currentScore = 0;
         PiuPiuGlobals.currentPointsMultiplier = 1;
         PiuPiuGlobals.currentUpdateRate = PiuPiuConsts.normalUpdateRate;
-        PiuPiuGlobals.highScore = 0;
+        PiuPiuConsts.worlds.forEach( function(world) {
+            PiuPiuGlobals["highScores." + world] = 0;
+            PiuPiuGlobals.loadSave.push("highScores." + world);
+        });
         PiuPiuGlobals.gameState = GameStates.Menu;
         PiuPiuGlobals.currentLevel = 0;
         PiuPiuGlobals.commonGrassMap = "";
         PiuPiuGlobals.soundEnabled = 1;
-
-        //  Load/Save stats
-        PiuPiuGlobals.loadSave = ["highScore"];
+        PiuPiuGlobals.currentWorld = 0;
+        PiuPiuGlobals.unlockedWorlds = [PiuPiuConsts.worlds[0]];
 
         //  Stats vars
         PiuPiuGlobals.statsNames = ["totalBulletsFired", "totalPowerUps", "totalEnemyKilled", "totalHeadShots", "totalPoints"];
@@ -185,8 +186,17 @@ exports
         PiuPiuGlobals.FBisConnected = false;
         PiuPiuGlobals.FBpermissionsMissing = PiuPiuConsts.FBpermissionsNeeded;
         PiuPiuGlobals.FBpermissionsGranted = [];
-        PiuPiuGlobals.FBallScoresData = null;
         PiuPiuGlobals.FBdata = null;
+        PiuPiuGlobals.FBmyUID = "";
+
+        //  Parse
+        PiuPiuConsts.worlds.forEach( function(world) {
+            PiuPiuGlobals["ParseMyObjectIDs." + world] = "";
+            PiuPiuGlobals.loadSave.push("ParseMyObjectIDs." + world);
+        });
+        PiuPiuGlobals.leaderboard = {};
+        PiuPiuGlobals.UIDtoData = {};
+        PiuPiuGlobals.UIDtoDataResults = {};
     }
 
     if (typeof PiuPiuLevelSettings == "undefined") {

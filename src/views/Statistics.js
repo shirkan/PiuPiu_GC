@@ -26,8 +26,7 @@ exports = Class(ImageView, function (supr) {
 			"Total enemies killed",
 			"Total head shots",
 			"Total power ups",
-			"Total points",
-			"High score"
+			"Total points"
 		];
 
 		this.keyText = {};
@@ -82,8 +81,7 @@ exports = Class(ImageView, function (supr) {
 			PiuPiuGlobals.totalEnemyKilled,
 			PiuPiuGlobals.totalHeadShots,
 			PiuPiuGlobals.totalPowerUps,
-			PiuPiuGlobals.totalPoints,
-			PiuPiuGlobals.highScore
+			PiuPiuGlobals.totalPoints
 		];
 
 		for (var i=0; i< values.length; i++) {

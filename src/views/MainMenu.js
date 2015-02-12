@@ -138,7 +138,15 @@ exports = Class(ImageView, function (supr) {
 
     this.checkFBstatus = function () {
         //  Handle FB login - Display FB logo if not logged in
-        FBisLoggedIn(this, this.hideFB, this.showFB);
+        //FBisLoggedIn(this, this.hideFB, this.showFB);
+        setTimeout(bind(this, function () {
+            LOG("checkFBstatus: checking FB status: " + PiuPiuGlobals.FBisConnected);
+            if (PiuPiuGlobals.FBisConnected) {
+                this.hideFB();
+            } else {
+                this.showFB();
+            }
+        }), PiuPiuConsts.FBwaitBeforeCheckingStatus);
     };
 
     this.animate = function () {

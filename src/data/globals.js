@@ -139,6 +139,7 @@ exports
         PiuPiuConsts.FBwaitForResultsInSeconds = 11;
         PiuPiuConsts.FBleaderboardShowTop = 7;
         PiuPiuConsts.FBpictureSize = 80;
+        PiuPiuConsts.FBwaitBeforeCheckingStatus = 5000;
     }
 
     if (typeof PiuPiuGlobals == "undefined") {

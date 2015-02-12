@@ -10,30 +10,6 @@ import animate;
 /** @const */ var POWERUP_WIDTH = 50;
 /** @const */ var POWERUP_HEIGHT = 50;
 
-var machineGun = {
-	name: "MachineGun",
-	image: res.PowerupMachineGun_png,
-	callback: "this.machineGunStart()"
-};
-
-var oneUp = {
-	name: "1Up",
-	image: res.Powerup1Up_png,
-	callback: "this.addLife()"
-};
-
-var captain = {
-	name: "Captain",
-	image: res.PowerupCaptain_png,
-	callback: "this.captainStart()"
-};
-
-var stopwatch = {
-	name: "Stopwatch",
-	image: res.PowerupStopwatch_png,
-	callback: "this.stopwatchStart()"
-};
-
 var PowerupConfig = {
 	zIndex: PiuPiuConsts.powerupZIndex,
 	width: POWERUP_WIDTH,
@@ -46,7 +22,29 @@ var PowerupConfig = {
 	},
 	autoSize: true,
 	anchorX: POWERUP_WIDTH / 2,
-	anchorY: POWERUP_HEIGHT / 2
+	anchorY: POWERUP_HEIGHT / 2,
+	powerups: {
+		machineGun : {
+			name: "MachineGun",
+			image: res.PowerupMachineGun_png,
+			callback: "this.machineGunStart()"
+		},
+		oneUp : {
+			name: "1Up",
+			image: res.Powerup1Up_png,
+			callback: "this.addLife()"
+		},
+		captain: {
+			name: "Captain",
+			image: res.PowerupCaptain_png,
+			callback: "this.captainStart()"
+		},
+		stopwatch : {
+			name: "Stopwatch",
+			image: res.PowerupStopwatch_png,
+			callback: "this.stopwatchStart()"
+		}
+	}
 };
 
 var Powerup = Class(Entity, function() {
@@ -63,7 +61,8 @@ var Powerup = Class(Entity, function() {
 		sup.init.call(this, opts);
 	};
 
-	this.resetObject = function (data) {
+	this.resetObject = function (type) {
+		var data = PowerupConfig.powerups[type];
 		this.setData(data);
 		this.view.setImage(data.image);
 		this.view.style.scale = this.MIN_SCALE;
@@ -147,7 +146,8 @@ exports = Class(EntityPool, function() {
 		opts.y = opts.y || randomNumber(0, PiuPiuGlobals.winSize.height - POWERUP_HEIGHT, false);
 
 		var powerup = this.obtain(opts.x, opts.y, opts);
-		eval("powerup.resetObject(" + type+ ")");
+		powerup.resetObject(type);
+		//eval("powerup.resetObject(" + type+ ")");
 		//powerup.showHitBounds();
 	};
 });

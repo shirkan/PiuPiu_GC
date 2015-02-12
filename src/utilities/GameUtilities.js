@@ -247,13 +247,6 @@ exports
     };
 
     loadAll = function () {
-        //for (var i in PiuPiuGlobals.statsNames) {
-        //    var val = parseInt(localStorage.getItem(PiuPiuGlobals.statsNames[i]));
-        //    if (val != null && !isNaN(val)) {
-        //        eval("PiuPiuGlobals." + PiuPiuGlobals.statsNames[i] +"= val");
-        //    }
-        //}
-
         PiuPiuGlobals.loadSave.forEach(function (entry) {
             var data = localStorage.getItem(entry);
             if (data !== null) {
@@ -271,11 +264,6 @@ exports
                 }
             }
         });
-
-        ////  Check for highscore
-        //if (localStorage.highScore) {
-        //    PiuPiuGlobals.highScore = localStorage.highScore;
-        //}
     };
 
     saveStats = function () {

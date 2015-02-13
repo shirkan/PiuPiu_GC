@@ -50,13 +50,8 @@ exports = Class(GC.Application, function () {
         this.rootView.push(this.splash);
 
         //  Splash screen handling
-        this.splash.on('InputSelect', bind(this, function () {
-            this.showMenu();
-        }));
-
-        this.switchToMenu = setTimeout(bind(this, function () {
-            this.showMenu();
-        }), PiuPiuConsts.splashScreenTimeOut);
+        this.splash.on('InputSelect', bind(this, this.showMenu));
+        this.on('splashAnim:end', bind(this, this.showMenu));
 
         //  Main Menu handling - Start
         this.mainMenu.on("intro:start", bind(this, function() {

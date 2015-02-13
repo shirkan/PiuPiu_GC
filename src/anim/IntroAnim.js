@@ -43,6 +43,7 @@ exports = Class(ImageView, function(supr) {
         animate(this.enemy3).clear();
         this.enemy3.run();
         clearTimeout(this.timer);
+        this.clickable = true;
     };
     
     this.resetAnimation = function () {
@@ -97,6 +98,10 @@ exports = Class(ImageView, function(supr) {
 
         this.timer = setTimeout(function () { GC.app.emit("intro:end")}, this.TIMEUP);
         this.on("InputSelect", bind(this, function () {
+            if (!this.clickable) {
+                return;
+            }
+            this.clickable = false;
             clearTimeout(this.timer);
             GC.app.emit("intro:end");
         }));

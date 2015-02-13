@@ -343,6 +343,7 @@ exports = Class(ImageView, function (supr) {
 		this.unsubscribe("InputSelect", this);
 		this.on('InputSelect', function (evt, pt) {
 			if (this.canContinueToNextScene) {
+				this.canContinueToNextScene = false;
 				this.status.emit('removeMessages');
 				GC.app.emit(nextEvent);
 			}

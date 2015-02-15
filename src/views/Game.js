@@ -13,7 +13,6 @@ import animate;
 
 import src.game.Status as Status;
 import src.game.Player as Player;
-import src.game.Hands as Hands;
 import src.game.Bullets as Bullets;
 import src.game.Enemies as Enemies;
 import src.game.Powerups as Powerups;
@@ -45,8 +44,6 @@ exports = Class(ImageView, function (supr) {
 		this.status = new Status({ parent: this });
 		//  Add player
 		this.player = new Player({ parent: this.gameLayer });
-		//  Add hands
-		this.hands = new Hands({ parent: this.gameLayer });
 		//  Prepare bullets
 		this.bullets = new Bullets({ parent: this.gameLayer });
 		//  Prepare enemies
@@ -114,9 +111,9 @@ exports = Class(ImageView, function (supr) {
 	};
 
 	this.startLevel = function () {
-		LOG("starting level")
 		this.enemySM.start();
 		this.powerupSM.start();
+		this.player.runWithNoHands();
 	};
 
 
@@ -156,7 +153,7 @@ exports = Class(ImageView, function (supr) {
 		this.bullets.spawnBullet(bulletStartPoint, bulletPathLengths, endAngle);
 		playSound(sound);
 
-		this.hands.rotateHands(endAngle);
+		this.player.rotateHands(endAngle);
 	};
 
 
@@ -283,19 +280,19 @@ exports = Class(ImageView, function (supr) {
 			//  Machine Gun mode on
 			if (this.isCaptainMode) {
 				//  Captain mode on
-				this.hands.setMachineGunCaptain();
+				this.player.handsSetMachineGunCaptain();
 			} else {
 				//  Captain Mode off
-				this.hands.setMachineGun();
+				this.player.handsSetMachineGun();
 			}
 		} else {
 			//  Machine Gun mode off
 			if (this.isCaptainMode) {
 				//  Captain mode on
-				this.hands.setCaptain();
+				this.player.handsSetCaptain();
 			} else {
 				//  Captain Mode off
-				this.hands.setNormal();
+				this.player.handsSetNormal();
 			}
 		}
 	};
@@ -337,6 +334,8 @@ exports = Class(ImageView, function (supr) {
 		this.enemies.reset();
 		this.powerupSM.stop();
 		this.powerups.reset();
+
+		this.player.stand();
 
 		//  Handle moving to next scene
 		setTimeout(bind(this, function () { this.canContinueToNextScene = true}), PiuPiuConsts.canContinueToNextSceneTimeOut);

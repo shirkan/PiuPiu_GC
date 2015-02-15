@@ -21,6 +21,7 @@ exports
 
         //  Game
         Enemy_anim : "resources/images/game/enemy/",
+        Player_anim : "resources/images/game/player/",
         Player_png : "resources/images/game/player.png",
         Hands_png : "resources/images/game/hands.png",
         Bullet_png: "resources/images/game/bullet_small.png",

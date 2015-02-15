@@ -29,6 +29,10 @@ exports = Class(ImageView, function(supr) {
         this.reset();
 
         this.on("InputSelect", bind(this, function () {
+            if (!this.clickable) {
+                return;
+            }
+            this.clickable = false;
             clearTimeout(this.timer);
             GC.app.emit("cutscene:end");
         }));
@@ -58,6 +62,7 @@ exports = Class(ImageView, function(supr) {
         this.enemy.run();
         animate(this.bullet).clear();
         clearTimeout(this.timer);
+        this.clickable = true;
     };
 
     this.animateLevel1 = function () {
@@ -75,7 +80,7 @@ exports = Class(ImageView, function(supr) {
         var xPlayerStanding = PiuPiuGlobals.winSize.width * 0.2;
 
         this.enemy.style.x = PiuPiuGlobals.winSize.width;
-        this.enemy.style.y = Y_FLOOR - this.enemy.style.height;
+        this.enemy.style.y = Y_FLOOR - this.enemy.style.height * 0.9;
         this.enemy.show();
         var xEnemyStanding = PiuPiuGlobals.winSize.width * 0.9 - this.enemy.style.width;
 
@@ -91,7 +96,7 @@ exports = Class(ImageView, function(supr) {
                 this.bullet.show();
                 playSound("piu");
             })).then(
-            {x: xEnemyStanding + this.enemy.style.width *0.3}, SHOOT_TIME).then(
+            {x: xEnemyStanding + this.enemy.style.width * 0.5}, SHOOT_TIME, animate.linear).then(
             bind(this, function () {
                 this.bullet.hide();
                 this.enemy.hide();

@@ -51,7 +51,7 @@ exports = Class(View, function(supr) {
         this.player.style.y = this.Y_FLOOR - this.player.style.height;
         this.xPlayerStanding = PiuPiuGlobals.winSize.width * 0.1;
         
-        this.ballView.style.x = -this.ballView.style.width;
+        this.ballView.style.x = -(this.ballView.style.width + this.player.style.width / 2);
         this.ballView.style.y = this.Y_FLOOR - this.ballView.style.height;
         this.ballView.style.r = 0;
         this.ballView.style.anchorX = this.ballView.style.width / 2;
@@ -61,7 +61,7 @@ exports = Class(View, function(supr) {
         this.ball.style.anchorY = this.ball.style.height / 2;
         this.ball.style.scale = 0.7;
 
-        var playerBallGap = this.player.style.width - this.ballView.style.width;
+        var playerBallGap = this.player.style.width / 2;
         this.xBallStanding = this.xPlayerStanding + playerBallGap;
 
         this.enemy.style.x = PiuPiuGlobals.winSize.width;

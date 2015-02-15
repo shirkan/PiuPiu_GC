@@ -56,11 +56,21 @@ exports
 
     if(typeof levelType == "undefined") {
         levelType = {};
-        levelType.EliminateAllEnemies = 0x0;
-        levelType.Survival = 0x1;
-        levelType.ShootPowerups = 0x2;
-        levelType.TargetScore = 0x4;
-        levelType.IntroducingNewThing = 0x8;
+        levelType.text = ["Eliminate all enemies", "Survival", "Shoot # power ups", "Target score", ""];
+        levelType.EliminateAllEnemies = 0;
+        levelType.Survival = 1;
+        levelType.ShootPowerups = 2;
+        levelType.TargetScore = 3;
+        levelType.IntroducingNewThing = 4;
+    }
+
+    if(typeof levelTypeText == "undefined") {
+        levelTypeText = {};
+        levelTypeText.EliminateAllEnemies = 0;
+        levelTypeText.Survival = 1;
+        levelTypeText.ShootPowerups = 2;
+        levelTypeText.TargetScore = 3;
+        levelTypeText.IntroducingNewThing = 4;
     }
 
     if (typeof PiuPiuConsts == "undefined") {
@@ -118,8 +128,8 @@ exports
         PiuPiuConsts.handsLength = 83;
         PiuPiuConsts.livesOnGameStart = 2;
         PiuPiuConsts.maxLives = 5;
-        PiuPiuConsts.playerWidth = 71;
-        PiuPiuConsts.playerHeight= 235;
+        PiuPiuConsts.playerWidth = 240;
+        PiuPiuConsts.playerHeight= 170;
 
         //  Powerups
         PiuPiuConsts.powerupRadius = 7;

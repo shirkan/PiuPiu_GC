@@ -42,7 +42,7 @@ exports = Class(Entity, function() {
 	this.init = function(opts) {
 		opts = merge(opts, handsConfig);
 		sup.init.call(this, opts);
-		sup.reset.call(this, PiuPiuGlobals.handsAnchor.x, PiuPiuGlobals.handsAnchor.y, handsConfig);
+		sup.reset.call(this, opts.x, opts.y, handsConfig);
 
 		//this.view.getImage().setURL(res.Hands_png);
 		this.map = this.view.getImage().getMap();
@@ -52,6 +52,14 @@ exports = Class(Entity, function() {
 
 		//this.view._sizeY = 43;
 		this.setNormal();
+	};
+
+	this.show = function () {
+		this.view.show();
+	};
+
+	this.hide = function () {
+		this.view.hide();
 	};
 
 	this.setNormal = function() {

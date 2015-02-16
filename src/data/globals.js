@@ -186,7 +186,7 @@ exports
         PiuPiuGlobals.unlockedWorlds = [PiuPiuConsts.worlds[0]];
 
         //  Stats vars
-        PiuPiuGlobals.statsNames = ["totalBulletsFired", "totalPowerUps", "totalEnemyKilled", "totalHeadShots", "totalPoints"];
+        PiuPiuGlobals.statsNames = ["totalBulletsFired", "totalPowerUps", "totalEnemyKilled", "totalHeadShots", "totalPoints", "gameProgress"];
         PiuPiuGlobals.statsNames.forEach( function(entry) {
             PiuPiuGlobals[entry] = 0;
             PiuPiuGlobals.loadSave.push(entry);

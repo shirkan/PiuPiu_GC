@@ -44,6 +44,8 @@ exports
 
         //  Main Menu
         FB_png: "resources/images/mainmenu/facebook.png",
+        Sound_on_png: "resources/images/mainmenu/sound_on.png",
+        Sound_off_png: "resources/images/mainmenu/sound_off.png",
 
         //  Leaderboard sprites
         stencil_png: "resources/images/leaderboard/stencil2.png",

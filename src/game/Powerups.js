@@ -71,6 +71,8 @@ var Powerup = Class(Entity, function() {
 	};
 
 	this.update = function(dt) {
+		//this.style.x -= dx;
+		LOG("updated powerup with " + dt);
 		sup.update.call(this, dt);
 	};
 
@@ -144,10 +146,10 @@ exports = Class(EntityPool, function() {
 
 		opts.x = opts.x || randomNumber(PiuPiuGlobals.winSize.width / 2, PiuPiuGlobals.winSize.width - POWERUP_WIDTH, false);
 		opts.y = opts.y || randomNumber(0, PiuPiuGlobals.winSize.height - POWERUP_HEIGHT, false);
+		opts.vx = -3;
 
 		var powerup = this.obtain(opts.x, opts.y, opts);
 		powerup.resetObject(type);
-		//eval("powerup.resetObject(" + type+ ")");
 		//powerup.showHitBounds();
 	};
 });

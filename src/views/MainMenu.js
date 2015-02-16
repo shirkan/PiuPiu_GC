@@ -26,10 +26,9 @@ exports = Class(ImageView, function (supr) {
 
     this.build = function() {
         //  Build menu
-        var entries = ["Start", "Sound on", "Statistics", "Leaderboard", "Achievements"];
-        if (!PiuPiuGlobals.soundEnabled){
-            entries[1] = "Sound off";
-        }
+        //var entries = ["Start", "Sound on", "Statistics", "Leaderboard", "Achievements"];
+        var entries = ["Start", "Statistics", "Leaderboard", "Achievements", "FEEDBACK"];
+
         this.menu = {};
 
         for (var i=0; i< entries.length; i++) {
@@ -64,26 +63,26 @@ exports = Class(ImageView, function (supr) {
             LOG(entries[0]);
             this.emit('intro:start');
         }));
+        //this.menu[1].on('InputSelect', bind (this, function() {
+        //    //  Sound
+        //    animateText(this.menu[1]);
+        //    this.soundToggle();
+        //}));
         this.menu[1].on('InputSelect', bind (this, function() {
-            //  Sound
-            animateText(this.menu[1]);
-            this.soundToggle();
-        }));
-        this.menu[2].on('InputSelect', bind (this, function() {
             //  Stats
             if (!this.isMenuClickable) { return }
             this.isMenuClickable = false;
 
-            animateText(this.menu[2]);
-            LOG(entries[2]);
+            animateText(this.menu[1]);
+            LOG(entries[1]);
             this.emit('stats:start');
         }));
-        this.menu[3].on('InputSelect', bind (this, function() {
+        this.menu[2].on('InputSelect', bind (this, function() {
             //  Leaderboard
             if (!this.isMenuClickable) { return }
 
-            animateText(this.menu[3]);
-            LOG(entries[3]);
+            animateText(this.menu[2]);
+            LOG(entries[2]);
 
             if (this.leaderboardEnabled) {
                 this.isMenuClickable = false;
@@ -92,6 +91,15 @@ exports = Class(ImageView, function (supr) {
                 this.runFBanimation();
             }
         }));
+        this.menu[3].on('InputSelect', bind (this, function() {
+            //  Achievements
+            //if (!this.isMenuClickable) { return }
+            //this.isMenuClickable = false;
+
+            animateText(this.menu[3]);
+            LOG(entries[3]);
+        }));
+
         this.menu[4].on('InputSelect', bind (this, function() {
             //  Achievements
             //if (!this.isMenuClickable) { return }
@@ -99,6 +107,7 @@ exports = Class(ImageView, function (supr) {
 
             animateText(this.menu[4]);
             LOG(entries[4]);
+            window.open("http://meganeev.weebly.com/feedback.html");
         }));
 
         //  Build FB assets
@@ -134,6 +143,25 @@ exports = Class(ImageView, function (supr) {
         this.FBlogo.on('InputSelect', this.onFBclick.bind(this));
 
         this.hideFB();
+
+        //  Sound icon
+        this.soundIcon = new ImageView({
+            superview: this,
+            image: res.Sound_on_png,
+            width: 40,
+            height: 40,
+            x: PiuPiuGlobals.winSize.width - 80,
+            y: 40
+        });
+
+        this.soundIcon.on('InputSelect', bind (this, function() {
+            //  Sound
+            this.soundToggle();
+        }));
+
+        if (!PiuPiuGlobals.soundEnabled){
+            this.soundIcon.setImage(res.Sound_off_png);
+        }
     };
 
     this.checkFBstatus = function () {
@@ -177,11 +205,13 @@ exports = Class(ImageView, function (supr) {
     this.soundToggle = function() {
         localStorage.soundEnabled = PiuPiuGlobals.soundEnabled = 1 - PiuPiuGlobals.soundEnabled;
         if (PiuPiuGlobals.soundEnabled == 0) {
-            this.menu[1].setText("Sound off");
+            //this.menu[1].setText("Sound off");
+            this.soundIcon.setImage(res.Sound_off_png);
             stopAllSounds();
             //stopMusic();
         } else {
-            this.menu[1].setText("Sound on");
+            //this.menu[1].setText("Sound on");
+            this.soundIcon.setImage(res.Sound_on_png);
             //startMusic();
         }
     };

@@ -16,10 +16,11 @@ import src.game.Player as Player;
 import src.game.Bullets as Bullets;
 import src.game.Enemies as Enemies;
 import src.game.Powerups as Powerups;
+import src.views.Background as Background;
 
 import src.utilities.SpawningMechanism as SpawningMechanism;
 
-exports = Class(ImageView, function (supr) {
+exports = Class(View, function (supr) {
 	this.init = function (opts) {
 		this.name = "GameView";
 		opts = merge(opts, {
@@ -39,6 +40,8 @@ exports = Class(ImageView, function (supr) {
 			height: PiuPiuGlobals.winSize.height,
 			zIndex: PiuPiuConsts.gameZIndex
 		});
+
+		this.bg = new Background({parent: this});
 
 		//  Add Status view
 		this.status = new Status({ parent: this });
@@ -63,12 +66,16 @@ exports = Class(ImageView, function (supr) {
 			this.doneAnimatingDeadEnemies++;
 			this.checkLevelComplete();
 		}));
+
+		//  Set speed for BG & powerups movement
+		this.BG_MOVE_SPEED = -3;
+		this.POWERUP_MOVE_SPEED = 2;
 	};
 
 	//  Init Level
 	this.initLevel = function () {
-		var map = randomMap();
-		this.style._view.setImage(map);
+		//var map = randomMap();
+		//this.style._view.setImage(map);
 
 		this.machineGunEnd();
 		this.captainEnd();
@@ -114,6 +121,7 @@ exports = Class(ImageView, function (supr) {
 		this.enemySM.start();
 		this.powerupSM.start();
 		this.player.runWithNoHands();
+		this.gameIsRunning = true;
 	};
 
 
@@ -336,6 +344,7 @@ exports = Class(ImageView, function (supr) {
 		this.powerups.reset();
 
 		this.player.stand();
+		this.gameIsRunning = false;
 
 		//  Handle moving to next scene
 		setTimeout(bind(this, function () { this.canContinueToNextScene = true}), PiuPiuConsts.canContinueToNextSceneTimeOut);
@@ -357,30 +366,26 @@ exports = Class(ImageView, function (supr) {
 		dt = Math.min(PiuPiuGlobals.currentUpdateRate * dt, 100);
 		//dt = 10;
 
-		// update entities
-		//this.player.update(dt);
+		//  Need to always update bullets so they can disappear on level complete
 		this.bullets.update(dt);
-		this.enemies.update(dt);
+		this.powerups.update(this.POWERUP_MOVE_SPEED);
 
-		//  Check collisions detections
-		//  Collide bullets with enemies
-		this.bullets.onFirstPoolCollisions(this.enemies, this.onBulletEnemyCollision, this);
-		//  Collide bullets with powerups
-		this.bullets.onFirstPoolCollisions(this.powerups, this.onBulletPowerupCollision, this);
-		//  Collide enemies with player
-		this.enemies.onFirstCollision(this.player, this.onEnemyPlayerCollision, this);
+		if (this.gameIsRunning) {
+			// update entities
+			this.enemies.update(dt);
 
-		// players vertical movement determines view offset for everything
-		//var screenOffsetY = -this.player.getScreenY();
-		//this.elementLayer.style.y = screenOffsetY;
-		//this.parallax.update(0, screenOffsetY);
-		//
-		//// collide bullets with enemies
-		//this.bullets.onFirstPoolCollisions(this.enemies, this.onBulletHit, this);
-		//
-		//// collide enemies with player
-		//this.enemies.onFirstCollision(this.player, this.onGameOver, this);
-		//
+			//  Check collisions detections
+			//  Collide bullets with enemies
+			this.bullets.onFirstPoolCollisions(this.enemies, this.onBulletEnemyCollision, this);
+			//  Collide bullets with powerups
+			this.bullets.onFirstPoolCollisions(this.powerups, this.onBulletPowerupCollision, this);
+			//  Collide enemies with player
+			this.enemies.onFirstCollision(this.player, this.onEnemyPlayerCollision, this);
+
+			// players vertical movement determines view offset for everything
+			this.bg.update(PiuPiuGlobals.currentUpdateRate * this.BG_MOVE_SPEED, 0);
+		}
+
 		//// update particles
 		//this.particles.runTick(dt);
 	};

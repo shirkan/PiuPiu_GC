@@ -139,6 +139,12 @@ exports = Class(GC.Application, function () {
     this.initializeGame = function () {
         this.scaleUI();
 
+        //  Set back button in Android to put the game in BG
+        device.setBackButtonHandler(function() {
+            console.log("someone hit the back button!");
+            return false;
+        });
+
         //  Init globals
         initGlobals();
 

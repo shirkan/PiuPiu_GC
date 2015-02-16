@@ -71,8 +71,6 @@ var Powerup = Class(Entity, function() {
 	};
 
 	this.update = function(dt) {
-		//this.style.x -= dx;
-		LOG("updated powerup with " + dt);
 		sup.update.call(this, dt);
 	};
 

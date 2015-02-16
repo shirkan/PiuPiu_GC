@@ -17,11 +17,7 @@ var config = [
 		y: 0,
 		pieceOptions: [
 			{
-				id: "bg1",
-				image: res.BG_grass1_png
-			},
-			{
-				id: "bg2d",
+				id: "BG-Grass-1",
 				image: res.BG_grass1_png
 			}
 		]
@@ -51,6 +47,9 @@ exports = Class(View, function (supr) {
 	};
 
 	this.reset = function () {
+		var map = randomMap();
+		config[0].pieceOptions[0].id = baseName(map);
+		config[0].pieceOptions[0].image = map;
 		this.parallax.reset(config);
 	};
 

@@ -77,6 +77,7 @@ exports = Class(View, function (supr) {
 		//var map = randomMap();
 		//this.style._view.setImage(map);
 
+		this.bg.reset();
 		this.machineGunEnd();
 		this.captainEnd();
 		this.stopwatchEnd();
@@ -275,12 +276,14 @@ exports = Class(View, function (supr) {
 			this.isStopwatchMode = true;
 		}
 		PiuPiuGlobals.currentUpdateRate = PiuPiuConsts.powerupStopwatchUpdateRate;
+		this.player.setSpeedSlow();
 		this.stopwatchTimeOut = setTimeout(bind(this, this.stopwatchEnd), PiuPiuConsts.powerupStopwatchPeriod);
 	};
 
 	this.stopwatchEnd = function () {
 		this.isStopwatchMode = false;
 		PiuPiuGlobals.currentUpdateRate = PiuPiuConsts.normalUpdateRate;
+		this.player.setSpeedNormal();
 	};
 
 	this.updateHandsType = function () {
@@ -368,7 +371,7 @@ exports = Class(View, function (supr) {
 
 		//  Need to always update bullets so they can disappear on level complete
 		this.bullets.update(dt);
-		this.powerups.update(this.POWERUP_MOVE_SPEED);
+		this.powerups.update(PiuPiuGlobals.currentUpdateRate * this.POWERUP_MOVE_SPEED);
 
 		if (this.gameIsRunning) {
 			// update entities

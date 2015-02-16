@@ -1,0 +1,6 @@
+{
+  "totalEnemies": 3,
+  "enemiesSpawnInterval": 300,
+  "specialNotations": ["center"],
+  "hint" : "Touch the screen to shoot down enemies.\nAvoid being hit by them!"
+}

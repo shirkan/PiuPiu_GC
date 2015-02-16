@@ -8,7 +8,7 @@ exports
 {
     isNumber = function (n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
-    }
+    };
 
     isFileExist = function (filename) {
         if (!filename) {
@@ -23,27 +23,27 @@ exports
         } else {
             return true;
         }
-    }
+    };
 
     isRunningOnAndroid = function () {
         return device.isAndroid;
-    }
+    };
 
     isRunningOniOS = function () {
         return device.isIOS;
-    }
+    };
 
     isRunningOnMobile = function () {
         return device.isMobileNative;
-    }
+    };
 
     isDebugMode = function () {
         //return cc.game.config["debugMode"];
-    }
+    };
 
     LOG = function (str) {
         logger.log(str);
-    }
+    };
 
     randomNumber = function (min, max, isRounded) {
         min = min || 0;
@@ -54,5 +54,12 @@ exports
             res = Math.floor(res);
         }
         return res;
-    }
+    };
+
+    baseName = function (str){
+        var base = new String(str).substring(str.lastIndexOf('/') + 1);
+        if(base.lastIndexOf(".") != -1)
+            base = base.substring(0, base.lastIndexOf("."));
+        return base;
+    };
 }

@@ -1,6 +1,10 @@
 {
-  "totalEnemies": 3,
-  "enemiesSpawnInterval": 300,
-  "specialNotations": ["center"],
-  "hint" : "Touch the screen to shoot down enemies.\nAvoid being hit by them!"
+  "totalEnemies" : 999999999,
+  "enemiesSpawnInterval": 400,
+  "powerupsSpawnInterval": 5000,
+  "powerupsTypes": "all",
+  "powerupsSpawnIntervalMin": 200,
+  "powerupsSpawnIntervalMax": 300,
+  "powerupsSpawnIntervalType": "rangeCount",
+  "hint" : "GOTTA SHOOT'EM ALL!"
 }

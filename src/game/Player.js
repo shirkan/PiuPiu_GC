@@ -41,6 +41,14 @@ var PlayerAnim = Class(SpriteView, function(supr) {
 	this.runWithNoHands = function () {
 		this.startAnimation("run-nohands", {loop: true});
 	};
+
+	this.setSpeedSlow = function () {
+		this.frameRate = PLAYER_SPEED / 2;
+	};
+
+	this.setSpeedNormal = function () {
+		this.frameRate = PLAYER_SPEED;
+	};
 });
 
 //  Player Entity
@@ -89,6 +97,14 @@ exports = Class(Entity, function() {
 		//  Display rotating hands
 		this.hands.show();
 		this.player.runWithNoHands();
+	};
+
+	this.setSpeedSlow = function () {
+		this.player.setSpeedSlow();
+	};
+
+	this.setSpeedNormal = function () {
+		this.player.setSpeedNormal();
 	};
 
 	//  Hands

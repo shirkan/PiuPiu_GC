@@ -184,6 +184,7 @@ exports
         PiuPiuGlobals.soundEnabled = 1;
         PiuPiuGlobals.currentWorld = 0;
         PiuPiuGlobals.unlockedWorlds = [PiuPiuConsts.worlds[0]];
+        PiuPiuGlobals.showAds = 1;
 
         //  Stats vars
         PiuPiuGlobals.statsNames = ["totalBulletsFired", "totalPowerUps", "totalEnemyKilled", "totalHeadShots", "totalPoints", "gameProgress"];

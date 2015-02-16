@@ -6,6 +6,8 @@
     }
   },
   "android": {
+    "chartboostAppID": "54b7a8b9c909a666495ede0e",
+    "chartboostAppSignature": "7af260e48654211dff14bcc8b716b8efd8bdf85c",
     "icons": {
       "144": "resources/icons/icon-144.png",
       "36": "resources/icons/icon-36.png",
@@ -17,6 +19,7 @@
   },
   "appID": "e1d3f9ac50c54731a5d723b8747db66b",
   "dependencies": {
+    "devkit-chartboost": "https://github.com/gameclosure/chartboost#v2.0.0",
     "devkit-core": "https://github.com/gameclosure/devkit-core#v2.0.19",
     "devkit-entities": "https://github.com/gameclosure/devkit-entities#v0.2.4",
     "devkit-facebook": "https://github.com/gameclosure/facebook#v2.0.0",
@@ -26,6 +29,8 @@
   "ios": {
     "appleID": 946898089,
     "bundleID": "com.shirkan.piupiu",
+    "chartboostAppID": "54b7a897c909a666495ede0a",
+    "chartboostAppSignature": "e894f237d87a448b0e37b6cfe11dfadb80586a4e",
     "icons": {
       "114": "resources/icons/icon-114.png",
       "120": "resources/icons/icon-120.png",

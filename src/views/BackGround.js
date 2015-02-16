@@ -13,6 +13,7 @@ var config = [
 		yMultiplier: 0,
 		yCanSpawn: false,
 		yCanRelease: false,
+		xGapRange: [-1, -1],
 		x: 0,
 		y: 0,
 		pieceOptions: [

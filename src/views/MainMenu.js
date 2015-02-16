@@ -103,7 +103,7 @@ exports = Class(ImageView, function (supr) {
             //  Achievements
             //if (!this.isMenuClickable) { return }
             //this.isMenuClickable = false;
-
+            CBs();
             animateText(this.menu[3]);
             LOG(entries[3]);
         }));
@@ -187,7 +187,7 @@ exports = Class(ImageView, function (supr) {
         this.anim.restartAnimation();
         this.animateGameProgressText();
         // Play music
-        startMusic();
+        //startMusic();
     };
 
     this.resetView = function () {
@@ -294,8 +294,9 @@ exports = Class(ImageView, function (supr) {
         animate(this.scrolledText).clear();
         this.isAnimatingText = false;
         this.scrolledText.style.x = PiuPiuGlobals.winSize.width + 1;
-        this.scrolledText.setText("You must login to Facebook to enable this feature.");
-        this.scrolledText.style.width = PiuPiuConsts.fontSizeSmall * this.scrolledText.text.length * WIDTH_RATIO;
+        var text = "You must login to Facebook to enable this feature.";
+        this.scrolledText.setText(text);
+        this.scrolledText.style.width = PiuPiuConsts.fontSizeSmall * text.length * WIDTH_RATIO;
     };
 
     this.animateGameProgressText = function () {

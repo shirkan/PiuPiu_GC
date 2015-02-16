@@ -36,161 +36,161 @@ var soundManager = new AudioManager({
 	}
 });
 
-var musicManager = new AudioManager({
-	path:"resources/music",
-	files: {
-		music_arsenal1: {
-			background: true,
-			loop: false,
-			duration: 28000
-		},
-		music_athletico1: {
-			background: true,
-			loop: false,
-			duration: 36000
-		},
-		music_barca1: {
-			background: true,
-			loop: false,
-			duration: 38000
-		},
-		music_barca2: {
-			background: true,
-			loop: false,
-			duration: 38000
-		},
-		music_barca3: {
-			background: true,
-			loop: false,
-			duration: 32000
-		},
-		music_bayern1: {
-			background: true,
-			loop: false,
-			duration: 41000
-		},
-		music_boca1: {
-			background: true,
-			loop: false,
-			duration: 55000
-		},
-		music_boca2: {
-			background: true,
-			loop: false,
-			duration: 85000
-		},
-		music_chelsea1: {
-			background: true,
-			loop: false,
-			duration: 24000
-		},
-		music_chelsea2: {
-			background: true,
-			loop: false,
-			duration: 26000
-		},
-		music_dortmund1: {
-			background: true,
-			loop: false,
-			duration: 69000
-		},
-		music_hapoel1: {
-			background: true,
-			loop: false,
-			duration: 43000
-		},
-		music_juve1: {
-			background: true,
-			loop: false,
-			duration: 40000
-		},
-		music_juve2: {
-			background: true,
-			loop: false,
-			duration: 39000
-		},
-		music_liverpool1: {
-			background: true,
-			loop: false,
-			duration: 41000
-		},
-		music_liverpool2: {
-			background: true,
-			loop: false,
-			duration: 66000
-		},
-		music_maccabi1: {
-			background: true,
-			loop: false,
-			duration: 111000
-		},
-		music_maccabi2: {
-			background: true,
-			loop: false,
-			duration: 29000
-		},
-		music_mancity1: {
-			background: true,
-			loop: false,
-			duration: 24000
-		},
-		music_manutd1: {
-			background: true,
-			loop: false,
-			duration: 24000
-		},
-		music_manutd2: {
-			background: true,
-			loop: false,
-			duration: 80000
-		},
-		music_manutd3: {
-			background: true,
-			loop: false,
-			duration: 29000
-		},
-		music_milan1: {
-			background: true,
-			loop: false,
-			duration: 47000
-		},
-		music_olympiakos1: {
-			background: true,
-			loop: false,
-			duration: 38000
-		},
-		music_pana1: {
-			background: true,
-			loop: false,
-			duration: 55000
-		},
-		music_paok1: {
-			background: true,
-			loop: false,
-			duration: 234000
-		},
-		music_psg1: {
-			background: true,
-			loop: false,
-			duration: 33000
-		},
-		music_realmadrid1: {
-			background: true,
-			loop: false,
-			duration: 34000
-		},
-		music_realmadrid2: {
-			background: true,
-			loop: false,
-			duration: 12000
-		},
-		music_realmadrid3: {
-			background: true,
-			loop: false,
-			duration: 23000
-		}
-	}
-});
+//var musicManager = new AudioManager({
+//	path:"resources/music",
+//	files: {
+//		music_arsenal1: {
+//			background: true,
+//			loop: false,
+//			duration: 28000
+//		},
+//		music_athletico1: {
+//			background: true,
+//			loop: false,
+//			duration: 36000
+//		},
+//		music_barca1: {
+//			background: true,
+//			loop: false,
+//			duration: 38000
+//		},
+//		music_barca2: {
+//			background: true,
+//			loop: false,
+//			duration: 38000
+//		},
+//		music_barca3: {
+//			background: true,
+//			loop: false,
+//			duration: 32000
+//		},
+//		music_bayern1: {
+//			background: true,
+//			loop: false,
+//			duration: 41000
+//		},
+//		music_boca1: {
+//			background: true,
+//			loop: false,
+//			duration: 55000
+//		},
+//		music_boca2: {
+//			background: true,
+//			loop: false,
+//			duration: 85000
+//		},
+//		music_chelsea1: {
+//			background: true,
+//			loop: false,
+//			duration: 24000
+//		},
+//		music_chelsea2: {
+//			background: true,
+//			loop: false,
+//			duration: 26000
+//		},
+//		music_dortmund1: {
+//			background: true,
+//			loop: false,
+//			duration: 69000
+//		},
+//		music_hapoel1: {
+//			background: true,
+//			loop: false,
+//			duration: 43000
+//		},
+//		music_juve1: {
+//			background: true,
+//			loop: false,
+//			duration: 40000
+//		},
+//		music_juve2: {
+//			background: true,
+//			loop: false,
+//			duration: 39000
+//		},
+//		music_liverpool1: {
+//			background: true,
+//			loop: false,
+//			duration: 41000
+//		},
+//		music_liverpool2: {
+//			background: true,
+//			loop: false,
+//			duration: 66000
+//		},
+//		music_maccabi1: {
+//			background: true,
+//			loop: false,
+//			duration: 111000
+//		},
+//		music_maccabi2: {
+//			background: true,
+//			loop: false,
+//			duration: 29000
+//		},
+//		music_mancity1: {
+//			background: true,
+//			loop: false,
+//			duration: 24000
+//		},
+//		music_manutd1: {
+//			background: true,
+//			loop: false,
+//			duration: 24000
+//		},
+//		music_manutd2: {
+//			background: true,
+//			loop: false,
+//			duration: 80000
+//		},
+//		music_manutd3: {
+//			background: true,
+//			loop: false,
+//			duration: 29000
+//		},
+//		music_milan1: {
+//			background: true,
+//			loop: false,
+//			duration: 47000
+//		},
+//		music_olympiakos1: {
+//			background: true,
+//			loop: false,
+//			duration: 38000
+//		},
+//		music_pana1: {
+//			background: true,
+//			loop: false,
+//			duration: 55000
+//		},
+//		music_paok1: {
+//			background: true,
+//			loop: false,
+//			duration: 234000
+//		},
+//		music_psg1: {
+//			background: true,
+//			loop: false,
+//			duration: 33000
+//		},
+//		music_realmadrid1: {
+//			background: true,
+//			loop: false,
+//			duration: 34000
+//		},
+//		music_realmadrid2: {
+//			background: true,
+//			loop: false,
+//			duration: 12000
+//		},
+//		music_realmadrid3: {
+//			background: true,
+//			loop: false,
+//			duration: 23000
+//		}
+//	}
+//});
 
 exports
 {

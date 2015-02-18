@@ -121,8 +121,8 @@ exports
 
         //  Enemy
         PiuPiuConsts.enemyZIndex = 3;
-        PiuPiuConsts.enemyWidth = 95;
-        PiuPiuConsts.enemyHeight= 125;
+        PiuPiuConsts.enemyWidth = 250;
+        PiuPiuConsts.enemyHeight= 240;
 
         //  Player
         PiuPiuConsts.handsLength = 83;
@@ -130,6 +130,10 @@ exports
         PiuPiuConsts.maxLives = 5;
         PiuPiuConsts.playerWidth = 240;
         PiuPiuConsts.playerHeight= 170;
+        PiuPiuConsts.playerAnimationSpeed = 15;
+        PiuPiuConsts.leftHandZIndex = 4;
+        PiuPiuConsts.playerZIndex = 5;
+        PiuPiuConsts.rightHandZIndex = 6;
 
         //  Powerups
         PiuPiuConsts.powerupRadius = 7;
@@ -185,6 +189,7 @@ exports
         PiuPiuGlobals.currentWorld = 0;
         PiuPiuGlobals.unlockedWorlds = [PiuPiuConsts.worlds[0]];
         PiuPiuGlobals.showAds = 1;
+        PiuPiuGlobals.showInstructions = true;
 
         //  Stats vars
         PiuPiuGlobals.statsNames = ["totalBulletsFired", "totalPowerUps", "totalEnemyKilled", "totalHeadShots", "totalPoints", "gameProgress"];

@@ -22,6 +22,7 @@ exports
         //  Game
         Enemy_anim : "resources/images/game/enemy/",
         Player_anim : "resources/images/game/player/",
+        Hands_anim : "resources/images/game/hands/",
         Player_png : "resources/images/game/player.png",
         Hands_png : "resources/images/game/hands.png",
         Bullet_png: "resources/images/game/bullet_small.png",
@@ -33,7 +34,7 @@ exports
         PowerupMachineGun_png: "resources/images/game/powerups/machineGun.png",
         Powerup1Up_png: "resources/images/game/powerups/1up.png",
         PowerupCaptain_png: "resources/images/game/powerups/captain.png",
-        PowerupStopwatch_png: "resources/images/game/stopwatch.png",
+        PowerupStopwatch_png: "resources/images/game/powerups/stopwatch.png",
 
 
         //  Animations
@@ -46,6 +47,11 @@ exports
         FB_png: "resources/images/mainmenu/facebook.png",
         Sound_on_png: "resources/images/mainmenu/sound_on.png",
         Sound_off_png: "resources/images/mainmenu/sound_off.png",
+
+        //  Instructions
+        Finger_png: "resources/images/instructions/finger.png",
+        Finger_tap_png: "resources/images/instructions/finger_tap.png",
+        Finger_rock_png: "resources/images/instructions/finger_rock.png",
 
         //  Leaderboard sprites
         stencil_png: "resources/images/leaderboard/stencil2.png",

@@ -42,9 +42,6 @@ exports = Class(View, function (supr) {
 
 		this.xPos = 0;
 		this.yPos = 0;
-
-		//this.build();
-		//this._createMainMenu();
 	};
 
 	this.reset = function () {
@@ -59,6 +56,4 @@ exports = Class(View, function (supr) {
 		this.yPos = (this.yPos + y) % PiuPiuGlobals.winSize.height;
 		this.parallax.update(this.xPos, this.yPos);
 	};
-
-	this.changeBG = function () {};
 });

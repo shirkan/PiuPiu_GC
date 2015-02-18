@@ -1,4 +1,4 @@
-/**
+7/**
  * Created by shirkan on 1/19/15.
  */
 
@@ -55,7 +55,7 @@ exports = Class(View, function (supr) {
 		//  Prepare powerups
 		this.powerups = new Powerups({ parent: this.gameLayer });
 
-		//  Init SM
+7		//  Init SM
 		this.enemySM = new SpawningMechanism();
 		this.powerupSM = new SpawningMechanism();
 
@@ -70,7 +70,7 @@ exports = Class(View, function (supr) {
 
 		//  Set speed for BG & powerups movement
 		this.BG_MOVE_SPEED = -3;
-		this.POWERUP_MOVE_SPEED = 2;
+		this.POWERUP_MOVE_SPEED = 1;
 	};
 
 	//  Init Level
@@ -114,7 +114,7 @@ exports = Class(View, function (supr) {
 
 		this.on('InputMove', function (evt, pt) {
 			if (this.isMachineGunMode) {
-				this.shootBullet(pt, "machineGun");
+				this.shootBullet(pt);
 			}
 		});
 	};
@@ -139,13 +139,13 @@ exports = Class(View, function (supr) {
 		}
 	};
 
-	this.shootBullet = function (pt, sound) {
+	this.shootBullet = function (pt) {
 		//  Angle limits - goes crazy beyond these angles
 		if (pt.x < PiuPiuGlobals.handsAnchor.x) {
 			return false;
 		}
 
-		var sound = sound || "piu";
+		var sound = this.isMachineGunMode ? "machineGun" : "piu";
 
 		var bulletData = calculateBulletTrigonometry(pt);
 		bulletData.push(sound);

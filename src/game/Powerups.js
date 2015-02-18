@@ -149,5 +149,7 @@ exports = Class(EntityPool, function() {
 		var powerup = this.obtain(opts.x, opts.y, opts);
 		powerup.resetObject(type);
 		//powerup.showHitBounds();
+
+		return powerup;
 	};
 });

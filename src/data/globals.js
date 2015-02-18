@@ -86,6 +86,7 @@ exports
             PiuPiuConsts.fontName = "Arcadepix";
         }
         PiuPiuConsts.fontSizeBig = 72;
+        PiuPiuConsts.fontSizeInstructions = 60;
         PiuPiuConsts.fontSizeNormal = 48;
         PiuPiuConsts.fontSizeSmall = 28;
         PiuPiuConsts.fontSizeStatus = 32;
@@ -138,7 +139,7 @@ exports
         //  Powerups
         PiuPiuConsts.powerupRadius = 7;
         PiuPiuConsts.powerupPeriod = 3000;
-        PiuPiuConsts.powerupTypes = ["machineGun", "oneUp", "captain", "stopwatch"];
+        PiuPiuConsts.powerupTypes = ["oneUp", "captain", "machineGun", "stopwatch"];
         PiuPiuConsts.powerupMachineGunPeriod = 10000;
         PiuPiuConsts.powerupCaptainPeriod = 20000;
         PiuPiuConsts.powerupCaptainMultiplier = 2;
@@ -167,7 +168,7 @@ exports
         PiuPiuConsts.sourcePoint = [];
 
         //  Load/Save stats
-        PiuPiuGlobals.loadSave = [];
+        PiuPiuGlobals.loadSave = ["showInstructions"];
 
         //  Music
         PiuPiuGlobals.currentMusicFile = "";

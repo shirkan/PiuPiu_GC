@@ -74,7 +74,7 @@ exports = Class(GC.Application, function () {
             }));
         }));
 
-        this.on('game:start', bind(this, function () {
+        this.mainMenu.on('game:start', bind(this, function () {
             loadLevelSettings();
             dissolvePushScenes(this.rootView, this.game, ANIMATING_SCENES_TIME, bind(this, function() {
                 this.game.startLevel();

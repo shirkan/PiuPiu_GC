@@ -15,6 +15,7 @@ import src.views.MainMenu as MainMenu;
 import src.views.Game as Game;
 import src.views.Statistics as Statistics;
 import src.views.Leaderboard as Leaderboard;
+import src.views.Instructions as Instructions;
 
 import src.anim.IntroAnim as IntroAnim;
 import src.anim.LevelAnim as LevelAnim;
@@ -47,6 +48,7 @@ exports = Class(GC.Application, function () {
         this.game = new Game();
         this.stats = new Statistics();
         this.leaderboard = new Leaderboard();
+        this.instructions = new Instructions();
 
         this.rootView.push(this.splash);
 
@@ -55,28 +57,27 @@ exports = Class(GC.Application, function () {
         this.on('splashAnim:end', bind(this, this.showMenu));
 
         //  Main Menu handling - Start
-        this.mainMenu.on("intro:start", bind(this, function() {
-            dissolvePushScenes(this.rootView, this.introAnim, ANIMATING_SCENES_TIME, bind(this, function() {
-                this.introAnim.restartAnimation();
+        this.mainMenu.on("instructions:start", bind(this, function() {
+            this.instructions.reset();
+            dissolvePushScenes(this.rootView, this.instructions, ANIMATING_SCENES_TIME, bind(this, function() {
+                this.instructions.startAnimation();
                 this.mainMenu.resetView();
             }));
         }));
 
-        this.on('intro:end', bind(this, function () {
+        this.on('instructions:end', bind(this, function () {
             loadLevelSettings();
-            dissolvePushScenes(this.rootView, this.levelAnim, ANIMATING_SCENES_TIME, bind(this, function() {
-                this.rootView.remove(this.introAnim);
-                this.introAnim.resetAnimation();
-                this.levelAnim.animateLevel();
+            dissolvePushScenes(this.rootView, this.game, ANIMATING_SCENES_TIME, bind(this, function() {
+                this.game.startLevel();
+                this.rootView.remove(this.instructions);
+                this.instructions.reset();
             }));
         }));
 
-        this.on('cutscene:end', bind(this, function () {
+        this.on('game:start', bind(this, function () {
+            loadLevelSettings();
             dissolvePushScenes(this.rootView, this.game, ANIMATING_SCENES_TIME, bind(this, function() {
                 this.game.startLevel();
-
-                this.rootView.remove(this.levelAnim);
-                this.levelAnim.reset();
             }));
         }));
 
@@ -87,6 +88,7 @@ exports = Class(GC.Application, function () {
             updateHighScore();
             CBonGameEnd();
             dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate));
+            this.instructions.reset();
         }));
 
         this.on('game:levelCompleted', bind (this, function() {

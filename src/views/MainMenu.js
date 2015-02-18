@@ -69,7 +69,11 @@ exports = Class(ImageView, function (supr) {
 
             animateText(this.menu[0]);
             LOG(entries[0]);
-            this.emit('intro:start');
+            if (PiuPiuGlobals.showInstructions) {
+                this.emit('instructions:start');
+            } else {
+                this.emit('game:start');
+            }
         }));
         //this.menu[1].on('InputSelect', bind (this, function() {
         //    //  Sound

@@ -209,5 +209,7 @@ exports = Class(EntityPool, function() {
 		enemy.target = target;
 		enemy.shotsLeft = 1;
 		//enemy.showHitBounds();
+
+		return enemy;
 	};
 });

@@ -69,6 +69,7 @@ exports
         } else if (decision <= 0.4) {
             LOG("CBonGameEnd " + decision);
             //  Suggest watching a video
+            CBshowInterstitial();
         } else {
             LOG("CBonGameEnd " + decision);
             CBshowInterstitial();

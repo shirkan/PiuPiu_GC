@@ -12,7 +12,7 @@ import ui.View;
 import animate;
 
 import src.game.Status as Status;
-import src.game.Players as Players;
+import src.game.Player as Player;
 import src.game.Bullets as Bullets;
 import src.game.Enemies as Enemies;
 import src.game.Powerups as Powerups;
@@ -46,8 +46,7 @@ exports = Class(View, function (supr) {
 		//  Add Status view
 		this.status = new Status({ parent: this });
 		//  Add player
-		this.players = new Players({ parent: this.gameLayer });
-		this.player = this.players.spawnPlayer(0, (PiuPiuGlobals.winSize.height - PiuPiuConsts.playerHeight) / 2);
+		this.player = new Player({ parent: this.gameLayer });
 		//  Prepare bullets
 		this.bullets = new Bullets({ parent: this.gameLayer });
 		//  Prepare enemies

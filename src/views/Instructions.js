@@ -7,7 +7,7 @@ import ui.ImageView as ImageView;
 import ui.TextView as TextView;
 import animate;
 
-import src.game.Players as Players;
+import src.game.Player as Player;
 import src.game.Enemies as Enemies;
 import src.game.Powerups as Powerups;
 import src.anim.Bullet as Bullet;
@@ -129,8 +129,8 @@ exports = Class(ImageView, function (supr) {
 			]
 		};
 
-		this.players = new Players({ parent: this });
-		this.player1 = this.players.spawnPlayer();
+		this.player1 = new Player({ parent: this });
+		//this.player1 = this.players.spawnPlayer();
 		this.player1.runWithRotatableHands();
 		this.player1.handsSetNormal();
 

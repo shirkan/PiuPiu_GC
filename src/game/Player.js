@@ -59,24 +59,26 @@ var playerConfig = {
 	name : "Player",
 	isAnchored: true,
 	hitBounds: {
-		x: PiuPiuConsts.playerWidth * 0.3 * 0.3,
+		x: PiuPiuConsts.playerWidth * PLAYER_X_OFFSET * PLAYER_X_OFFSET,
 		y: PiuPiuConsts.playerHeight / 4,
 		w: PiuPiuConsts.playerWidth * 0.2,
 		h: PiuPiuConsts.playerHeight / 2
-	},
-	x: 0,
-	y: (PiuPiuGlobals.winSize.height - PiuPiuConsts.playerHeight) / 2
+	}
 };
 
-var Player = Class(Entity, function() {
+exports = Class(Entity, function() {
 	var sup = Entity.prototype;
 	this.viewClass = View;
 	this.name = "Player";
 
 	this.init = function(opts) {
 		opts = merge(opts, playerConfig);
+		opts = merge(opts, { x: 0,
+			y: (PiuPiuGlobals.winSize.height - PiuPiuConsts.playerHeight) / 2
+		});
+
 		sup.init.call(this, opts);
-		sup.reset.call(this, playerConfig.x, playerConfig.y, playerConfig);
+		sup.reset.call(this, opts.x, opts.y, opts);
 
 		this.player = new PlayerAnim({parent: this.view});
 		this.player.runWithRotatableHands();
@@ -138,7 +140,7 @@ var Player = Class(Entity, function() {
 
 	this.handsSetCaptain = function() {
 		var currentFrame = this.player._currentFrame;
-		this.leftHand.setCaptain(currentFrame);
+		this.leftHand.setNormal(currentFrame);
 		this.rightHand.setCaptain(currentFrame);
 	};
 
@@ -150,34 +152,12 @@ var Player = Class(Entity, function() {
 
 	this.handsSetMachineGunCaptain = function() {
 		var currentFrame = this.player._currentFrame;
-		this.leftHand.setMachineGunCaptain(currentFrame);
+		this.leftHand.setMachineGun(currentFrame);
 		this.rightHand.setMachineGunCaptain(currentFrame);
 	};
 
 	this.rotateHands = function (angle) {
 		this.leftHand.rotateHand(angle);
 		this.rightHand.rotateHand(angle);
-	};
-});
-
-exports = Class(EntityPool, function() {
-	var sup = EntityPool.prototype;
-
-	this.init = function(opts) {
-		opts.ctor = Player;
-		sup.init.call(this, opts);
-	};
-
-	this.reset = function() {
-		sup.reset.call(this);
-	};
-
-	this.update = function(dt) {
-		sup.update.call(this, dt);
-	};
-
-	this.spawnPlayer = function(x, y, opts) {
-		var player = this.obtain(x, y, opts);
-		return player;
 	};
 });

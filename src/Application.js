@@ -78,6 +78,7 @@ exports = Class(GC.Application, function () {
             loadLevelSettings();
             dissolvePushScenes(this.rootView, this.game, ANIMATING_SCENES_TIME, bind(this, function() {
                 this.game.startLevel();
+                this.mainMenu.resetView();
             }));
         }));
 

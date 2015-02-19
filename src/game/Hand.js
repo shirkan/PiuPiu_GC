@@ -55,6 +55,7 @@ exports = Class(SpriteView, function(supr) {
 	};
 
 	this.setCaptain = function( startFrame ) {
+		this.startAnimation("captain", {loop:true, frame: startFrame});
 	};
 
 	this.setMachineGun = function( startFrame ) {
@@ -62,6 +63,7 @@ exports = Class(SpriteView, function(supr) {
 	};
 
 	this.setMachineGunCaptain = function( startFrame ) {
+		this.startAnimation("machineGunCaptain", {loop:true, frame: startFrame});
 	};
 
 	this.rotateHand = function (angle) {

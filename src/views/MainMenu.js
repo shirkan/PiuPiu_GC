@@ -9,7 +9,7 @@ import src.anim.MainMenuAnim as MainMenuAnim;
 /** @const */ var START_Y = 100;
 /** @const */ var WIDTH_RATIO = 0.55;
 /** @const */ var TEXT_TIME = 10000;
-/** @const */ var SENTENCES0 = ["Start play now!", "Let's go hit some hooligans!", "What are you waiting for? Start play now!"];
+/** @const */ var SENTENCES0 = ["Start play now!", "Let's go hit some hooligans!", "What are you waiting for? Start playing now!"];
 /** @const */ var SENTENCES1_20 = ["Come on! you can do better!", "Let's go hit some hooligans!", "Come play some more!"];
 /** @const */ var SENTENCES21_50 = ["You are getting better and better!", "Let's go hit some hooligans!", "Come play some more!"];
 /** @const */ var SENTENCES51_80 = ["You are mastering this game!", "Let's go hit some hooligans!", "Come play some more!"];
@@ -100,7 +100,9 @@ exports = Class(ImageView, function (supr) {
                 this.isMenuClickable = false;
                 this.emit('leaderboard:start');
             } else {
-                this.runFBanimation();
+                if (this.doneInitialization) {
+                    this.runFBanimation();
+                }
             }
         }));
         this.menu[3].on('InputSelect', bind (this, function() {
@@ -172,13 +174,19 @@ exports = Class(ImageView, function (supr) {
         if (!PiuPiuGlobals.soundEnabled){
             this.soundIcon.setImage(res.Sound_off_png);
         }
+
+        //  A flag to verify init was done
+        this.doneInitialization = false;
     };
 
     this.checkFBstatus = function () {
         //  Handle FB login - Display FB logo if not logged in
-        //FBisLoggedIn(this, this.hideFB, this.showFB);
+        //  Disable leaderboard until FB check is done
+        this.leaderboardEnabled = false;
+
         setTimeout(bind(this, function () {
             LOG("checkFBstatus: checking FB status: " + PiuPiuGlobals.FBisConnected);
+            this.doneInitialization = true;
             if (PiuPiuGlobals.FBisConnected) {
                 this.hideFB();
             } else {
@@ -246,6 +254,7 @@ exports = Class(ImageView, function (supr) {
 
     this.runFBanimation = function () {
         this.animateFBlogo();
+        this.resetFBText();
         this.animateFBText();
     };
 
@@ -289,8 +298,6 @@ exports = Class(ImageView, function (supr) {
         this.isAnimatingText = true;
 
         animate(this.scrolledText).now({x: -1 * this.scrolledText.style.width}, TEXT_TIME, animate.linear).
-            then(this.resetFBText.bind(this)).
-            then(this.resetGameProgressText.bind(this)).
             then(this.animateGameProgressText.bind(this));
     };
 

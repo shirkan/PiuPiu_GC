@@ -15,7 +15,8 @@
       "72": "resources/icons/icon-72.png",
       "96": "resources/icons/icon-96.png"
     },
-    "versionCode": 11
+    "version" : "0.7",
+    "versionCode": 12
   },
   "appID": "e1d3f9ac50c54731a5d723b8747db66b",
   "dependencies": {
@@ -41,8 +42,8 @@
       "76": "resources/icons/icon-76.png",
       "renderGloss": false
     },
-    "version": "0.6",
-    "versionCode": 11
+    "version": "0.7",
+    "versionCode": 12
   },
   "shortName": "PiuPiu",
   "splash": {
@@ -59,5 +60,5 @@
   "ttf": [
     "resources/fonts/ArcadepixRegular.ttf"
   ],
-  "version": "0.6"
+  "version": "0.7"
 }

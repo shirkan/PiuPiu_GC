@@ -39,7 +39,7 @@ exports = Class(ImageView, function (supr) {
 			height: PiuPiuConsts.fontSizeBig,
 			horizontalAlign: 'center',
 			x: 0,
-			y: this.PADDING
+			y: this.Y_PADDING
 		});
 
 		//  Sub-titles
@@ -55,7 +55,7 @@ exports = Class(ImageView, function (supr) {
 			height: PiuPiuConsts.fontSizeNormal,
 			horizontalAlign: 'center',
 			x: 0,
-			y: this.PADDING + PiuPiuConsts.fontSizeBig
+			y: this.Y_PADDING + PiuPiuConsts.fontSizeBig
 		});
 
 		this.friends = new TextView({
@@ -70,7 +70,7 @@ exports = Class(ImageView, function (supr) {
 			height: PiuPiuConsts.fontSizeNormal,
 			horizontalAlign: 'center',
 			x: PiuPiuGlobals.winSize.width / 2,
-			y: this.PADDING + PiuPiuConsts.fontSizeBig,
+			y: this.Y_PADDING + PiuPiuConsts.fontSizeBig,
 			opacity : 0.5
 		});
 
@@ -115,7 +115,7 @@ exports = Class(ImageView, function (supr) {
 
 		//  Build friends
 		var startX = this.X_PADDING;
-		var startY = 2 * this.PADDING + PiuPiuConsts.fontSizeBig + PiuPiuConsts.fontSizeNormal;
+		var startY = 2 * this.Y_PADDING + PiuPiuConsts.fontSizeBig + PiuPiuConsts.fontSizeNormal;
 
 		this.FplaceImages = {};
 		this.FFBImages = {};
@@ -126,7 +126,7 @@ exports = Class(ImageView, function (supr) {
 		var rowHeight = PiuPiuConsts.FBpictureSize;
 
 		for (var i=0; i < PiuPiuConsts.FBleaderboardShowTop; i++) {
-			var y = startY + i * (rowHeight + this.PADDING);
+			var y = startY + i * (rowHeight + this.Y_PADDING);
 			var x = startX;
 			var color = (i%2) ? "blue" : "yellow";
 			var strokeColor = (i%2) ? "yellow" : "blue";

@@ -70,6 +70,7 @@ exports = Class(GC.Application, function () {
                 this.game.startLevel();
                 this.rootView.remove(this.instructions);
                 this.instructions.reset();
+                this.mainMenu.resetView();
             }));
         }));
 

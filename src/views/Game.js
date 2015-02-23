@@ -20,6 +20,8 @@ import src.views.Background as Background;
 
 import src.utilities.SpawningMechanism as SpawningMechanism;
 
+import src.utilities.ChartboostUtilities;
+
 exports = Class(View, function (supr) {
 	this.init = function (opts) {
 		this.name = "GameView";
@@ -348,6 +350,9 @@ exports = Class(View, function (supr) {
 
 		this.player.stand();
 		this.gameIsRunning = false;
+
+		//  call Chartboost handler
+		CBonGameEnd();
 
 		//  Handle moving to next scene
 		setTimeout(bind(this, function () { this.canContinueToNextScene = true}), PiuPiuConsts.canContinueToNextSceneTimeOut);

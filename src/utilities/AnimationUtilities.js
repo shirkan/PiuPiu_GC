@@ -14,10 +14,13 @@ exports
 			fromScene.style.opacity = 1;
 		});
 
-		animate(toScene).wait(sceneDuration).then({opacity : 1}, sceneDuration);
-		if (cb) {
-			setTimeout(function () {cb.call(rootView)}, duration);
-		}
+		animate(toScene).wait(sceneDuration).then({opacity : 1}, sceneDuration).
+		then(function () {
+			if (cb) {
+				setTimeout(function () {cb.call(rootView)}, duration);
+			}
+		});
+
 	};
 
 	dissolvePopScenes = function (rootView, duration, cb) {
@@ -34,9 +37,11 @@ exports
 			fromScene.style.opacity = 1;
 		});
 
-		animate(toScene).wait(sceneDuration).then({opacity : 1}, sceneDuration);
-		if (cb) {
-			setTimeout(function () {cb.call(rootView)}, duration);
-		}
+		animate(toScene).wait(sceneDuration).then({opacity : 1}, sceneDuration).
+		then (function () {
+			if (cb) {
+				setTimeout(function () {cb.call(rootView)}, duration);
+			}
+		});
 	};
 }

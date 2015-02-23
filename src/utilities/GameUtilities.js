@@ -288,25 +288,25 @@ exports
         });
     };
 
-    handleHighScore = function ( world ) {
-        //var currentHighScore = Math.max(PiuPiuGlobals.highScore, PiuPiuGlobals.currentScore);
-        var currentHighScore = PiuPiuGlobals.highScore[world];
-        var storedHighScore = loadData("highScore") || 0;
-
-        //  We retrieve FB high score on log-in so it should be updated by now.
-        //var ParseHighscore = (PiuPiuGlobals.FBdata ? PiuPiuGlobals.FBdata.score : 0);
-        var ParseHighscore = 0;
-
-        LOG("handleHighScore: current highscore: " + currentHighScore + " stored: " + storedHighScore + " FB: " + ParseHighscore);
-
-        PiuPiuGlobals.highScore = Math.max(currentHighScore, storedHighScore);
-
-        if (PiuPiuGlobals.highScore > ParseHighscore) {
-            ParseSaveScore();
-        }
-
-        saveData("highScore", PiuPiuGlobals.highScore);
-    };
+    //handleHighScore = function ( world ) {
+    //    //var currentHighScore = Math.max(PiuPiuGlobals.highScore, PiuPiuGlobals.currentScore);
+    //    var currentHighScore = PiuPiuGlobals.highScore[world];
+    //    var storedHighScore = loadData("highScore") || 0;
+    //
+    //    //  We retrieve FB high score on log-in so it should be updated by now.
+    //    //var ParseHighscore = (PiuPiuGlobals.FBdata ? PiuPiuGlobals.FBdata.score : 0);
+    //    var ParseHighscore = 0;
+    //
+    //    LOG("handleHighScore: current highscore: " + currentHighScore + " stored: " + storedHighScore + " FB: " + ParseHighscore);
+    //
+    //    PiuPiuGlobals.highScore = Math.max(currentHighScore, storedHighScore);
+    //
+    //    if (PiuPiuGlobals.highScore > ParseHighscore) {
+    //        ParseSaveScore();
+    //    }
+    //
+    //    saveData("highScore", PiuPiuGlobals.highScore);
+    //};
 
     updateHighScore = function () {
         var world = PiuPiuConsts.worlds[PiuPiuGlobals.currentWorld];
@@ -316,9 +316,10 @@ exports
             saveData("highScores." + world, PiuPiuGlobals.currentScore);
 
             //  Since by now highscores DBs are synced, we know we need to update Parse DB as well.
-            ParseSaveScore(world);
-
-            //  TODO: Refresh leaderboards
+            //  TODO: Refresh leaderboards - do this in a less expensive way
+            ParseSaveScore(world, this, ParseLoadAllScores.bind(this, PiuPiuConsts.worlds[PiuPiuGlobals.currentWorld], this, function () {
+                GC.app.emit('onlineData:ready');
+            }));
         }
     };
 

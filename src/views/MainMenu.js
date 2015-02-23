@@ -9,7 +9,7 @@ import src.anim.MainMenuAnim as MainMenuAnim;
 /** @const */ var START_Y = 100;
 /** @const */ var WIDTH_RATIO = 0.55;
 /** @const */ var TEXT_TIME = 10000;
-/** @const */ var SENTENCES0 = ["Start play now!", "Let's go hit some hooligans!", "What are you waiting for? Start playing now!"];
+/** @const */ var SENTENCES0 = ["Start playing now!", "Let's go hit some hooligans!", "What are you waiting for? Start playing now!"];
 /** @const */ var SENTENCES1_20 = ["Come on! you can do better!", "Let's go hit some hooligans!", "Come play some more!"];
 /** @const */ var SENTENCES21_50 = ["You are getting better and better!", "Let's go hit some hooligans!", "Come play some more!"];
 /** @const */ var SENTENCES51_80 = ["You are mastering this game!", "Let's go hit some hooligans!", "Come play some more!"];
@@ -109,7 +109,7 @@ exports = Class(ImageView, function (supr) {
             //  Achievements
             //if (!this.isMenuClickable) { return }
             //this.isMenuClickable = false;
-            CBs();
+            //CBs();
             animateText(this.menu[3]);
             LOG(entries[3]);
         }));

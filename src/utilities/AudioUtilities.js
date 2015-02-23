@@ -197,9 +197,9 @@ exports
 	//  Music & sounds
 	playSound = function ( sound, force ) {
 		if (force || PiuPiuGlobals.soundEnabled) {
-			if (!soundManager.isPlaying(sound)) {
+			//if (!soundManager.isPlaying(sound)) {
 				soundManager.play(sound);
-			}
+			//}
 		}
 	};
 

@@ -54,7 +54,7 @@ var Powerup = Class(Entity, function() {
 
 	this.ANIMATION_TIME = 700;
 	this.MAX_SCALE = 1;
-	this.MIN_SCALE = 0.1
+	this.MIN_SCALE = 0.1;
 
 	this.init = function(opts) {
 		opts = merge(opts, PowerupConfig);
@@ -84,7 +84,7 @@ var Powerup = Class(Entity, function() {
 
 	this.start = function () {
 		this.scheduler = setTimeout(this.animateOut.bind(this), PiuPiuConsts.powerupPeriod);
-		this.shootable = true;
+		this.shootable = false;
 		this.animateIn();
 	};
 
@@ -103,7 +103,10 @@ var Powerup = Class(Entity, function() {
 
 	this.animateIn = function () {
 		animate(this.view).clear().
-			now({scale: this.MAX_SCALE}, this.ANIMATION_TIME, animate.easeInOutElastic);
+			now({scale: this.MAX_SCALE}, this.ANIMATION_TIME, animate.easeInOut).
+		then(bind(this, function () {
+			this.shootable = true;
+		}));
 	};
 
 	this.animateOut = function () {

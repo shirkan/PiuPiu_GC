@@ -6,7 +6,6 @@ import src.utilities.GameUtilities;
 import src.utilities.AudioUtilities;
 import src.utilities.AnimationUtilities;
 import src.utilities.FBUtilities;
-import src.utilities.ChartboostUtilities;
 import device;
 import animate;
 
@@ -87,7 +86,6 @@ exports = Class(GC.Application, function () {
             PiuPiuGlobals.currentLevel = 1;
             saveStats();
             updateHighScore();
-            CBonGameEnd();
             dissolvePopScenes(this.rootView, ANIMATING_SCENES_TIME, bind(this.mainMenu, this.mainMenu.animate));
             this.instructions.reset();
         }));

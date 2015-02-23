@@ -29,7 +29,7 @@ exports
 		}
 	};
 
-	ParseSaveScore = function ( world ) {
+	ParseSaveScore = function ( world, target, success_callback, error_callback ) {
 		if (PiuPiuGlobals.FBmyUID == "") {
 			LOG("ParsePostScore: no UID found");
 			return;
@@ -43,6 +43,8 @@ exports
 			success: function(obj) {
 				LOG("ParseSaveData: data saved successfully: " + JSON.stringify(obj));
 				ParseUpdateLocalObjectID(world, obj.id, "ParseSaveData");
+
+				target && success_callback && success_callback.call(target);
 			},
 			error: function(obj, error) {
 				LOG("ParseSaveData: failed saving obj: " + JSON.stringify(obj) + " with error: " + JSON.stringify(error));
@@ -50,6 +52,8 @@ exports
 					//  objectId error - clear objectId and retry. the correct objectId will be updated.
 					PiuPiuGlobals["ParseMyObjectIDs." + world] = "";
 					ParseSaveScore();
+				} else {
+					target && error_callback && error_callback.call(target);
 				}
 			}
 		});

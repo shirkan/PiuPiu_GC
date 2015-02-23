@@ -29,8 +29,7 @@ exports
         } else {
             LOG("FBstatusChange: connected! response: " + JSON.stringify(response));
             PiuPiuGlobals.FBisConnected = true;
-            PiuPiuGlobals.FBmyUID = response.authResponse.userID;
-            target && success_callback && success_callback.call(target);
+            FBgetMyUID(target, success_callback, error_callback);
         }
     };
 
@@ -54,8 +53,7 @@ exports
             } else {
                 LOG("FBlogin: response success: " + JSON.stringify(response));
                 PiuPiuGlobals.FBisConnected = true;
-                PiuPiuGlobals.FBmyUID = response.authResponse.userID;
-                FBonLoginUpdates();
+                FBgetMyUID(this, FBonLoginUpdates);
                 target && success_callback && success_callback.call(target);
             }
         }, {scope: "public_profile, user_friends"});
@@ -92,6 +90,19 @@ exports
         //FBgetAllScores(this, function () {
         ParseLoadAllScores(PiuPiuConsts.worlds[PiuPiuGlobals.currentWorld], this, function () {
             GC.app.emit('onlineData:ready');
+        });
+    };
+
+    FBgetMyUID = function (target, success_callback, error_callback) {
+        FB.api("/me", 'get', function (response) {
+            if (!response || response.error) {
+                LOG("FBGetMyUID: response error " + JSON.stringify(response));
+                target && error_callback && error_callback.call(target);
+            } else {
+                LOG("FBGetMyUID: " + JSON.stringify(response));
+                PiuPiuGlobals.FBmyUID = response.id;
+                target && success_callback && success_callback.call(target);
+            }
         });
     };
 

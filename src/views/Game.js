@@ -56,7 +56,7 @@ exports = Class(View, function (supr) {
 		//  Prepare powerups
 		this.powerups = new Powerups({ parent: this.gameLayer });
 
-7		//  Init SM
+		//  Init SM
 		this.enemySM = new SpawningMechanism();
 		this.powerupSM = new SpawningMechanism();
 
@@ -72,12 +72,55 @@ exports = Class(View, function (supr) {
 		//  Set speed for BG & powerups movement
 		this.BG_MOVE_SPEED = -3;
 		this.POWERUP_MOVE_SPEED = 1;
+
+		//  Pause button
+		this.pauseButton = new ImageView({
+			parent : this,
+			width : PiuPiuConsts.pauseButtonSize,
+			height : PiuPiuConsts.pauseButtonSize,
+			image: res.Pause_png,
+			zIndex: PiuPiuConsts.statusZIndex,
+			x: PiuPiuGlobals.winSize.width - PiuPiuConsts.pauseButtonSize - this.status.getPadding(),
+			y: this.status.getPadding()
+		});
+		this.pauseButton.on('InputSelect', bind(this, function () {
+			//  Call game's onPause
+			this.onPause();
+		}));
+
+		//  Pause screen
+		this.pauseScreen = new View({
+			parent: this,
+			width: PiuPiuGlobals.winSize.width,
+			height: PiuPiuGlobals.winSize.height,
+			zIndex: PiuPiuConsts.pauseScreenZIndex,
+			backgroundColor: 'black',
+			opacity: 0.8
+		});
+		this.pauseScreen.hide();
+
+		//  Pause screen text
+		this.pauseScreenText = new TextView({
+			parent: this.pauseScreen,
+			width: PiuPiuGlobals.winSize.width,
+			height: PiuPiuGlobals.winSize.height,
+			zIndex: PiuPiuConsts.pauseScreenZIndex,
+			text: "Continue",
+			fontFamily : PiuPiuConsts.fontName,
+			size: PiuPiuConsts.fontSizeBig,
+			color: "yellow",
+			strokeColor: "blue",
+			strokeWidth: PiuPiuConsts.fontStrokeSize,
+			horizontalAlign: 'center',
+			verticalAlign: 'middle'
+		});
+		this.pauseScreenText.on('InputSelect', bind(this, function () {
+			this.onPause();
+		}));
 	};
 
-	//  Init Level
+	//  Game init & states
 	this.initLevel = function () {
-		//var map = randomMap();
-		//this.style._view.setImage(map);
 
 		this.bg.reset();
 		this.machineGunEnd();
@@ -109,14 +152,13 @@ exports = Class(View, function (supr) {
 			PiuPiuLevelSettings.powerupsSpawnIntervalMax);
 
 		//  Catch clicks
-		this.on('InputSelect', function (evt, pt) {
-			this.shootBullet(pt);
+		var self = this;
+		this.gameLayer.on('InputSelect', function (evt, pt) {
+			!self.gameHasEnded && self.gameIsRunning && self.shootBullet(pt);
 		});
 
-		this.on('InputMove', function (evt, pt) {
-			if (this.isMachineGunMode) {
-				this.shootBullet(pt);
-			}
+		this.gameLayer.on('InputMove', function (evt, pt) {
+			!self.gameHasEnded && self.gameIsRunning && self.isMachineGunMode && self.shootBullet(pt);
 		});
 	};
 
@@ -124,8 +166,37 @@ exports = Class(View, function (supr) {
 		this.enemySM.start();
 		this.powerupSM.start();
 		this.player.runWithRotatableHands();
-		this.gameIsRunning = true;
+		this.gameIsRunning = true;  //  determines if game is not paused
+		this.gameHasEnded = false; //   determines if game is yet to end
+		//setInterval(this.bg.replaceMap.bind(this.bg), 3000);
 	};
+
+
+
+	//  Pausing
+	this.onPause = function () {
+		if (this.gameHasEnded) {
+			return;
+		}
+		LOG("Game onPause");
+		if (this.gameIsRunning) {
+			this.gameIsRunning = false;
+			this.enemySM.stop();
+			this.powerupSM.stop();
+			this.player.pause();
+			this.enemies.pause();
+			this.pauseScreen.show();
+		} else {
+			this.gameIsRunning = true;
+			this.enemySM.start();
+			this.powerupSM.start();
+			this.player.resume();
+			this.enemies.resume();
+			this.pauseScreen.hide();
+		}
+	};
+
+
 
 
 
@@ -349,7 +420,7 @@ exports = Class(View, function (supr) {
 		this.powerups.reset();
 
 		this.player.stand();
-		this.gameIsRunning = false;
+		this.gameHasEnded = true;
 
 		//  call Chartboost handler
 		CBonGameEnd();
@@ -374,24 +445,26 @@ exports = Class(View, function (supr) {
 		dt = Math.min(PiuPiuGlobals.currentUpdateRate * dt, 100);
 		//dt = 10;
 
-		//  Need to always update bullets so they can disappear on level complete
-		this.bullets.update(dt);
-		this.powerups.update(PiuPiuGlobals.currentUpdateRate * this.POWERUP_MOVE_SPEED);
-
 		if (this.gameIsRunning) {
-			// update entities
-			this.enemies.update(dt);
+			//  Need to always update bullets so they can disappear on level complete
+			this.bullets.update(dt);
+			this.powerups.update(PiuPiuGlobals.currentUpdateRate * this.POWERUP_MOVE_SPEED);
 
-			//  Check collisions detections
-			//  Collide bullets with enemies
-			this.bullets.onFirstPoolCollisions(this.enemies, this.onBulletEnemyCollision, this);
-			//  Collide bullets with powerups
-			this.bullets.onFirstPoolCollisions(this.powerups, this.onBulletPowerupCollision, this);
-			//  Collide enemies with player
-			this.enemies.onFirstCollision(this.player, this.onEnemyPlayerCollision, this);
+			if (!this.gameHasEnded) {
+				// update entities
+				this.enemies.update(dt);
 
-			// players vertical movement determines view offset for everything
-			this.bg.update(PiuPiuGlobals.currentUpdateRate * this.BG_MOVE_SPEED, 0);
+				//  Check collisions detections
+				//  Collide bullets with enemies
+				this.bullets.onFirstPoolCollisions(this.enemies, this.onBulletEnemyCollision, this);
+				//  Collide bullets with powerups
+				this.bullets.onFirstPoolCollisions(this.powerups, this.onBulletPowerupCollision, this);
+				//  Collide enemies with player
+				this.enemies.onFirstCollision(this.player, this.onEnemyPlayerCollision, this);
+
+				// players vertical movement determines view offset for everything
+				this.bg.update(PiuPiuGlobals.currentUpdateRate * this.BG_MOVE_SPEED, 0);
+			}
 		}
 
 		//// update particles

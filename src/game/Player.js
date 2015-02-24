@@ -160,4 +160,16 @@ exports = Class(Entity, function() {
 		this.leftHand.rotateHand(angle);
 		this.rightHand.rotateHand(angle);
 	};
+
+	this.pause = function () {
+		this.player.pause();
+		this.leftHand.pause();
+		this.rightHand.pause();
+	};
+
+	this.resume = function () {
+		this.player.resume();
+		this.leftHand.resume();
+		this.rightHand.resume();
+	};
 });

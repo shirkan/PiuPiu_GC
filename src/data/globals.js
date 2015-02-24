@@ -147,6 +147,10 @@ exports
         PiuPiuConsts.powerupStopwatchUpdateRate = 0.5;
         PiuPiuConsts.powerupZIndex = 2;
 
+        //  Pause button
+        PiuPiuConsts.pauseButtonSize = 32;
+        PiuPiuConsts.pauseScreenZIndex = PiuPiuConsts.statusZIndex + 1;
+
         //  Facebook
         PiuPiuConsts.FB_appid = "331202163734875";
         //PiuPiuConsts.FBpermissionsNeeded = ["public_profile", "user_activities", "user_about_me", "user_friends", "publish_actions"];

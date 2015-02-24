@@ -29,6 +29,7 @@ exports
         LifeBig_png : "resources/images/game/life.png",
         Life_png : "resources/images/game/life_small.png",
         Achievement_png : "resources/images/game/achievement_unlocked.png",
+        Pause_png : "resources/images/game/pause.png",
 
         //  Powerups
         PowerupMachineGun_png: "resources/images/game/powerups/machineGun.png",

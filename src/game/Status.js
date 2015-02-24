@@ -19,6 +19,8 @@ exports = Class(View, function (supr) {
 	};
 
 	this.build = function () {
+		this.PADDING = (LIFE_HEIGHT  - PiuPiuConsts.fontSizeStatus) / 2;
+
 		//  Add score text on upper right side
 		this.scoreText = new TextView({
 			name: "scoreText",
@@ -33,8 +35,8 @@ exports = Class(View, function (supr) {
 			width: PiuPiuGlobals.winSize.width * 0.2,
 			height: PiuPiuConsts.fontSizeStatus,
 			zIndex: PiuPiuConsts.statusZIndex,
-			x: PiuPiuGlobals.winSize.width * 0.8,
-			y: (LIFE_HEIGHT  - PiuPiuConsts.fontSizeStatus) / 2
+			x: PiuPiuGlobals.winSize.width * 0.8 - PiuPiuConsts.pauseButtonSize - this.PADDING,
+			y: this.PADDING
 		});
 
 		//  Add lives on upper left corner
@@ -59,7 +61,7 @@ exports = Class(View, function (supr) {
 			height: PiuPiuConsts.fontSizeStatus,
 			zIndex: PiuPiuConsts.statusZIndex,
 			x: LIFE_WIDTH + 10,
-			y: (LIFE_HEIGHT  - PiuPiuConsts.fontSizeStatus) / 2
+			y: this.PADDING
 		});
 
 		//  Prepare header message
@@ -78,7 +80,7 @@ exports = Class(View, function (supr) {
 			zIndex: PiuPiuConsts.statusZIndex,
 			opacity : 0,
 			x: 0,
-			y: (LIFE_HEIGHT  - PiuPiuConsts.fontSizeStatus) / 2
+			y: this.PADDING
 		});
 
 		//  Prepare game over message
@@ -180,4 +182,8 @@ exports = Class(View, function (supr) {
 		this.positiveMessage.setText(positiveSentences[randomNumber(0, positiveSentences.length, true)]);
 		setTimeout(bind(this, function () {this.positiveMessage.show()}), 2000);
 	};
+
+	this.getPadding = function () {
+		return this.PADDING;
+	}
 });

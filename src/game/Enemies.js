@@ -114,6 +114,7 @@ var Enemy = Class(Entity, function() {
 		this.view.style.r = 0;
 
 		this.anim.run();
+		this.resume();
 
 		this.head.reset(x, y, config);
 		this.body.reset(x, y, config);
@@ -180,6 +181,14 @@ var Enemy = Class(Entity, function() {
 				this.target.emit('enemyDied');
 			}));
 	};
+
+	this.pause = function () {
+		this.anim.pause();
+	};
+
+	this.resume = function () {
+		this.anim.resume();
+	};
 });
 
 exports = Class(EntityPool, function() {
@@ -200,7 +209,7 @@ exports = Class(EntityPool, function() {
 
 	this.spawnEnemy = function(target, x, y, speed) {
 		x = x || PiuPiuGlobals.winSize.width;
-		y = y || randomNumber(0, PiuPiuGlobals.winSize.height);
+		y = y || randomNumber(-PiuPiuGlobals.enemyHeight, PiuPiuGlobals.winSize.height);
 		speed = speed || randomNumber(0.3, 1);
 		var vx = PiuPiuGlobals.currentUpdateRate * speed * (PiuPiuGlobals.sourcePoint.x - x) / PiuPiuConsts.framesPerSeconds;
 		var vy = PiuPiuGlobals.currentUpdateRate * speed * (PiuPiuGlobals.sourcePoint.y - y) / PiuPiuConsts.framesPerSeconds;
@@ -211,5 +220,17 @@ exports = Class(EntityPool, function() {
 		//enemy.showHitBounds();
 
 		return enemy;
+	};
+
+	this.pause = function () {
+		this.forEachActiveEntity(function (enemy) {
+			enemy.pause();
+		});
+	};
+
+	this.resume = function () {
+		this.forEachActiveEntity(function (enemy) {
+			enemy.resume();
+		});
 	};
 });

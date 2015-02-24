@@ -35,7 +35,7 @@ exports = Class(ImageView, function (supr) {
     this.build = function() {
         //  Build menu
         //var entries = ["Start", "Sound on", "Statistics", "Leaderboard", "Achievements"];
-        var entries = ["Start", "Statistics", "Leaderboard", "Achievements", "FEEDBACK"];
+        var entries = ["Start", "Statistics", "Leaderboard", "Achievements"];
 
         this.menu = {};
 
@@ -114,15 +114,15 @@ exports = Class(ImageView, function (supr) {
             LOG(entries[3]);
         }));
 
-        this.menu[4].on('InputSelect', bind (this, function() {
-            //  Achievements
-            //if (!this.isMenuClickable) { return }
-            //this.isMenuClickable = false;
-
-            animateText(this.menu[4]);
-            LOG(entries[4]);
-            window.open("http://meganeev.weebly.com/feedback.html");
-        }));
+        //this.menu[4].on('InputSelect', bind (this, function() {
+        //    //  FEEDBACK
+        //    //if (!this.isMenuClickable) { return }
+        //    //this.isMenuClickable = false;
+        //
+        //    animateText(this.menu[4]);
+        //    LOG(entries[4]);
+        //    window.open("http://meganeev.weebly.com/feedback.html");
+        //}));
 
         //  Build FB assets
         this.FB_LOGO_SIZE = 64;

@@ -109,6 +109,7 @@ exports
         PiuPiuConsts.pointsPerEnemyHeadShot = 10;
         PiuPiuConsts.pointsNormalMultiplier = 1;
         PiuPiuConsts.normalUpdateRate = 1;
+        PiuPiuConsts.hitUpdateRate = 0.5;
         PiuPiuConsts.gameZIndex = 1;
         PiuPiuConsts.canContinueToNextSceneTimeOut = 2000;
         PiuPiuConsts.worlds = ["Madrid"];
@@ -157,7 +158,7 @@ exports
         PiuPiuConsts.FBpermissionsNeeded = ["public_profile", "user_friends"];
         PiuPiuConsts.FBwaitForResultsInSeconds = 11;
         PiuPiuConsts.FBleaderboardShowTop = 7;
-        PiuPiuConsts.FBpictureSize = 80;
+        PiuPiuConsts.FBpictureSize = 64;
         PiuPiuConsts.FBwaitBeforeCheckingStatus = 5000;
     }
 

@@ -50,7 +50,7 @@ exports = Class(View, function (supr) {
 
 		this.xPos = 0;
 		this.yPos = 0;
-		this.TRANSFORM_MAP_TIME = 1000; 
+		this.TRANSFORM_MAP_TIME = 1000;
 	};
 
 	resetMap = function ( parallax ) {
